@@ -22,7 +22,7 @@ wget ....
 cd /app/mi_connector
 sudo nano config.yaml
 ctrl+x -> y -> Enter
----------------------------------------------
+
 st:
   app_url: https://.......
   app_id: 2..........
@@ -30,7 +30,7 @@ st:
 
 connector:
   port: 11111
----------------------------------------------
+  
 
 6. Run Program
 cd /app/mi_connector
