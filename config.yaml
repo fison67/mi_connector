@@ -1,0 +1,7 @@
+st:
+  app_url: xxxx
+  app_id: xxxxx0
+  access_token: xxxxxx
+
+connector:
+  port: 11111
