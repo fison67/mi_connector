@@ -3,35 +3,14 @@ Connector for Xiaomi with ST
 
 
 Install
-1. Make folder
-sudo mkdir /app
-sudo mkdir /app/mi_connector
+- wget https://raw.githubusercontent.com/fison67/mi_connector/master/install.sh
 
-2. pm2 install
-sudo npm install pm2 -g
+- chmod 755 install.sh
+- sudo ./install.sh
 
-3. library install
-cd /app/mi_connector
-npm install miio yaml request http log4js
+- cd /app/mi_connector
+- sudo pm2 start mi_connector.js
 
-4. Donwload mi_connector.js
-cd /app/mi_connector
-wget ....
 
-5. Make config.yaml
-cd /app/mi_connector
-sudo nano config.yaml
-ctrl+x -> y -> Enter
-
-st:
-  app_url: ....
-  app_id: ....
-  access_token: ....
-  
-connector:
-  port: 11111
-  
-
-6. Run Program
-cd /app/mi_connector
-pm2 start mi_connector
+logging
+- tail -500f /app/mi_connector/connector.log
