@@ -85,7 +85,7 @@ function sendAllDevices(){
 						}
 					});
 				}, time);
-				time += 300;
+				time += 1000;
 			}catch(e){
 			  logger.info(e);
 			}
