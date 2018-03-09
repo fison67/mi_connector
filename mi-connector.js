@@ -28,7 +28,7 @@ logger.level = 'debug';
 
 
 const devices = miio.devices({
-	cacheTime: 300 // 5 minutes. Default is 1800 seconds (30 minutes)
+	cacheTime: 1 // 5 minutes. Default is 1800 seconds (30 minutes)
 });
 
 function initAPIServier(){
@@ -55,11 +55,17 @@ function initAPIServier(){
 
 					controlDevice(jsonObj);
 				});
+			}else if(path == '/get'){
+                        	res.writeHead(200, { 'Content-Type': 'application/json' });
+                                res.write( JSON.stringify({"result":"ok"}) )
+                                res.end();
+
+                                getDeviceStatus(urlObj.query.id);
 			}
 		}.bind(this));
 		server.listen(config.connector.port); //6 - listen for any incoming requests
 	}catch(e){
-		logger.error("Init Api Server Error >> " + e);
+		logger.error("Init Api Server Error >> " + e + "\n" + new Error().stack);
 	}
 }
 
@@ -81,7 +87,7 @@ function sendAllDevices(){
 				setTimeout(function(){
 					request.post({url:url, form: data}, function(err,httpResponse,body){
 						if(err){
-							logger.error(err);
+							logger.error("Send Devices To ST Request Error >> " + e + "\n" + new Error().stack);
 						}
 					});
 				}, time);
@@ -91,7 +97,7 @@ function sendAllDevices(){
 			}
 		});
 	}catch(e){
-		logger.error("Send Device To ST Error >> " + e);
+		logger.error("Send Devices To ST Error >> " + e + "\n" + new Error().stack);
 	}
 }
 
@@ -123,17 +129,17 @@ function controlDevice(jsonObj){
 				const children = device.children();
 				for(const child of children) {
 					var sid = child.id.split(":")[1];
-					logger.debug("Sid >> " + sid + ", id >> " + id);
 					if(id == sid){
-						logger.debug(child);
 						target = child;
 					}
 				}
 			 
 				switch(cmd){
 				case "power":
-					var val = (data == "on" ? true : false);
-					target.power(val);
+					if(target.matches('cap:power')) {
+						var val = (data == "on" ? true : false);
+						target.power(val);
+					}
 					break;
 				case "color":
 					if(target.matches('cap:colorable')) {
@@ -143,7 +149,7 @@ function controlDevice(jsonObj){
 					}
 					break;
 				case "brightness":
-					if(target.matches('cap:colorable')) {
+					if(target.matches('cap:brightness') || target.matches('cap:dimmable')) {
 					  target.setBrightness(parseInt(data));
 					}else{
 						logger.warn(type + " is not supported to set brightness!!!! ID(" + id + ")");
@@ -153,16 +159,18 @@ function controlDevice(jsonObj){
 				return;
 			}
 		}catch(e){
-			logger.error("Control Device1 Error >> " + e);
+			logger.error("Control Device1 Error " + type + " >> " + e + "\n" + new Error().stack);
 		}
     
 		// Non zigbee devices
 		try{
 			switch(cmd){
 			case "power":
-				var val = (data == "on" ? true : false);
-				device.power(val);
-				notifyEvent(type, id, "power", val.toString());
+				if(device.matches('cap:power')) {
+					var val = (data == "on" ? true : false);
+					device.power(val);
+					notifyEvent(type, id, "power", val.toString());
+				}
 				break;
 			case "buzzer":
 				var val = (data == "on" ? true : false);
@@ -188,10 +196,15 @@ function controlDevice(jsonObj){
 				}
 				break;
 			case "speed":
-				device.mode("favorite");
-				device.setFavoriteLevel(parseInt(data));
-				notifyEvent(type, id, "power", "true");
-				notifyEvent(type, id, "mode", "favorite");
+				if(device.miioModel == "zhimi.airpurifier.m1" || device.miioModel == "zhimi.airpurifier.v1" || device.miioModel == "zhimi.airpurifier.v2" || device.miioModel == "zhimi.airpurifier.v3" || device.miioModel == "zhimi.airpurifier.v6"){
+					device.mode("favorite");
+					device.setFavoriteLevel(parseInt(data));
+					notifyEvent(type, id, "mode", "favorite");
+					notifyEvent(type, id, "power", "true");
+				}else{
+					device.speed(parseInt(data));
+					notifyEvent(type, id, "speed", data);
+				}
 				break;
 			case "color":
 				if(device.matches('cap:colorable')) {
@@ -201,7 +214,7 @@ function controlDevice(jsonObj){
 				}
 				break;
 			case "brightness":
-				if(device.matches('cap:colorable')) {
+				if(device.matches('cap:brightness') || device.matches('cap:dimmable')) {
 					device.setBrightness(parseInt(data));
 				}else{
 					logger.warn(type + " is not supported to set brightness!!!! ID(" + id + ")");
@@ -222,53 +235,96 @@ function controlDevice(jsonObj){
 			case "stop":
 				device.stop();
 				break;
+			case "start":
+				device.start();
+				break;
+			case "pause":
+				device.pause();
+				break;
 			}	
 		}catch(e){
-			logger.error("Control Device2 Error >> " + e)
+			logger.error("Control Device2 Error >> " + e + "\n" + new Error().stack);
+		}
+	});
+}
+
+function getDeviceStatus(id){
+	var target = deviceMap[id];
+	if(target == null){
+		return;
+	}
+
+	miio.device({
+		address: target.ip,
+	}).then(device => {
+		logger.info("Type >> " + device.miioModel);
+		if(device.matches('type:air-purifier')) {
+
 		}
 	});
 }
 
 function init(){
-	logger.info("################# Config ###################");
-	logger.info("--------------------------------------------");
-	logger.info(config);
+//	logger.info("################# Config ###################");
+//	logger.info("--------------------------------------------");
+//	logger.info(config);
 	logger.info("--------------------------------------------\n\n");
 	logger.info("Init Program...................");
 	devices.on('available', device => {
-    try{
-		var addr  = device.address;
-		var model = device.device.miioModel;
-		if(addr != undefined){
-        logger.info("Model >> " + model + "(" + addr + ")");
-        switch(model){
-        case "lumi.gateway.v3":
-			initGatewayV3(addr);
-			break;
-        case "zhimi.airpurifier.m1":
-			initAirpurifier(addr);
-			break;
-        case "zhimi.airpurifier.v1":
-			initAirpurifier(addr);
-			break;
-        case "zhimi.airpurifier.v2":
-			initAirpurifier(addr);
-			break;
-        case "zhimi.airpurifier.v3":
-			initAirpurifier(addr);
-			break;
-        case "zhimi.airpurifier.v6":
-			initAirpurifier(addr);
-			break;
-        case "zhimi.humidifier.v1":
-			initHumidifier(addr);
-			break;
-        }
-      }
-    }catch(e){
-		logger.error(e);
-    }
-  });
+		try{
+			var addr  = device.address;
+			var model = device.device.miioModel;
+			if(addr != undefined){
+				logger.info("Model >> " + model + "(" + addr + ")");
+				switch(model){
+				case "lumi.gateway.v3":
+					initGatewayV3(addr);
+					break;
+				case "zhimi.airpurifier.m1":
+					initAirpurifier(addr);
+					break;
+				case "zhimi.airpurifier.v1":
+					initAirpurifier(addr);
+					break;
+				case "zhimi.airpurifier.v2":
+					initAirpurifier(addr);
+					break;
+				case "zhimi.airpurifier.v3":
+					initAirpurifier(addr);
+					break;
+				case "zhimi.airpurifier.v6":
+					initAirpurifier(addr);
+					break;
+				case "zhimi.humidifier.v1":
+					initHumidifier(addr);
+					break;
+				case "yeelink.light.lamp1":
+					initLight(addr);
+					break;
+				case "yeelink.light.mono1":
+					initLight(addr);
+					break;
+				case "yeelink.light.color1":
+					initLight(addr);
+					break;
+				case "yeelink.light.strip1":
+					initLight(addr);
+					break;
+				case "philips.light.sread1":
+					initLight(addr);
+					break;
+				case "philips.light.bulb":
+					initLight(addr);
+					break;
+				case "rockrobo.vacuum.v1":
+					initVacuum(addr);
+					break;
+				}
+			}
+		}catch(e){
+			logger.error("Init Error >> " + e + "\n" + new Error().stack);
+		}
+	});
 }
 
 function loadConfig(){
@@ -280,72 +336,92 @@ function loadConfig(){
 	}
 }
 
+function initVacuum(ip){
+	logger.info("Init Vacuum\n");
+	miio.device({
+		address: ip,
+	}).then(device => {
+		try{
+			var id = device.id.split(":")[1];
+			var type = device.miioModel;
+			device.on('stateChanged', state=>{
+				logger.info("Notify Vacuum >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+				notifyEvent(type, id, state.key, state.value.toString());
+			});
+		}catch(e){
+			logger.error("Init Vacuum Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
+		}
+	});
+}
+
+function initLight(ip){
+	logger.info("Init initLight\n");
+	miio.device({
+		address: ip,
+	}).then(device => {
+		try{
+			var id = device.id.split(":")[1];
+			var type = device.miioModel;
+			device.on('stateChanged', state=>{
+				logger.info("Notify Light >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+				notifyEvent(type, id, state.key, state.value.toString());
+			});
+		}catch(e){
+			logger.error("Init Light Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
+		}
+	});
+}
+
 function initAirpurifier(ip){
 	logger.info("Init Airpurifier\n");
 	miio.device({
 		address: ip,
 	}).then(device => {
 
-    try{
-		var id = device.id.split(":")[1];
-		var modes = device.modes();
-		device.modes().then(list=>{
-			var modes = [];
-			for(var i=0; i<list.length; i++){
-				modes.push(list[i].id);
-			}
-
-			deviceMap[id] = {'type': device.miioModel, 'mode':modes, 'ip':ip}
-		});
-
-
-		device.on('stateChanged', state=>{
-			logger.info("Notify Airpurifier >> id(" + id + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
-			try{
-			/*	var url = getNotifyURL();
-				var data = {
-					type: device.miioModel,
-					id: id,
-					cmd: "notify",
-					key: state.key,
-					data: state.value.toString()
+		try{
+			var id = device.id.split(":")[1];
+			var type = device.miioModel;
+			var modes = device.modes();
+			device.modes().then(list=>{
+				var modes = [];
+				for(var i=0; i<list.length; i++){
+					modes.push(list[i].id);
 				}
-				if(state.key == "mode"){
-					data['modes'] = deviceMap[id].mode.toString();
+
+				deviceMap[id] = {'type': device.miioModel, 'mode':modes, 'ip':ip}
+			});
+
+
+			device.on('stateChanged', state=>{
+				logger.info("Notify Airpurifier >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+				try{
+					notifyEvent(type, id, state.key, state.value.toString());
+				}catch(e){
+					logger.error("Air Pirifier Notify Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
 				}
-				request.post({url:url, form: data}, function(err,httpResponse,body){ 
-					if(err){
-						logger.error(err);
-					}
-				});
-			*/	
-				notifyEvent(device.miioModel, id, state.key, state.value.toString());
-				
-			}catch(e){
-				logger.error(e);
-			}
-		});
-    }catch(e){
-		logger.error(e);
-    }
-  });
+			});
+		}catch(e){
+			logger.error("Air Pirifier Init Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
+		}
+	});
 }
 
 function initHumidifier(ip){
-    logger.info("Init Humidifier");
+    logger.info("Init Humidifier (" + ip + ")\n");
     miio.device({
 		address: ip,
     }).then(device => {
 
 		var id = device.id.split(":")[1];
+		var type = device.miioModel;
 
 		device.on('stateChanged', state=>{
-			logger.info("Humidifier Notify >> id(" + id + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+			logger.info("Humidifier Notify >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
 
 			try{
 				notifyEvent(device.miioModel, id, state.key, state.value.toString()); 
 			}catch(e){
-				logger.error("Humidifier Notify Error >> " + e);
+				logger.error("Humidifier Notify Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
 			}
 		});
 	});
@@ -357,7 +433,8 @@ function initGatewayV3(ip){
 		address: ip,
 	}).then(device => {
 		var id = device.id.split(":")[1];
-		logger.info("Gateway id >> " + id + ", type >> " + device.miioModel);
+		var type = device.miioModel;
+		logger.info("Gateway id >> " + id + ", type >> " + type);
 		deviceMap[id] = {'type': device.miioModel, 'ip':ip}
 
 		const children = device.children();
@@ -374,9 +451,9 @@ function initGatewayV3(ip){
 					logger.info("Action Data >> " + JSON.stringify(data));
 					notifyEvent2(type, id, "action", data.action.toString(), data.data.toString()); 
 					
-					logger.info("Notify Gateway ID(" + id + ") " + type  + " (" + JSON.stringify(data) + ") >> [" + data.action.toString() + "]\n");
+					logger.info("Notify Gateway ID(" + id + "):type(" + type  + ") (" + JSON.stringify(data) + ") >> [" + data.action.toString() + "]\n");
 				}catch(e){
-					logger.error("Zigbee Action Notify Error >> " + e + "\n" + new Error().stack);
+					logger.error("Zigbee Action Notify Error " + type + " >> " + e + "\n" + new Error().stack);
 				}
 			});
 
@@ -394,9 +471,9 @@ function initGatewayV3(ip){
 					}
 					notifyEvent(type, id, state.key, value);
 
-					logger.info("Notify Zigbee ID(" + id + ") " + type + " key >> " + state.key  + " (" + JSON.stringify(state) + ") >> [" + value+ "]\n");
+					logger.info("Notify Zigbee ID(" + id + "):type(" + type + ") key >> " + state.key  + " (" + JSON.stringify(state) + ") >> [" + value+ "]\n");
 				}catch(e){
-					logger.error("Zigbee Notify Error >> " + e + "\n" + new Error().stack);
+					logger.error("Zigbee Notify Error " + child.miioModel + " >> " + e + "\n" + new Error().stack);
 				}
 
 				// Set Force Motion Off
@@ -428,22 +505,22 @@ function notifyEvent2(type, id, key, data, subData){
 }
 
 function makeNotifyData(type, id, key, data){
-        var data = {
-                type: type,
-                id: id,
-                cmd: "notify",
-                key: key,
-                data: data
-        }
+	var data = {
+		type: type,
+		id: id,
+		cmd: "notify",
+		key: key,
+		data: data
+	}
 	return data;
 }
 
 function requestNotify(data){
-        request.post({url:getNotifyURL(), form: data}, function(err,httpResponse,body){ 
-                if(err){
-                        logger.info(err);
-                }
-        });
+	request.post({url:getNotifyURL(), form: data}, function(err,httpResponse,body){ 
+		if(err){
+			logger.info(err);
+		}
+	});
 }
 
 try{
@@ -455,9 +532,3 @@ try{
 }catch(e){
 	logger.fatal("Run Program Error!!! >> " + e);
 }
-
-
-
-
-
-
