@@ -26,7 +26,8 @@ metadata {
         attribute "battery", "string"
         
         attribute "lastCheckin", "Date"
-         
+        
+        command "refresh"
 	}
 
 
@@ -36,8 +37,8 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-               	attributeState "open", label:'${name}', icon:"https://raw.githubusercontent.com/fison67/mi_connector/master/imgs/door-open.png", backgroundColor:"#e86d13"
-            	attributeState "closed", label:'${name}', icon:"https://raw.githubusercontent.com/fison67/mi_connector/master/imgs/door-closed.png", backgroundColor:"#00a0dc"
+               	attributeState "open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
+            	attributeState "closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -62,7 +63,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-	log.debug "Mi Connector >> ${params.key} : ${params.data}"
+	log.debug "${params.key} : ${params.data}"
  	switch(params.key){
     case "contact":
     	sendEvent(name:"status", value: (params.data == "true" ? "closed" : "open") )
@@ -88,6 +89,9 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 }
 
 def updated() {
+}
+
+def refresh(){
 }
 
 def sendCommand(options, _callback){
