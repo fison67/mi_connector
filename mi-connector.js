@@ -1,10 +1,3 @@
-/**
-*  Mi Connector. (v.0.0.1)
-* fison67@nate.com
-*
-*  miio lib -> https://github.com/aholstenson/miio
-*/
-
 const miio = require('miio');
 var yaml = require('js-yaml');
 var fs   = require('fs');
@@ -64,11 +57,11 @@ function initAPIServier(){
 					controlDevice(jsonObj);
 				});
 			}else if(path == '/get'){
-                        	res.writeHead(200, { 'Content-Type': 'application/json' });
-                                res.write( JSON.stringify({"result":"ok"}) )
-                                res.end();
+				res.writeHead(200, { 'Content-Type': 'application/json' });
+				res.write( JSON.stringify({"result":"ok"}) )
+				res.end();
 
-                                getDeviceStatus(urlObj.query.id);
+				getDeviceStatus(urlObj.query.id);
 			}
 		}.bind(this));
 		server.listen(config.connector.port); //6 - listen for any incoming requests
