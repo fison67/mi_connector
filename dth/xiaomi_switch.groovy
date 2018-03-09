@@ -22,7 +22,7 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Switch", namespace: "fison67", author: "fison67") {
-        capability "Switch"						//"on", "off"
+        capability "Sensor"						//"on", "off"
          
         attribute "status", "string"
         attribute "battery", "string"
