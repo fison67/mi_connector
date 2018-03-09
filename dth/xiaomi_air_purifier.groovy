@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.2)
+ *  Xiaomi Air Purifier (v.0.0.1)
  *
  *  Authors
  *   - fison67@nate.com
