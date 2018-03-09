@@ -320,6 +320,12 @@ function init(){
 				case "rockrobo.vacuum.v1":
 					initVacuum(addr);
 					break;
+				case "qmi.powerstrip.v1":
+                                        initPowerStrip(addr);
+                                        break;
+                                case "zimi.powerstrip.v2":
+                                        initPowerStrip(addr);
+                                        break;
 				}
 			}
 		}catch(e){
@@ -353,6 +359,24 @@ function initVacuum(ip){
 			logger.error("Init Vacuum Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
 		}
 	});
+}
+
+function initPowerStrip(ip){
+        logger.info("Init PowerStrip\n");
+        miio.device({
+                address: ip,
+        }).then(device => {
+                try{
+                        var id = device.id.split(":")[1];
+                        var type = device.miioModel;
+                        device.on('stateChanged', state=>{
+                                logger.info("Notify PowerStrip >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+                                notifyEvent(type, id, state.key, state.value.toString());
+                        });
+                }catch(e){
+                        logger.error("Init PowerStrip Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
+                }
+        });
 }
 
 function initLight(ip){
