@@ -7,7 +7,9 @@ wget https://raw.githubusercontent.com/fison67/mi_connector/master/mi-connector.
 wget https://raw.githubusercontent.com/fison67/mi_connector/master/config.yaml
 wget https://raw.githubusercontent.com/fison67/mi_connector/master/log.sh
 
-chmod 755 /app/mi_connector/log.sh
+chmod 755 log.sh
+chown pi:pi config.yaml
+
 
 npm install pm2 -g
 npm install miio yaml request http log4js js-yaml node-schedule
