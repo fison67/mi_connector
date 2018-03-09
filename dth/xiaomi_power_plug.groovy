@@ -72,6 +72,8 @@ def setStatus(params){
     	sendEvent(name:"status", value: (params.data == "true" ? "on" : "off"))
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
+    case "temperature":
+    	break;
     }
     
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
