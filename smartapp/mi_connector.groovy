@@ -161,6 +161,19 @@ def addDevice(){
         }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.m1" || params.type == "lumi.plug"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
+        }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
+     //   	dth = "Xiaomi Wall Switch1";
+     //       name = "Xiaomi Wall Switch1";
+        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
+     //   	dth = "Xiaomi Wall Switch2";
+    //        name = "Xiaomi Wall Switch2";
+        }else if(params.type == "lumi.sensor_ht"){
+        	dth = "Xiaomi Sensor HT";
+            name = "Xiaomi Sensor HT";
+        }
+        
+        if(dth == null){
+        	return;
         }
         
         try{
