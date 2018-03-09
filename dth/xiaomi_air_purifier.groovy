@@ -27,6 +27,11 @@ metadata {
         attribute "humidity", "string"
         attribute "pm25", "string"
         attribute "buzzer", "string"
+        attribute "mode", "string"
+        attribute "ledBrightness", "string"
+        attribute "f1_hour_used", "string"
+        attribute "filter1_life", "string"
+        attribute "average_aqi", "string"
         
         
         attribute "lastCheckin", "Date"
@@ -124,8 +129,8 @@ metadata {
         }
         
         standardTile("buzzer", "device.buzzer", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
-            state "on", label:'소리', action:"buzzerOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'무음', action:"buzzerOn", backgroundColor:"#ffffff", nextState:"turningOn"
+            state "on", label:'Sound', action:"buzzerOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'Mute', action:"buzzerOn", backgroundColor:"#ffffff", nextState:"turningOn"
              
         	state "turningOn", label:'....', action:"buzzerOff", backgroundColor:"#00a0dc", nextState:"turningOff"
             state "turningOff", label:'....', action:"buzzerOn", backgroundColor:"#ffffff", nextState:"turningOn"
@@ -133,9 +138,9 @@ metadata {
         
         standardTile("mode", "device.mode", width: 2, height: 2, canChangeIcon: true) {
             state "idle", label: 'Idle', action: "setModeAuto", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"auto"
-            state "auto", label: '자동', action: "setModeSilent", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"silent"
-            state "silent", label: '수면', action: "setModeFavorite", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"favorite"
-            state "favorite", label: '수동', action: "setModeAuto", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"auto"
+            state "auto", label: 'Auto', action: "setModeSilent", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"silent"
+            state "silent", label: 'Silent', action: "setModeFavorite", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"favorite"
+            state "favorite", label: 'Manual', action: "setModeAuto", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"auto"
         }
         
         standardTile("ledBrightness", "device.ledBrightness", width: 2, height: 2, canChangeIcon: true) {
@@ -146,6 +151,33 @@ metadata {
                 
         controlTile("speed", "device.speed", "slider",  height: 2, width: 2, inactiveLabel: false, range:"(0..16)") {
             state "val", action:"setSpeed", label:"${currentValue}"
+        }
+        
+        standardTile("temp1", "device.ledBrightness", width: 2, height: 2) {
+        } 
+        
+        standardTile("f1_hour_used_name", "device.f1_hour_used_name", inactiveLabel: false, width: 2, height: 1) {
+            state "temp", label:'Filter Hour Used',  backgroundColor:"#ffffff"
+        }
+        
+        standardTile("filter1_life_name", "device.filter1_life_name", inactiveLabel: false, width: 2, height: 1) {
+            state "temp", label:'Filter Life Remain',  backgroundColor:"#ffffff"
+        }
+        
+        standardTile("average_aqi_name", "device.average_aqi_name", inactiveLabel: false, width: 2, height: 1) {
+            state "temp", label:'Average Aqi',  backgroundColor:"#ffffff"
+        }
+        
+        valueTile("f1_hour_used", "device.f1_hour_used", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
+        }
+        
+        valueTile("filter1_life", "device.filter1_life", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
+        }
+        
+        valueTile("average_aqi", "device.average_aqi", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
         }
 	}
 }
@@ -171,6 +203,9 @@ def setStatus(params){
     case "pm2.5":
     	sendEvent(name:"pm25", value: params.data + "㎍/㎥")
     	break;
+    case "aqi":
+    	sendEvent(name:"pm25", value: params.data + "㎍/㎥")
+    	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data + "%")
     	break;
@@ -190,8 +225,17 @@ def setStatus(params){
     case "speed":
         sendEvent(name:"speed", value: params.data)
     	break;
-     case "led":
+    case "led":
         sendEvent(name:"led", value: (params.data == "true" ? "on" : "off"))
+    	break;
+    case "f1_hour_used":
+    	sendEvent(name:"f1_hour_used", value: params.data)
+        break;
+    case "filter1_life":
+    	sendEvent(name:"filter1_life", value: params.data)
+    	break;
+    case "average_aqi":
+    	sendEvent(name:"average_aqi", value: params.data + "㎍/㎥")
     	break;
     }
     
@@ -203,10 +247,9 @@ def refresh(){
 	log.debug "Refresh"
     def options = [
      	"method": "GET",
-        "path": "/api/states/${state.entity_id}",
+        "path": "/get?id=${state.id}",
         "headers": [
         	"HOST": state.app_url,
-            "x-ha-access": state.app_pwd,
             "Content-Type": "application/json"
         ]
     ]
@@ -381,7 +424,8 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+        log.debug jsonObj
+//        setStatus(jsonObj.state)
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
@@ -406,4 +450,4 @@ def makeCommand(body){
         "body":body
     ]
     return options
-}Xiaomi Air Purifier
+}
