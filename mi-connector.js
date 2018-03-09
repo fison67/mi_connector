@@ -1,3 +1,10 @@
+/**
+*  Mi Connector. (v.0.0.1)
+* fison67@nate.com
+*
+*  miio lib -> https://github.com/aholstenson/miio
+*/
+
 const miio = require('miio');
 var yaml = require('js-yaml');
 var fs   = require('fs');
@@ -6,6 +13,7 @@ var http = require('http');
 var url = require('url');
 var qs  = require('querystring');
 var path = require('path');
+var schedule = require('node-schedule');
 
 var config;
 var deviceMap = {};
@@ -372,11 +380,34 @@ function initLight(ip){
 	});
 }
 
+function loadCustomFunction(device, key, properties){
+	var id = device.id.split(":")[1];
+	var type = device.miioModel;
+	var j = schedule.scheduleJob('* * * * *', function(fireDate){
+		device.call('get_prop', properties)
+		.then( _data=>{
+			for(var i=0; i<_data.length; i++){
+				var data = _data[i];
+				if(data == null){
+					data = "";
+				}
+				logger.info("Notify Custom Property[" + key[i] + "] >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(data) + " >> [" + data.toString() + "]\n");
+				notifyEvent(type, id, key[i], data.toString());
+			}
+		})
+		.catch (res=> {
+			logger.error("loadCustomFunction Notify Error " + device.miioModel + " >> " + res + "\n" + new Error().stack);
+		});
+	});
+}
+
 function initAirpurifier(ip){
 	logger.info("Init Airpurifier\n");
 	miio.device({
 		address: ip,
 	}).then(device => {
+		
+		loadCustomFunction(device, [ "f1_hour_used", "average_aqi", "filter1_life" ], [ "f1_hour_used", "average_aqi", "filter1_life" ]);
 
 		try{
 			var id = device.id.split(":")[1];
@@ -411,6 +442,8 @@ function initHumidifier(ip){
     miio.device({
 		address: ip,
     }).then(device => {
+		
+		loadCustomFunction(device, [ "limit_hum", "use_time", "dry" ], [ "limit_hum", "use_time", "dry" ]);
 
 		var id = device.id.split(":")[1];
 		var type = device.miioModel;
@@ -442,6 +475,10 @@ function initGatewayV3(ip){
 			var sid = child.id.split(":")[1];
 			if(child.miioModel != null){
 				deviceMap[sid] = {'type': child.miioModel, 'ip':ip}
+			}
+			
+			if(child.miioModel == "lumi.plug"){
+				
 			}
 
 			child.on('action', data=>{
@@ -524,11 +561,17 @@ function requestNotify(data){
 }
 
 try{
+	logger.info("################################ Mi Connector ################################");
 	loadConfig();
-	
 	init();
-	
 	initAPIServier();
+	logger.info("################################ Mi Connector Ready ################################");
 }catch(e){
 	logger.fatal("Run Program Error!!! >> " + e);
 }
+
+
+
+
+
+
