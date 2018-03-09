@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Humidifier(v.0.0.2)
+ *  Xiaomi Humidifier(v.0.0.1)
  *
  *  Authors
  *   - fison67@nate.com
@@ -25,6 +25,13 @@ metadata {
         attribute "switch", "string"
         attribute "temperature", "string"
         attribute "humidity", "string"
+        attribute "buzzer", "string"
+        attribute "mode", "string"
+        attribute "ledBrightness", "string"
+        attribute "limit_humidity", "string"
+        attribute "use_time", "string"
+        attribute "dry", "string"
+        
         
         attribute "lastCheckin", "Date"
          
@@ -32,6 +39,17 @@ metadata {
         command "localOff"
         command "on"
         command "off"
+        
+        command "setModeSilent"
+        command "setModeHight"
+        command "setModeMedium"
+        
+        command "buzzerOn"
+        command "buzzerOff"
+        
+        command "setBright"
+        command "setBrightDim"
+        command "setBrightOff"
 	}
 
 
@@ -81,6 +99,49 @@ metadata {
             )
         }
         
+        valueTile("limit_humidity", "device.limit_humidity", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true, 
+            	backgroundColors:[
+                    [value: 30, color: "#153591"],
+                    [value: 40, color: "#1e9cbb"],
+                    [value: 50, color: "#90d2a7"],
+                    [value: 60, color: "#44b621"],
+                    [value: 70, color: "#f1d801"],
+                    [value: 80, color: "#d04e00"]
+                ]
+        	)
+        }
+        
+        standardTile("mode", "device.mode", width: 2, height: 2, canChangeIcon: true) {
+            state "idle", label: 'Idle', action: "setModeSilent", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"silent"
+            state "silent", label: 'Silent', action: "setModeMedium", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"medium"
+            state "medium", label: 'Medium', action: "setModeHight", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"hight"
+            state "hight", label: 'Hight', action: "setModeMedium", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"silent"
+        }
+        
+        standardTile("buzzer", "device.buzzer", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
+            state "on", label:'Sound', action:"buzzerOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'Mute', action:"buzzerOn", backgroundColor:"#ffffff", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"buzzerOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"buzzerOn", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        
+        standardTile("ledBrightness", "device.ledBrightness", width: 2, height: 2, canChangeIcon: true) {
+            state "bright", label: 'Bright', action: "setBrightDim", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"dim"
+            state "dim", label: 'Dim', action: "setBrightOff", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"off"
+            state "off", label: 'Off', action: "setBright", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState:"bright"
+        } 
+        
+        valueTile("use_time", "device.use_time", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true
+        	)
+        }
+        
+        standardTile("dry", "device.dry", width: 2, height: 2, canChangeIcon: true) {
+            state "dry", label: 'Dry',  backgroundColor: "#00a0dc"
+            state "noDry", label: 'No Dry', backgroundColor: "#ffffff"
+        }
 	}
 }
 
@@ -96,7 +157,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
- //   log.debug "${params.key}"
+    log.debug "${params.key} : ${params.data}"
  
  	switch(params.key){
     case "relativeHumidity":
@@ -109,24 +170,107 @@ def setStatus(params){
     case "temperature":
         sendEvent(name:"temperature", value: params.data)
     	break;
+    case "limit_hum":
+        sendEvent(name:"limit_hum", value: params.data)
+    	break;
+    case "use_time":
+        sendEvent(name:"use_time", value: (params.data.toInteger() / 60 / 60) + "h" )
+    	break;
+    case "dry":
+    	sendEvent(name:"dry", value: (params.data == "" ? "noDry" : "dry") )
+        break;
     }
     
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
 }
 
-def refresh(){
-	log.debug "Refresh"
-    def options = [
-     	"method": "GET",
-        "path": "/api/states/${state.entity_id}",
-        "headers": [
-        	"HOST": state.app_url,
-            "x-ha-access": state.app_pwd,
-            "Content-Type": "application/json"
-        ]
+def setBright(){
+	log.debug "setBright >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "ledBrightness",
+        "data": "bright"
     ]
-    sendCommand(options, callback)
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setBrightDim(){
+	log.debug "setDim >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "ledBrightness",
+        "data": "brightDim"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setBrightOff(){
+	log.debug "setDim >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "ledBrightness",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setModeSilent(){
+    log.debug "setModeSilent >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "silent"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setModeHight(){
+    log.debug "setModeHight >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "hight"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setModeMedium(){
+    log.debug "setModeMedium >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "medium"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def buzzerOn(){
+	log.debug "buzzerOn >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "buzzer",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def buzzerOff(){
+	log.debug "buzzerOff >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "buzzer",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
 }
 
 def localOn(){
@@ -157,17 +301,6 @@ def on(){
 
 def off(){
 	localOff()
-}
-
-def callback(physicalgraph.device.HubResponse hubResponse){
-	def msg
-    try {
-        msg = parseLanMessage(hubResponse.description)
-		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
-    } catch (e) {
-        log.error "Exception caught while parsing data: "+e;
-    }
 }
 
 def updated() {
