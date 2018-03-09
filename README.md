@@ -9,7 +9,7 @@ Install
 - sudo ./install.sh
 
 - cd /app/mi_connector
-- sudo pm2 start mi_connector.js
+- pm2 start mi_connector.js
 
 
 logging
