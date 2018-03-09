@@ -24,7 +24,7 @@ metadata {
 	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67") {
         capability "Motion Sensor"
          
-        attribute "status", "string"
+        attribute "motion", "string"
         attribute "battery", "string"
         attribute "illuminance", "string"
         
@@ -37,8 +37,8 @@ metadata {
 	}
 
 	tiles {
-		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
+		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
+			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
 				attributeState "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#00a0dc"
 				attributeState "inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
 			}
@@ -81,7 +81,7 @@ def setInfo(String app_url, String id) {
 def setStatus(params){
  	switch(params.key){
     case "motion":
-    	sendEvent(name:"status", value: (params.data == "true" ? "active" : "inactive") )
+        sendEvent(name:"motion", value: (params.data == "true" ? "active" : "inactive") )
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data + "%")
