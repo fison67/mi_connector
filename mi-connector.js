@@ -13,15 +13,21 @@ var deviceMap = {};
 
 var log4js = require('log4js');
 log4js.configure({
-	appenders: { 
-		cheese: { 
-			type: 'file', 
-			filename: 'connector.log' ,
-			maxLogSize: 1000000,
-			backups: 5
-		},
-	},
-	categories: { default: { appenders: ['cheese'], level: 'error' } }
+        appenders: {
+                cheese: {
+                        type: 'file',
+                        filename: 'connector.log' ,
+                        maxLogSize: 1000000,
+                        backups: 5
+                },
+                out: { type: "stdout" },
+        },
+        categories: {
+                default: {
+                        appenders: ['cheese', 'out'],
+                        level: 'error'
+                }
+        }
 });
 
 var logger = log4js.getLogger();
