@@ -35,7 +35,7 @@ logger.level = 'debug';
 
 
 const devices = miio.devices({
-	cacheTime: 1 // 5 minutes. Default is 1800 seconds (30 minutes)
+	cacheTime: 1800 // 5 minutes. Default is 1800 seconds (30 minutes)
 });
 
 function initAPIServier(){
