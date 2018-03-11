@@ -357,6 +357,7 @@ function initVacuum(ip){
 		try{
 			var id = device.id.split(":")[1];
 			var type = device.miioModel;
+			deviceMap[id] = {'type': device.miioModel, 'ip':ip}
 			device.on('stateChanged', state=>{
 				logger.info("Notify Vacuum >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
 				notifyEvent(type, id, state.key, state.value.toString());
@@ -375,6 +376,7 @@ function initPowerStrip(ip){
                 try{
                         var id = device.id.split(":")[1];
                         var type = device.miioModel;
+			deviceMap[id] = {'type': device.miioModel, 'ip':ip}
                         device.on('stateChanged', state=>{
                                 logger.info("Notify PowerStrip >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
                                 notifyEvent(type, id, state.key, state.value.toString());
@@ -393,6 +395,7 @@ function initLight(ip){
 		try{
 			var id = device.id.split(":")[1];
 			var type = device.miioModel;
+			deviceMap[id] = {'type': device.miioModel, 'ip':ip}
 			device.on('stateChanged', state=>{
 				logger.info("Notify Light >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
 				notifyEvent(type, id, state.key, state.value.toString());
@@ -435,6 +438,7 @@ function initAirpurifier(ip){
 		try{
 			var id = device.id.split(":")[1];
 			var type = device.miioModel;
+			deviceMap[id] = {'type': device.miioModel, 'ip':ip}
 			var modes = device.modes();
 			device.modes().then(list=>{
 				var modes = [];
@@ -442,7 +446,7 @@ function initAirpurifier(ip){
 					modes.push(list[i].id);
 				}
 
-				deviceMap[id] = {'type': device.miioModel, 'mode':modes, 'ip':ip}
+			//	deviceMap[id] = {'type': device.miioModel, 'mode':modes, 'ip':ip}
 			});
 
 
@@ -470,6 +474,7 @@ function initHumidifier(ip){
 
 		var id = device.id.split(":")[1];
 		var type = device.miioModel;
+	        deviceMap[id] = {'type': device.miioModel, 'ip':ip}
 
 		device.on('stateChanged', state=>{
 			logger.info("Humidifier Notify >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
