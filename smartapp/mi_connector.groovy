@@ -125,7 +125,7 @@ def addDevice(){
         def dth = null
         def name = null
 
-        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6"){
+        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.ma2"){
             dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
         }else if(params.type == "lumi.gateway.v2"){
@@ -170,6 +170,9 @@ def addDevice(){
         }else if(params.type == "lumi.sensor_ht"){
         	dth = "Xiaomi Sensor HT";
             name = "Xiaomi Sensor HT";
+        }else if(params.type == "zhimi.airmonitor.v1"){
+        	dth = "Xiaomi Air Monitor";
+            name = "Xiaomi Air Monitor";
         }
         
         if(dth == null){
