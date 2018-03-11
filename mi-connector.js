@@ -117,7 +117,7 @@ function controlDevice(jsonObj){
 	var data = jsonObj.data;
 
 	logger.info("Requested to control by ST [" + deviceMap[id].type + "] >> " + JSON.stringify(jsonObj) + "\n");
-	
+
 	var target = deviceMap[id];
 	if(target == null){
 		return;
@@ -140,7 +140,7 @@ function controlDevice(jsonObj){
 						target = child;
 					}
 				}
-			 
+
 				switch(cmd){
 				case "power":
 					if(target.matches('cap:power')) {
@@ -168,7 +168,7 @@ function controlDevice(jsonObj){
 		}catch(e){
 			logger.error("Control Device1 Error " + type + " >> " + e + "\n" + new Error().stack);
 		}
-    
+
 		// Non zigbee devices
 		try{
 			switch(cmd){
@@ -248,7 +248,7 @@ function controlDevice(jsonObj){
 			case "pause":
 				device.pause();
 				break;
-			}	
+			}
 		}catch(e){
 			logger.error("Control Device2 Error >> " + e + "\n" + new Error().stack);
 		}
@@ -302,6 +302,9 @@ function init(){
 				case "zhimi.airpurifier.v6":
 					initAirpurifier(addr);
 					break;
+        case "zhimi.airpurifier.ma2":
+					initAirpurifier(addr);
+					break;
 				case "zhimi.humidifier.v1":
 					initHumidifier(addr);
 					break;
@@ -327,11 +330,14 @@ function init(){
 					initVacuum(addr);
 					break;
 				case "qmi.powerstrip.v1":
-                                        initPowerStrip(addr);
-                                        break;
-                                case "zimi.powerstrip.v2":
-                                        initPowerStrip(addr);
-                                        break;
+          initPowerStrip(addr);
+          break;
+        case "zimi.powerstrip.v2":
+          initPowerStrip(addr);
+          break;
+        case "zhimi.airmonitor.v1":
+          initAirMonitor(addr);
+          break;
 				}
 			}
 		}catch(e){
@@ -347,6 +353,25 @@ function loadConfig(){
 	} catch (e) {
 		logger.error("Load Config Error >> " + e);
 	}
+}
+
+function initAirMonitor(ip){
+	logger.info("Init AirMonitor\n");
+	miio.device({
+		address: ip,
+	}).then(device => {
+		try{
+			var id = device.id.split(":")[1];
+			var type = device.miioModel;
+			deviceMap[id] = {'type': device.miioModel, 'ip':ip}
+			device.on('stateChanged', state=>{
+				logger.info("Notify AirMonitor >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
+				notifyEvent(type, id, state.key, state.value.toString());
+			});
+		}catch(e){
+			logger.error("Init AirMonitor Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
+		}
+	});
 }
 
 function initVacuum(ip){
@@ -432,7 +457,7 @@ function initAirpurifier(ip){
 	miio.device({
 		address: ip,
 	}).then(device => {
-		
+
 		loadCustomFunction(device, [ "f1_hour_used", "average_aqi", "filter1_life" ], [ "f1_hour_used", "average_aqi", "filter1_life" ]);
 
 		try{
@@ -469,7 +494,7 @@ function initHumidifier(ip){
     miio.device({
 		address: ip,
     }).then(device => {
-		
+
 		loadCustomFunction(device, [ "limit_hum", "use_time", "dry" ], [ "limit_hum", "use_time", "dry" ]);
 
 		var id = device.id.split(":")[1];
@@ -480,7 +505,7 @@ function initHumidifier(ip){
 			logger.info("Humidifier Notify >> id(" + id + "):type(" + type + ") state=" + JSON.stringify(state) + " >> [" + state.value.toString() + "]\n");
 
 			try{
-				notifyEvent(device.miioModel, id, state.key, state.value.toString()); 
+				notifyEvent(device.miioModel, id, state.key, state.value.toString());
 			}catch(e){
 				logger.error("Humidifier Notify Error " + device.miioModel + " >> " + e + "\n" + new Error().stack);
 			}
@@ -504,9 +529,9 @@ function initGatewayV3(ip){
 			if(child.miioModel != null){
 				deviceMap[sid] = {'type': child.miioModel, 'ip':ip}
 			}
-			
+
 			if(child.miioModel == "lumi.plug"){
-				
+
 			}
 
 			child.on('action', data=>{
@@ -514,8 +539,8 @@ function initGatewayV3(ip){
 					var id = child.id.split(":")[1];
 					var type = child.miioModel;
 					logger.info("Action Data >> " + JSON.stringify(data));
-					notifyEvent2(type, id, "action", data.action.toString(), data.data.toString()); 
-					
+					notifyEvent2(type, id, "action", data.action.toString(), data.data.toString());
+
 					logger.info("Notify Gateway ID(" + id + "):type(" + type  + ") (" + JSON.stringify(data) + ") >> [" + data.action.toString() + "]\n");
 				}catch(e){
 					logger.error("Zigbee Action Notify Error " + type + " >> " + e + "\n" + new Error().stack);
@@ -581,7 +606,7 @@ function makeNotifyData(type, id, key, data){
 }
 
 function requestNotify(data){
-	request.post({url:getNotifyURL(), form: data}, function(err,httpResponse,body){ 
+	request.post({url:getNotifyURL(), form: data}, function(err,httpResponse,body){
 		if(err){
 			logger.info(err);
 		}
@@ -597,9 +622,3 @@ try{
 }catch(e){
 	logger.fatal("Run Program Error!!! >> " + e);
 }
-
-
-
-
-
-
