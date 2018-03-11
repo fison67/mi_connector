@@ -23,8 +23,6 @@ metadata {
         capability "Switch"						//"on", "off"
          
         attribute "switch", "string"
-        attribute "temperature", "string"
-        attribute "humidity", "string"
         attribute "pm25", "string"
         attribute "battery", "string"
         attribute "usb_state", "string"
@@ -55,34 +53,6 @@ metadata {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
 		}
-        
-        valueTile("temperature", "device.temperature", width: 2, height: 2, unit: "°C") {
-            state("val", label:'${currentValue}', defaultState: true, 
-            	backgroundColors:[
-                    [value: 31, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-                    [value: 74, color: "#44b621"],
-                    [value: 84, color: "#f1d801"],
-                    [value: 95, color: "#d04e00"],
-                    [value: 96, color: "#bc2323"]
-                ]
-            )
-        }
-        
-        valueTile("humidity", "device.humidity", width: 2, height: 2, unit: "%") {
-            state("val", label:'${currentValue}', defaultState: true, 
-            	backgroundColors:[
-                    [value: 31, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-                    [value: 74, color: "#44b621"],
-                    [value: 84, color: "#f1d801"],
-                    [value: 95, color: "#d04e00"],
-                    [value: 96, color: "#bc2323"]
-                ]
-            )
-        }
         
          valueTile("pm25", "device.pm25", width: 2, height: 2, unit: "") {
             state("val", label:'${currentValue}', defaultState: true, 
