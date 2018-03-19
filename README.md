@@ -76,7 +76,15 @@ Install Smartapps<br/>
 
 <br/><br/>
 
-
+Support devices<br/>
+- xiaomi air purifier<br/>
+- xiaomi humidifier<br/>
+- xiaomi gateway<br/>
+&nbsp;&nbsp;- xiaomi motion sensor<br/>
+&nbsp;&nbsp;- xiaomi door/window sensor<br/>
+&nbsp;&nbsp;- xiaomi button<br/>
+&nbsp;&nbsp;- xiaomi cube<br/>
+&nbsp;&nbsp;- xiaomi socket<br/>
 
 Library
 - https://github.com/aholstenson/miio
