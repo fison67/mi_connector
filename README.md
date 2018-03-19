@@ -5,6 +5,13 @@ This makes you easy to setup xiaomi devices to Smartthings
 
 ![web-dashboard](./imgs/web-dashboard.png) 
 
+![web-dashboard-click](./imgs/web-dashboard-click.png) 
+
+![web-search-result](./imgs/web-search-result.png) 
+
+
+
+
 Install. <br/>
 a. raspberry pi<br/>
 &nbsp;&nbsp;sudo mkdir /docker<br/>
