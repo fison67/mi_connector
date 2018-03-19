@@ -3,7 +3,8 @@ Connector for Xiaomi with ST
 
 This makes you easy to setup xiaomi devices to Smartthings
 <br/><br/>
-[![Watch the video](https://www.youtube.com/yts/img/yt_1200-vfl4C3T0K.png)]("https://www.youtube.com/embed/CtPce-KBVcY)
+
+[![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
 <br/><br/>
 Desktop Version.<br/>
