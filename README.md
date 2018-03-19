@@ -13,6 +13,8 @@ This makes you easy to setup xiaomi devices to Smartthings
 
 ![web-dashboard-vacuum-custom](./imgs/web-dashboard-vacuum-custom.png) 
 
+![web-setup](./imgs/web-setup.png) 
+
 
 
 Install. <br/>
