@@ -9,6 +9,7 @@ This makes you easy to setup xiaomi devices to Smartthings
 
 ![web-search-result](./imgs/web-search-result.png) 
 
+![web-dashboard-vacuum](./imgs/web-dashboard-vacuum.png) 
 
 
 
