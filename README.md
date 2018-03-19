@@ -7,6 +7,10 @@ This makes you easy to setup xiaomi devices to Smartthings
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
 <br/><br/>
+
+
+
+<br/><br/>
 Desktop Version.<br/>
 ![web-dashboard](./imgs/web-dashboard.png) 
 
@@ -29,7 +33,7 @@ Mobile Version.<br/>
 
 
 
-Install. <br/>
+Install program. <br/>
 a. raspberry pi<br/>
 &nbsp;&nbsp;sudo mkdir /docker<br/>
 &nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
@@ -46,7 +50,33 @@ b. synology nas<br/>
 &nbsp;&nbsp;&nbsp;-> Volume tab -> folder -> Select mi-connector & Mount path '/config'<br/>
 &nbsp;&nbsp;&nbsp;-> Network tab -> Check 'use same network as Docker Host'<br/>
 &nbsp;&nbsp;&nbsp;-> Complete<br/>
+
+<br/><br/>
  
+Install DTH<br/>
+a. Connect to the Smartthings IDE<br/>
+b. Click My Device Handlers<br/>
+c. Click Create New Device Handlers<br/>
+d. Copy content of file in the dth folder to the area<br/>
+e. Click Create<br/>
+f. Loop<br/>
+
+<br/><br/>
+
+Install Smartapps<br/>
+a. Connect to the Smartthings IDE<br/>
+b. Click My Smartapps<br/>
+c. Click New Smartapp<br/>
+d. Click From Code <br/>
+e. Copy content of mi_connector.groovy to area<br/><br/>
+f. Click Create<br/>
+e. Click My Smartapps & Edit properties (Mi-Connector)<br/>
+g. Enable OAuth<br/>
+h. Update Click<br/>
+
+<br/><br/>
+
+
 
 Library
 - https://github.com/aholstenson/miio
