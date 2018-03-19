@@ -1,19 +1,30 @@
 # mi_connector
 Connector for Xiaomi with ST
 
-Using a miio nodejs library
-https://github.com/aholstenson/miio
+This makes you easy to setup xiaomi devices to Smartthings
 
 
 
-Install
-1. Raspbery pi
-- wget https://raw.githubusercontent.com/fison67/mi_connector/master/install.sh
+Install.
+a. raspberry pi
+  sudo mkdir /docker
+  sudo mkdir /docker/mi-connector
+  sudo chown -R pi:pi /docker
+  docker pull fison67/mi-connector-arm:0.0.1
+  docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1
 
-- chmod 755 install.sh
-- sudo ./install.sh
+b. synology nas
+  make folder /docker/mi-connector
+  Run Docker
+  -> Registery 
+  -> Search fison67/mi-connector
+  -> Advanced Settings
+  -> Volume tab -> folder -> Select mi-connector & Mount path '/config'
+  -> Network tab -> Check 'use same network as Docker Host'
+  -> Complete
+ 
 
-- cd /app/mi_connector
-- pm2 start mi_connector.js
-
-- /app/mi_connector/log.sh ( logging )
+Library
+- https://github.com/aholstenson/miio
+- https://github.com/zlargon/google-tts
+- 
