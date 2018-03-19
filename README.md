@@ -39,6 +39,10 @@ Xiaomi Vacuum<br/>
 Xiaomi Air Purifier<br/>
 ![air_pir](./imgs/air_pir.png) 
 
+Xiaomi Gateway<br/>
+![gateway](./imgs/gateway.jpg) 
+
+
 
 Install program. <br/>
 a. raspberry pi<br/>
