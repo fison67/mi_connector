@@ -1,20 +1,32 @@
 /**
  *  Xiaomi Power Plug (v.0.0.1)
  *
- *  Authors
- *   - fison67@nate.com
- *  Copyright 2018
+ * MIT License
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License. You may obtain a copy of the License at:
+ * Copyright (c) 2018 fison67@nate.com
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
- *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
- *  for the specific language governing permissions and limitations under the License.
- *
- */
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+*/
+
  
 import groovy.json.JsonSlurper
 
@@ -22,13 +34,11 @@ metadata {
 	definition (name: "Xiaomi Power Plug", namespace: "fison67", author: "fison67") {
         capability "Switch"						
          
-        attribute "status", "string"
         attribute "switch", "string"
+        attribute "power", "string"
         
         attribute "lastCheckin", "Date"
         
-        command "localOn"
-        command "localOff"
         command "on"
         command "off"
         
@@ -37,19 +47,23 @@ metadata {
 	simulator { }
 
 	tiles {
-		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"localOff", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"localOn", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'${name}', action:"localOff", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"localOn", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
 		}
+        
+        valueTile("powerLoad", "device.powerLoad", width: 2, height: 2) {
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
+        }
 	}
 }
 
@@ -69,10 +83,10 @@ def setStatus(params){
  
  	switch(params.key){
     case "power":
-    	sendEvent(name:"status", value: (params.data == "true" ? "on" : "off"))
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
-    case "temperature":
+    case "powerLoad":
+    	sendEvent(name:"power", value: params.data + "w")
     	break;
     }
     
@@ -80,7 +94,7 @@ def setStatus(params){
     sendEvent(name: "lastCheckin", value: now)
 }
 
-def localOn(){
+def on(){
 	log.debug "Off >> ${state.id}"
     def body = [
         "id": state.id,
@@ -91,8 +105,8 @@ def localOn(){
     sendCommand(options, null)
 }
 
-def localOff(){
-	log.debug "Off >> ${state.id}"
+def off(){
+    log.debug "Off >> ${state.id}"
 	def body = [
         "id": state.id,
         "cmd": "power",
@@ -100,14 +114,6 @@ def localOff(){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
-}
-
-def on(){
-	localOn()
-}
-
-def off(){
-	localOff()
 }
 
 def callback(physicalgraph.device.HubResponse hubResponse){
