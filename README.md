@@ -31,6 +31,10 @@ Mobile Version.<br/>
 ![app-add-manual2](./imgs/app-add-manual2.jpg) 
 
 
+<br/><br/>
+DTH
+Xiaomi Vacuum
+![vacuum_](./imgs/vacuum_.png) 
 
 
 Install program. <br/>
