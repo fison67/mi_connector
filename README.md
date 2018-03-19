@@ -3,7 +3,7 @@ Connector for Xiaomi with ST
 
 This makes you easy to setup xiaomi devices to Smartthings
 
-
+![web-dashboard](./imgs/web-dashboard.png) 
 
 Install. <br/>
 a. raspberry pi<br/>
