@@ -7,11 +7,11 @@ This makes you easy to setup xiaomi devices to Smartthings
 
 Install. <br/>
 a. raspberry pi<br/>
-  sudo mkdir /docker<br/>
-  sudo mkdir /docker/mi-connector<br/>
-  sudo chown -R pi:pi /docker<br/>
-  docker pull fison67/mi-connector-arm:0.0.1<br/>
-  docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1<br/>
+&nbsp;&nbsp;sudo mkdir /docker<br/>
+&nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
+&nbsp;&nbsp;sudo chown -R pi:pi /docker<br/>
+&nbsp;&nbsp;docker pull fison67/mi-connector-arm:0.0.1<br/>
+&nbsp;&nbsp;docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1<br/>
 
 b. synology nas<br/>
   make folder /docker/mi-connector<br/>
