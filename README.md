@@ -79,9 +79,9 @@ Install Smartapps<br/>
 Support devices<br/>
 - xiaomi air purifier<br/>
 - xiaomi humidifier<br/>
-- xiaomi gateway<br/>
 - xiaomi vacuum<br/>
 - xiaomi air monitor<br/>
+- xiaomi gateway<br/>
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
 &nbsp;&nbsp;- xiaomi button<br/>
