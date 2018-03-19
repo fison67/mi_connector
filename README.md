@@ -80,12 +80,16 @@ Support devices<br/>
 - xiaomi air purifier<br/>
 - xiaomi humidifier<br/>
 - xiaomi gateway<br/>
+- xiaomi vacuum<br/>
+- xiaomi air monitor<br/>
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
 &nbsp;&nbsp;- xiaomi button<br/>
 &nbsp;&nbsp;- xiaomi cube<br/>
 &nbsp;&nbsp;- xiaomi socket<br/>
+&nbsp;&nbsp;- xiaomi weather<br/>
 
+<br/><br/>
 Library
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
