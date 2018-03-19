@@ -1,20 +1,31 @@
 /**
  *  Xiaomi Vacuums (v.0.0.1)
  *
- *  Authors
- *   - fison67@nate.com
- *  Copyright 2018
+ * MIT License
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License. You may obtain a copy of the License at:
+ * Copyright (c) 2018 fison67@nate.com
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
- *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
- *  for the specific language governing permissions and limitations under the License.
- *
- */
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+*/
  
 import groovy.json.JsonSlurper
 
@@ -25,7 +36,7 @@ metadata {
         attribute "switch", "string"
         
         attribute "status", "string"
-        attribute "battery", "string"
+        attribute "battery", "number"
         attribute "clean_time", "string"
         attribute "clean_area", "string"
         attribute "in_cleaning", "string"
@@ -34,73 +45,113 @@ metadata {
         attribute "filterWorkTime", "string"
         attribute "sensorDirtyTime", "string"
         
-        
-        
         attribute "lastCheckin", "Date"
          
-        command "localOn"
-        command "localOff"
         command "on"
         command "off"
         
+        command "find"
+        command "clean"
         command "charge"
+        command "paused"
         command "fanSpeed"
         command "spotClean"
+        
+        command "quiet"
+        command "balanced"
+        command "turbo"
+        command "fullSpeed"
+        command "setVolume"
+        command "setVolumeWithTest"
 	}
 
 	simulator {}
 
 	tiles {
-		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-                attributeState "initiating", label:'${name}',   backgroundColor:"#00a0dc"
-                attributeState "charger-offline", label:'${name}', backgroundColor:"#ffffff"
-                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc"
-                attributeState "cleaning", label:'${name}', backgroundColor:"#ffffff"
-                attributeState "returning", label:'${name}', backgroundColor:"#00a0dc"
-                attributeState "charging", label:'${name}',   backgroundColor:"#ffffff"
+		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
+                attributeState "initiating", label:'${name}', backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"off"
+                attributeState "charger-offline", label:'${name}', backgroundColor:"#000000", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"charge"
+                attributeState "cleaning", label:'${name}', backgroundColor:"#4286f4", icon:"st.Electronics.electronics1", action:"off"
+                attributeState "returning", label:'${name}', backgroundColor:"#4e25a8", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "charging", label:'${name}',   backgroundColor:"#25a896", icon:"st.Electronics.electronics1", action:"on"
                 
-                attributeState "charging-error", label:'${name}',  backgroundColor:"#00a0dc"
-                attributeState "paused", label:'${name}',  backgroundColor:"#ffffff"
+                attributeState "charging-error", label:'${name}',  backgroundColor:"#ff2100", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "paused", label:'${name}',  backgroundColor:"#09540d", icon:"st.Electronics.electronics1", action:"on"
                 
-                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#00a0dc"
-                attributeState "error", label:'${name}',   backgroundColor:"#ffffff"
+                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#a0e812", icon:"st.Electronics.electronics1", action:"off"
+                attributeState "error", label:'${name}',   backgroundColor:"#ff2100", icon:"st.Electronics.electronics1", action:"on"
                 
-                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc"
-                attributeState "updating", label:'${name}',  backgroundColor:"#ffffff"
+                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "updating", label:'${name}',  backgroundColor:"#ffa0ea", icon:"st.Electronics.electronics1", action:"on"
                 
-                attributeState "docking", label:'${name}', backgroundColor:"#00a0dc"
-                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#ffffff"
+                attributeState "docking", label:'${name}', backgroundColor:"#9049bc", icon:"st.Electronics.electronics1", action:"off"
+                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#91f268", icon:"st.Electronics.electronics1", action:"off"
                 
-                attributeState "full", label:'${name}', backgroundColor:"#ffffff"
+                attributeState "full", label:'${name}', backgroundColor:"#ffffff", icon:"st.Electronics.electronics1", action:"on"
                 
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
+            
 		}
         
-        standardTile("spot", "device.spot", width: 2, height: 2, decoration: "flat") {
-            state "on", label:'Spot Clean', action:"spotClean",  backgroundColor:"#ffffff"
+        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
+            state "on", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
         }
         
-        standardTile("charge", "device.charge", width: 2, height: 2, decoration: "flat") {
-            state "on", label:'Charge', action:"charge",  backgroundColor:"#ffffff"
+        standardTile("fanSpeed", "device.fanSpeed", inactiveLabel: false, width: 2, height: 2) {
+            state "quiet", label:'Quiet', action:"balanced", backgroundColor:"#00a0dc", nextState:"balanced"
+            state "balanced", label:'Balanced', action:"turbo", backgroundColor:"#1000ff", nextState:"turbo"
+            state "turbo", label:'Turbo', action:"fullSpeed", backgroundColor:"#9a71f2", nextState:"fullSpeed"
+            state "fullSpeed", label:'Max', action:"quiet", backgroundColor:"#aa00ff", nextState:"quiet"
         }
         
-        standardTile("paused", "device.paused", width: 2, height: 2, decoration: "flat") {
-            state "on", label:'Pause', action:"paused", backgroundColor:"#ffffff"
+        standardTile("paused", "device.paused", width: 2, height: 2) {
+            state "paused", label:'paused', action:"paused", backgroundColor:"#00a0dc", nextState:"restart"
+            state "restart", label:'${name}', action:"on", backgroundColor:"#09540d"
         }
         
-        standardTile("start", "device.start", width: 2, height: 2, decoration: "flat") {
-            state "on", label:'Start', action:"start", backgroundColor:"#ffffff"
+        standardTile("charge", "device.charge", width: 2, height: 2 ) {
+            state "charge", label:'Charge', action:"charge",  backgroundColor:"#25a896"
+        }
+        
+        standardTile("spot", "device.spot", width: 2, height: 2 ) {
+            state "spot", label:'Spot', action:"spotClean",  backgroundColor:"#2ca6e8"
+        }
+        
+        standardTile("find", "device.find", width: 2, height: 2 ) {
+            state "find", label:'Find Me', action:"find",  backgroundColor:"#1cffe8"
         }
         
         valueTile("battery", "device.battery",  height: 2, width: 2) {
-            state "val", label:"${currentValue}"
+            state "val", label:'${currentValue}', defaultState: true,
+            	backgroundColors:[
+                    [value: 10, color: "#ff002a"],
+                    [value: 20, color: "#f4425f"],
+                    [value: 30, color: "#ef7085"],
+                    [value: 40, color: "#ea8f9e"],
+                    [value: 50, color: "#edadb7"],
+                    [value: 60, color: "#a9aee8"],
+                    [value: 70, color: "#7f87e0"],
+                    [value: 80, color: "#505bd3"],
+                    [value: 90, color: "#2131e0"]
+                ]
         }
         
+        controlTile("volume", "device.volume", "slider", height: 2, width: 2, inactiveLabel: false, range:"(0..100)") {
+			state ("volume", label:'${currentValue}', action:"setVolumeWithTest")
+		}
+        
+        main (["mode"])
+      	details(["mode", "switch", "paused", "fanSpeed", "spot", "charge", "find", "battery", "volume"])
 	}
 }
 
@@ -116,17 +167,43 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-	log.debug "Key >> ${params.key}"
+	log.debug "${params.key} >> ${params.data}"
     
  	switch(params.key){
-    case "state":
-    	sendEvent(name:"status", value: params.data )
+    case "mode":
+    	sendEvent(name:"mode", value: params.data )
+        if(params.data == "paused"){
+    		sendEvent(name:"switch", value: "paused" )
+        }
     	break;
-    case "battery":
-    	sendEvent(name:"battery", value: params.data )
+    case "batteryLevel":
+    	sendEvent(name:"battery", value: params.data + "%" )
     	break;
     case "fanSpeed":
-    	sendEvent(name:"fanSpeed", value: params.data )
+    	def val = params.data.toInteger()
+        def _value
+        switch(val){
+        case 38:
+        	_value = "quiet"
+        	break;
+        case 60:
+        	_value = "balanced"
+        	break;
+        case 77:
+        	_value = "turbo"
+        	break;
+        case 90:
+        	_value = "fullSpeed"
+        	break;
+        }
+    	sendEvent(name:"fanSpeed", value: _value )
+    	break;
+    case "cleaning":
+    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off") )
+       	sendEvent(name:"paused", value: params.data == "true" ? "paused" : "restart" )     
+    	break;
+    case "volume":
+    	sendEvent(name:"volume", value: params.data )
     	break;
     }
     
@@ -134,12 +211,63 @@ def setStatus(params){
     sendEvent(name: "lastCheckin", value: now)
 }
 
-def fanSpeed(speed){
-    log.debug "fanSpeed >> ${state.id}"
+def setVolume(volume){
+	log.debug "setVolume >> ${state.id}"
     def body = [
         "id": state.id,
-        "cmd": "fanSpeed",
-        "data": speed
+        "cmd": "volume",
+        "data": volume
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setVolumeWithTest(volume){
+	log.debug "setVolume >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "volumeWithTest",
+        "data": volume
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def quiet(){
+    log.debug "quiet >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "quiet"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def balanced(){
+    log.debug "balanced >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "balanced"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def turbo(){
+    log.debug "turbo >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "turbo"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def fullSpeed(){
+    log.debug "fullSpeed >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "fullSpeed"
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -153,6 +281,8 @@ def spotClean(){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+    
+    sendEvent(name:"spot", value: "on" )
 }
 
 def charge(){
@@ -169,7 +299,7 @@ def paused(){
 	log.debug "paused >> ${state.id}"
     def body = [
         "id": state.id,
-        "cmd": "paused"
+        "cmd": "pause"
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -185,8 +315,18 @@ def start(){
     sendCommand(options, null)
 }
 
-def localOn(){
-	log.debug "On >> ${state.id}"
+def find(){
+    log.debug "find >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "find"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def on(){
+		log.debug "On >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "clean"
@@ -195,7 +335,7 @@ def localOn(){
     sendCommand(options, null)
 }
 
-def localOff(){
+def off(){
 	log.debug "Off >> ${state.id}"
 	def body = [
         "id": state.id,
@@ -205,13 +345,13 @@ def localOff(){
     sendCommand(options, null)
 }
 
-def on(){
-	localOn()
+/*
+def timer(mSecond, function){
+	def now = new Date()
+	def runTime = new Date(now.getTime() + mSecond)
+	runOnce(runTime, function);
 }
-
-def off(){
-	localOff()
-}
+*/
 
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
