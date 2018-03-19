@@ -68,7 +68,7 @@ a. Connect to the Smartthings IDE<br/>
 b. Click My Smartapps<br/>
 c. Click New Smartapp<br/>
 d. Click From Code <br/>
-e. Copy content of mi_connector.groovy to area<br/><br/>
+e. Copy content of mi_connector.groovy to area<br/>
 f. Click Create<br/>
 e. Click My Smartapps & Edit properties (Mi-Connector)<br/>
 g. Enable OAuth<br/>
