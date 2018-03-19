@@ -1,18 +1,30 @@
 /**
  *  Mi Connector (v.0.0.1)
  *
- *  Authors
- *   - fison67@nate.com
- *  Copyright 2018
+ * MIT License
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License. You may obtain a copy of the License at:
+ * Copyright (c) 2018 fison67@nate.com
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
- *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
- *  for the specific language governing permissions and limitations under the License.
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
  
 import groovy.json.JsonSlurper
@@ -35,7 +47,7 @@ definition(
 
 preferences {
    page(name: "mainPage")
-   page(name: "requestPage")
+   page(name: "monitorPage")
 }
 
 
@@ -43,34 +55,25 @@ def mainPage() {
     dynamicPage(name: "mainPage", title: "Home Assistant Manage", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
         	input "address", "string", title: "Server address", required: true
-        	href "requestPage", title: "Request New Devices", description:""
+        	href url:"http://${settings.address}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
         }
+       
        	section() {
             paragraph "View this SmartApp's configuration to use it in other places."
             href url:"${apiServerUrl("/api/smartapps/installations/${app.id}/config?access_token=${state.accessToken}")}", style:"embedded", required:false, title:"Config", description:"Tap, select, copy, then click \"Done\""
-       }
+       	}
     }
 }
 
-def requestPage(){
-	log.debug "Executing requestPage"
-    getDataList()
-    
-    dynamicPage(name: "requestPage", title:"Get Xiaomi Devices", nextPage: null) {
-        section("Please wait for the API to answer, this might take a couple of seconds.") {
-           paragraph "Quit after 5 seconds...."
-        }
-    }
-}
 
 def installed() {
     log.debug "Installed with settings: ${settings}"
-
-    initialize()
     
     if (!state.accessToken) {
         createAccessToken()
     }
+    
+    initialize()
 }
 
 def updated() {
@@ -84,6 +87,23 @@ def updated() {
 
 def initialize() {
 	log.debug "initialize"
+    
+    def options = [
+     	"method": "POST",
+        "path": "/settings/smartthings",
+        "headers": [
+        	"HOST": settings.address,
+            "Content-Type": "application/json"
+        ],
+        "body":[
+            "app_url":"${apiServerUrl}/api/smartapps/installations/",
+            "app_id":app.id,
+            "access_token":state.accessToken
+        ]
+    ]
+    log.debug options
+    def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: null])
+    sendHubCommand(myhubAction)
 }
 
 def dataCallback(physicalgraph.device.HubResponse hubResponse) {
@@ -115,8 +135,13 @@ def getDataList(){
 def addDevice(){
 	def id = params.id
     def type = params.type
+    def data = params.data
+    if(data){
+    	data = new JsonSlurper().parseText(data)
+    }
     
-    log.debug("Type >> ${type}");
+    log.debug("Try >> ADD Xiaomi Device id=${id}, type=${type}")
+    log.debug("Data >> ${data}")
 	
     def dni = "mi-connector-" + id.toLowerCase()
     
@@ -173,33 +198,89 @@ def addDevice(){
         }else if(params.type == "zhimi.airmonitor.v1"){
         	dth = "Xiaomi Air Monitor";
             name = "Xiaomi Air Monitor";
+        }else if(params.type == "lumi.weather"){
+        	dth = "Xiaomi Weather";
+            name = "Xiaomi Weather";
+        	
         }
         
         if(dth == null){
-        	return;
-        }
-        
-        try{
-            def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
-                "label": name
-            ])    
-            childDevice.setInfo(settings.address, id)
-            log.debug "ADD Device >> ${type} DNI=${dni}"
-        }catch(e){
-        	console.log("ADD Device Error >> " + e);
-        }
+        	log.warn("Failed >> Non exist DTH!!! Type >> " + type);
+            def resultString = new groovy.json.JsonOutput().toJson("result":"nonExist")
+            render contentType: "application/javascript", data: resultString
+        	
+        }else{
+            try{
+                def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+                    "label": name
+                ])    
+                childDevice.setInfo(settings.address, id)
+                log.debug "Success >> ADD Device : ${type} DNI=${dni}"
+                data.each { key, value ->
+                //	log.debug "Key:" + key + ", " + value
+                	def map = [:]
+                    map['key'] = key
+                    map['data'] = value
+                	childDevice.setStatus(map)
+                }
+                
+                def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
+                render contentType: "application/javascript", data: resultString
+            }catch(e){
+                console.log("Failed >> ADD Device Error : " + e);
+                def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
+                render contentType: "application/javascript", data: resultString
+            }
+    	}
     }
-
+    
 }
 
 def updateDevice(){
-	log.debug "Mi >> ${params.type} (${params.key}) >> ${params.cmd}"
+//	log.debug "Mi >> ${params.type} (${params.key}) >> ${params.cmd}"
     def id = params.id
     def dni = "mi-connector-" + id.toLowerCase()
     def chlid = getChildDevice(dni)
     if(chlid){
 		chlid.setStatus(params)
     }
+    def resultString = new groovy.json.JsonOutput().toJson("result":true)
+    render contentType: "application/javascript", data: resultString
+}
+
+def deleteDevice(){
+	def id = params.id
+    def dni = "mi-connector-" + id.toLowerCase()
+    
+    log.debug "Try >> DELETE child device(${dni})"
+    def result = false
+    
+    def chlid = getChildDevice(dni)
+    if(!child){
+    	try{
+            deleteChildDevice(dni)
+            result = true
+    		log.debug "Success >> DELETE child device(${dni})"
+        }catch(err){
+			log.error("Failed >> DELETE child Device Error!!! ${dni} => " + err);
+        }
+    }
+    
+    def resultString = new groovy.json.JsonOutput().toJson("result":result)
+    render contentType: "application/javascript", data: resultString
+}
+
+def getDeviceList(){
+	def list = getChildDevices();
+    def resultList = [];
+    list.each { child ->
+ //       log.debug "child device id $child.deviceNetworkId with label $child.label"
+        def dni = child.deviceNetworkId
+        resultList.push( dni.substring(13, dni.length()) );
+    }
+    
+    def configString = new groovy.json.JsonOutput().toJson("list":resultList)
+    render contentType: "application/javascript", data: configString
 }
 
 def authError() {
@@ -227,12 +308,16 @@ def renderConfig() {
 mappings {
     if (!params.access_token || (params.access_token && params.access_token != state.accessToken)) {
         path("/config")                         { action: [GET: "authError"] }
+        path("/list")                         	{ action: [GET: "authError"]  }
         path("/update")                         { action: [POST: "authError"]  }
         path("/add")                         	{ action: [POST: "authError"]  }
+        path("/delete")                         { action: [POST: "authError"]  }
 
     } else {
         path("/config")                         { action: [GET: "renderConfig"]  }
+        path("/list")                         	{ action: [GET: "getDeviceList"]  }
         path("/update")                         { action: [POST: "updateDevice"]  }
         path("/add")                         	{ action: [POST: "addDevice"]  }
+        path("/delete")                         { action: [POST: "deleteDevice"]  }
     }
 }
