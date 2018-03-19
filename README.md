@@ -54,25 +54,25 @@ b. synology nas<br/>
 <br/><br/>
  
 Install DTH<br/>
-a. Connect to the Smartthings IDE<br/>
-b. Click My Device Handlers<br/>
-c. Click Create New Device Handlers<br/>
-d. Copy content of file in the dth folder to the area<br/>
-e. Click Create<br/>
-f. Loop<br/>
+&nbsp;a. Connect to the Smartthings IDE<br/>
+&nbsp;b. Click My Device Handlers<br/>
+&nbsp;c. Click Create New Device Handlers<br/>
+&nbsp;d. Copy content of file in the dth folder to the area<br/>
+&nbsp;e. Click Create<br/>
+&nbsp;f. Loop<br/>
 
 <br/><br/>
 
 Install Smartapps<br/>
-a. Connect to the Smartthings IDE<br/>
-b. Click My Smartapps<br/>
-c. Click New Smartapp<br/>
-d. Click From Code <br/>
-e. Copy content of mi_connector.groovy to area<br/>
-f. Click Create<br/>
-e. Click My Smartapps & Edit properties (Mi-Connector)<br/>
-g. Enable OAuth<br/>
-h. Update Click<br/>
+&nbsp;a. Connect to the Smartthings IDE<br/>
+&nbsp;b. Click My Smartapps<br/>
+&nbsp;c. Click New Smartapp<br/>
+&nbsp;d. Click From Code <br/>
+&nbsp;e. Copy content of mi_connector.groovy to area<br/>
+&nbsp;f. Click Create<br/>
+&nbsp;e. Click My Smartapps & Edit properties (Mi-Connector)<br/>
+&nbsp;g. Enable OAuth<br/>
+&nbsp;h. Update Click<br/>
 
 <br/><br/>
 
