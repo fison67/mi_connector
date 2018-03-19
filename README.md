@@ -32,9 +32,12 @@ Mobile Version.<br/>
 
 
 <br/><br/>
-DTH
-Xiaomi Vacuum
+DTH<br/>
+Xiaomi Vacuum<br/>
 ![vacuum_](./imgs/vacuum_.png) 
+
+Xiaomi Air Purifier<br/>
+![air_pir](./imgs/air_pir.png) 
 
 
 Install program. <br/>
