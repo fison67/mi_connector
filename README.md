@@ -105,7 +105,9 @@ Update Click
 |   |   |   |
 | Xiaomi Zigbee  |   |    |
 | motion sensor | lumi.motion  |  X  |
-|  | lumi.motion.aq2  |  X  |
+|  | lumi.motion.aq2  |  O  |
+| door/window sensor | lumi.magnet  |  X  |
+|  | lumi.magnet.aq2  |  O  |
 
 
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
