@@ -44,7 +44,7 @@ Xiaomi Gateway<br/>
 
 
 
-# Install program. <br/>
+# Install API Server<br/>
 a. raspberry pi<br/>
 &nbsp;&nbsp;sudo mkdir /docker<br/>
 &nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
