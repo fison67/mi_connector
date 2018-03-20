@@ -33,11 +33,12 @@ You must install docker on your nas
 ![image](../../../imgs/install/nas/image7.png) 
 <br/><br/>
 
-### Default URL
-http://nas_address:30000/
+### Management URL
+http://nas_address:30000
 
 If other application in nas use 30000, 30001 port, you have to modify ports.
-Open /docker/mi-connector/config.json and modify port.
+Open /docker/mi-connector/config.json and modify port. 
+Restart container.
 
 If you can't find config.json
 just make it like below
