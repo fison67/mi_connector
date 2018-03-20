@@ -76,6 +76,7 @@ Loop until all of file is registered
 <br/><br/>
 
 ## Install Smartapps<br/>
+See the [Manual](doc/install/smartapp/README.md) file for details
 ```
 Connect to the Smartthings IDE
 Click My Smartapps
