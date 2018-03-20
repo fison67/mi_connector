@@ -15,7 +15,6 @@ Example Video<br/>
 
 <br/><br/>
 ## Management Web Desktop Version.<br/>
-#### Dashboard
 ![web-dashboard-total](./imgs/web-dashboard-total.png) 
 
 
