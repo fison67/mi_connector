@@ -16,15 +16,8 @@ Example Video<br/>
 <br/><br/>
 ## Management Web Desktop Version.<br/>
 #### Dashboard
-![web-dashboard](./imgs/web-dashboard.png) 
-#### Params of Device
-![web-dashboard-click](./imgs/web-dashboard-click.png) 
-#### Search Xiaomi Devices manually
-![web-search-result](./imgs/web-search-result.png) 
-#### SoundPack setup of Xiaomi Vacuum
-![web-dashboard-vacuum](./imgs/web-dashboard-vacuum.png) 
+![web-dashboard-total](./imgs/web-dashboard-total.png) 
 
-![web-dashboard-vacuum-custom](./imgs/web-dashboard-vacuum-custom.png) 
 #### Mi Connector System Setup
 ![web-setup](./imgs/web-setup.png) 
 
@@ -98,7 +91,7 @@ Update Click
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
 &nbsp;&nbsp;- xiaomi button<br/>
-&nbsp;&nbsp;- xiaomi cube<br/>
+&nbsp;&nbsp;- xiaomi cube(Not yet tested)<br/>
 &nbsp;&nbsp;- xiaomi socket<br/>
 &nbsp;&nbsp;- xiaomi weather<br/>
 
