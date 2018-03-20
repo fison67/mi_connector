@@ -92,6 +92,9 @@ Update Click
 <br/><br/>
 
 ## Problem solving
+#### Some of xiaomi product is not registered
+> Some of product is not getting token automatically like Xiaomi Vacuum. You have to get token yourself.<br/>
+And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out the blank. (IP & Token)
 <br/><br/>
 
 ## Support devices<br/>
