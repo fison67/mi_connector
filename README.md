@@ -45,7 +45,7 @@ sudo mkdir /docker
 sudo mkdir /docker/mi-connector
 sudo chown -R pi:pi /docker
 docker pull fison67/mi-connector-arm:0.0.1
-docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1
+docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector-arm --net=host fison67/mi-connector-arm:0.0.1 
 ```
 
 ###### Synology nas<br/>
