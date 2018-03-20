@@ -105,6 +105,9 @@ Support devices<br/>
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 <br/><br/>
 # Donation Button
