@@ -92,7 +92,7 @@ Update Click
 <br/><br/>
 
 ## Support devices<br/>
-> Wi-Fi Version
+ Wi-Fi Version
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
 | Xiaomi air purifier  | zhimi.airpurifier.m1  |   O |
@@ -111,7 +111,7 @@ Update Click
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
 
-> Zigbee Version
+ Zigbee Version
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
 | Xiaomi motion sensor | lumi.motion  |  X  |
