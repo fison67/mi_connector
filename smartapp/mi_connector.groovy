@@ -165,7 +165,7 @@ def addDevice(){
         }else if(params.type == "lumi.motion" || params.type == "lumi.motion.aq2"){
         	dth = "Xiaomi Motion";
             name = "Xiaomi Motion";
-        }else if(params.type == "lumi.switch" || params.type == "lumi.switch.v2" || params.type == "lumi.86sw1" || params.type == "lumi.86sw2"){
+        }else if(params.type == "lumi.switch" || params.type == "lumi.switch.v2" || params.type == "lumi.86sw1" || params.type == "lumi.86sw2" || params.type == "lumi.cube"){
         	dth = "Xiaomi Switch";
             name = "Xiaomi Switch";
         }else if(params.type == "zhimi.humidifier.v1"){
