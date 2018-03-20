@@ -15,3 +15,6 @@ You must install docker on your nas
 
 ### Launch image
 ![image](../../../imgs/install/nas/image2.png) 
+
+### Settings
+![image](../../../imgs/install/nas/image3.png) 
