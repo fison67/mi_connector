@@ -3,7 +3,7 @@
 
 #### Preparing
 ```
-You must install docker on your nas
+You must install docker on your nas first
 ```
 <br/><br/>
 
