@@ -68,25 +68,28 @@ Run Docker
 <br/><br/>
  
 ## Install DTH<br/>
-&nbsp;a. Connect to the Smartthings IDE<br/>
-&nbsp;b. Click My Device Handlers<br/>
-&nbsp;c. Click Create New Device Handlers<br/>
-&nbsp;d. Copy content of file in the dth folder to the area<br/>
-&nbsp;e. Click Create<br/>
-&nbsp;f. Loop<br/>
-
+```
+Go to the Smartthings IDE
+Click My Device Handlers
+Click Create New Device Handlers
+Copy content of file in the dth folder to the area
+Click Create
+Loop until all of file is registered
+```
 <br/><br/>
 
 ## Install Smartapps<br/>
-&nbsp;a. Connect to the Smartthings IDE<br/>
-&nbsp;b. Click My Smartapps<br/>
-&nbsp;c. Click New Smartapp<br/>
-&nbsp;d. Click From Code <br/>
-&nbsp;e. Copy content of mi_connector.groovy to area<br/>
-&nbsp;f. Click Create<br/>
-&nbsp;e. Click My Smartapps & Edit properties (Mi-Connector)<br/>
-&nbsp;g. Enable OAuth<br/>
-&nbsp;h. Update Click<br/>
+```
+Connect to the Smartthings IDE<br/>
+Click My Smartapps<br/>
+Click New Smartapp<br/>
+Click From Code <br/>
+Copy content of mi_connector.groovy to area<br/>
+Click Create<br/>
+Click My Smartapps & Edit properties (Mi-Connector)<br/>
+Enable OAuth<br/>
+Update Click<br/>
+```
 
 <br/><br/>
 
