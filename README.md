@@ -18,8 +18,6 @@ Example Video<br/>
 #### Dashboard
 ![web-dashboard-total](./imgs/web-dashboard-total.png) 
 
-#### Mi Connector System Setup
-![web-setup](./imgs/web-setup.png) 
 
 <br/><br/>
 
