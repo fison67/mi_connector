@@ -23,4 +23,8 @@ You must install docker on your nas
 
 
 ### Setting network
+##### You must use same network
 ![image](../../../imgs/install/nas/image6.png) 
+
+### Finish
+![image](../../../imgs/install/nas/image7.png) 
