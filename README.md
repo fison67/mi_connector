@@ -90,17 +90,19 @@ Update Click
 ## Support devices<br/>
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
-| xiaomi air purifier  | zhimi.airpurifier.m1  | O |
-|   | zhimi.airpurifier.v1  | X |
-|   | zhimi.airpurifier.v2  | X |
-|   | zhimi.airpurifier.v3  | X |
-|   | zhimi.airpurifier.v6  | X |
-|   | zhimi.airpurifier.ma2  | X |
+| Xiaomi air purifier  | zhimi.airpurifier.m1  |   O |
+|   | zhimi.airpurifier.v1  |   X |
+|   | zhimi.airpurifier.v2  |   X |
+|   | zhimi.airpurifier.v3  |   X |
+|   | zhimi.airpurifier.v6  |   X |
+|   | zhimi.airpurifier.ma2  |   X |
+| Xiaomi humidifier  | zhimi.humidifier.v1  |   X |
+| Xiaomi vacuum  | rockrobo.vacuum.v1  |   O |
+|   | zhimi.airpurifier.ma2  |   X |
+| Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
+| Xiaomi gateway  | lumi.gateway.v2  |   X |
+|   | lumi.gateway.v3  |   O |
 
-- xiaomi humidifier (zhimi.humidifier.v1)<br/>
-- xiaomi vacuum (rockrobo.vacuum.v1)<br/>
-- xiaomi air monitor (zhimi.airmonitor.v1)<br/>
-- xiaomi gateway (lumi.gateway.v2, lumi.gateway.v3)<br/>
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
 &nbsp;&nbsp;- xiaomi button<br/>
