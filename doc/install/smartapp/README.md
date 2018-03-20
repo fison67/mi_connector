@@ -29,5 +29,5 @@
 ![create](../../../imgs/smartapp/app-add3.jpg) 
 
 #### Fill the blank with local address.<br/>
-Be careful. The address is not external ip.
+>Be careful. The address is not external ip.<br/>
 ![create](../../../imgs/smartapp/app-add4.jpg) 
