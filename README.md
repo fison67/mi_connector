@@ -104,4 +104,10 @@ Support devices<br/>
 Library
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
-- 
+
+
+# Donation Button
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](paypal.me/fison67)
+
+
