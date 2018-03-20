@@ -1,7 +1,7 @@
 # Mi-Connector
-Connector for Xiaomi with ST
+Connector for Xiaomi Devices with ST
 
-This makes you easy to setup xiaomi devices to Smartthings
+This makes you easy to setup xiaomi devices to Smartthings.
 <br/><br/>
 Example Video<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
