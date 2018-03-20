@@ -28,6 +28,6 @@
 #### Select Mi Connector<br/>
 ![create](../../../imgs/smartapp/app-add3.jpg) 
 
-#### Fill the blank with local address.<br/>
+#### Fill the blank with local address and Click the save button<br/>
 Be careful. The address is not external ip.<br/>
 ![create](../../../imgs/smartapp/app-add4.jpg) 
