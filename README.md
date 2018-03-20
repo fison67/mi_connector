@@ -98,7 +98,7 @@ Update Click
 |   | zhimi.airpurifier.ma2  |   X |
 | Xiaomi humidifier  | zhimi.humidifier.v1  |   X |
 | Xiaomi vacuum  | rockrobo.vacuum.v1  |   O |
-|   | zhimi.airpurifier.ma2  |   X |
+|   | roborock.vacuum.s5  |   X |
 | Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
