@@ -100,7 +100,10 @@ Update Click
 | Xiaomi humidifier  | zhimi.humidifier.v1  |   X |
 | Xiaomi vacuum  | rockrobo.vacuum.v1  |   O |
 |   | roborock.vacuum.s5  |   X |
-| Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
+| Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
+|   | chuangmi.plug.v2  |   X |
+|   | chuangmi.plug.m1  |   X |
+| Xiaomi air monitor  | zhimi.airmonitor.v1  |   X |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
 
