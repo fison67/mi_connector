@@ -18,6 +18,9 @@ You must install docker on your nas
 
 ### Setting volume
 ![image](../../../imgs/install/nas/image3.png) 
+![image](../../../imgs/install/nas/image4.png) 
+![image](../../../imgs/install/nas/image5.png) 
+
 
 ### Setting network
-![image](../../../imgs/install/nas/image4.png) 
+![image](../../../imgs/install/nas/image6.png) 
