@@ -1,4 +1,4 @@
-# mi_connector
+# Mi-Connector
 Connector for Xiaomi with ST
 
 This makes you easy to setup xiaomi devices to Smartthings
@@ -44,7 +44,7 @@ Xiaomi Gateway<br/>
 
 
 
-Install program. <br/>
+# Install program. <br/>
 a. raspberry pi<br/>
 &nbsp;&nbsp;sudo mkdir /docker<br/>
 &nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
@@ -64,7 +64,7 @@ b. synology nas<br/>
 
 <br/><br/>
  
-Install DTH<br/>
+# Install DTH<br/>
 &nbsp;a. Connect to the Smartthings IDE<br/>
 &nbsp;b. Click My Device Handlers<br/>
 &nbsp;c. Click Create New Device Handlers<br/>
@@ -74,7 +74,7 @@ Install DTH<br/>
 
 <br/><br/>
 
-Install Smartapps<br/>
+# Install Smartapps<br/>
 &nbsp;a. Connect to the Smartthings IDE<br/>
 &nbsp;b. Click My Smartapps<br/>
 &nbsp;c. Click New Smartapp<br/>
@@ -101,11 +101,12 @@ Support devices<br/>
 &nbsp;&nbsp;- xiaomi weather<br/>
 
 <br/><br/>
-Library
+# Library
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
 
 
+<br/><br/>
 # Donation Button
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](paypal.me/fison67)
