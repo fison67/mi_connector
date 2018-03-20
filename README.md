@@ -33,9 +33,9 @@ Example Video<br/>
 <br/><br/>
 
 # Install
-## Preparing
+#### Preparing
 ```
-Raspbery pi or Synology Nas
+You need a Raspbery pi or Synology Nas to install Mi Connector API Server
 ```
 <br/><br/>
 
