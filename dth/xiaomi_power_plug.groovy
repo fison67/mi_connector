@@ -86,7 +86,7 @@ def setStatus(params){
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
     case "powerLoad":
-    	sendEvent(name:"power", value: params.data + "w")
+    	sendEvent(name:"powerLoad", value: params.data)
     	break;
     }
     
