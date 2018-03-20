@@ -106,7 +106,7 @@ Update Click
 
 #### Zigbee Version
 | Type  | Model | Tested |
-| Xiaomi Zigbee  |   |    |
+| ------------- | ------------- | ------------- |
 | motion sensor | lumi.motion  |  X  |
 |  | lumi.motion.aq2  |  O  |
 | door/window sensor | lumi.magnet  |  X  |
