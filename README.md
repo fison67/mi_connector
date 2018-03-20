@@ -11,7 +11,7 @@ Example Video<br/>
 
 
 <br/><br/>
-# Management Web Desktop Version.<br/>
+## Management Web Desktop Version.<br/>
 ![web-dashboard](./imgs/web-dashboard.png) 
 
 ![web-dashboard-click](./imgs/web-dashboard-click.png) 
@@ -26,7 +26,7 @@ Example Video<br/>
 
 <br/><br/>
 
-# Management Web Mobile Version.<br/>
+## Management Web Mobile Version.<br/>
 ![web-setup](./imgs/main.jpg) 
 ![app-add-manual2](./imgs/app-add-manual2.jpg) 
 
@@ -44,7 +44,7 @@ Xiaomi Gateway<br/>
 
 
 
-# Install API Server<br/>
+## Install API Server<br/>
 a. raspberry pi<br/>
 &nbsp;&nbsp;sudo mkdir /docker<br/>
 &nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
@@ -64,7 +64,7 @@ b. synology nas<br/>
 
 <br/><br/>
  
-# Install DTH<br/>
+## Install DTH<br/>
 &nbsp;a. Connect to the Smartthings IDE<br/>
 &nbsp;b. Click My Device Handlers<br/>
 &nbsp;c. Click Create New Device Handlers<br/>
@@ -74,7 +74,7 @@ b. synology nas<br/>
 
 <br/><br/>
 
-# Install Smartapps<br/>
+## Install Smartapps<br/>
 &nbsp;a. Connect to the Smartthings IDE<br/>
 &nbsp;b. Click My Smartapps<br/>
 &nbsp;c. Click New Smartapp<br/>
@@ -101,16 +101,16 @@ Support devices<br/>
 &nbsp;&nbsp;- xiaomi weather<br/>
 
 <br/><br/>
-# Library
+## Library
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 <br/><br/>
-# Donation Button
+## Donation Button
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
 
