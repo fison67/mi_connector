@@ -1,13 +1,12 @@
 # Mi-Connector
 Connector for Xiaomi Devices with ST
 
-This makes you easy to setup xiaomi devices to Smartthings.
+This makes you easy to setup xiaomi devices to Smartthings.<br/>
+If Mi-Connector is installed, virtual devices is registered automatically by Mi Connector Smartapp.<br/>
+You don't have to do something to add xiaomi device.
 
 <br/><br/>
 Example Video<br/>
-```
-If Mi-Connector System is installed, virtual devices is registered automatically by Mi Connector Smartapp.
-```
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
 <br/><br/>
