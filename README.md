@@ -107,18 +107,18 @@ Update Click
 #### Zigbee Version
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
-| motion sensor | lumi.motion  |  X  |
+| Xiaomi motion sensor | lumi.motion  |  X  |
 |  | lumi.motion.aq2  |  O  |
-| door/window sensor | lumi.magnet  |  X  |
+| Xiaomi door/window sensor | lumi.magnet  |  X  |
 |  | lumi.magnet.aq2  |  O  |
+| Xiaomi weather sensor | lumi.weather  |  O  |
+| Xiaomi power socket | lumi.plug  |  O  |
 
 
-&nbsp;&nbsp;- xiaomi motion sensor<br/>
-&nbsp;&nbsp;- xiaomi door/window sensor<br/>
+
+
 &nbsp;&nbsp;- xiaomi button<br/>
 &nbsp;&nbsp;- xiaomi cube(Not yet tested)<br/>
-&nbsp;&nbsp;- xiaomi socket<br/>
-&nbsp;&nbsp;- xiaomi weather<br/>
 
 <br/><br/>
 ## Library
