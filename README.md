@@ -88,6 +88,10 @@ Update Click
 <br/><br/>
 
 ## Support devices<br/>
+| Type  | Model | Tested |
+| ------------- | ------------- | ------------- |
+| xiaomi air purifier  | zhimi.airpurifier.m1  | tested |
+
 - xiaomi air purifier (zhimi.airpurifier.m1
 , zhimi.airpurifier.v1
 , zhimi.airpurifier.v2
