@@ -102,6 +102,11 @@ Update Click
 | Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
+|   |   |   |
+| Xiaomi Zigbee  |   |    |
+| motion sensor | lumi.motion  |  X  |
+|  | lumi.motion.aq2  |  X  |
+
 
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
