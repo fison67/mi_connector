@@ -87,7 +87,7 @@ b. synology nas<br/>
 
 <br/><br/>
 
-Support devices<br/>
+## Support devices<br/>
 - xiaomi air purifier<br/>
 - xiaomi humidifier<br/>
 - xiaomi vacuum<br/>
@@ -105,6 +105,7 @@ Support devices<br/>
 - https://github.com/aholstenson/miio
 - https://github.com/zlargon/google-tts
 
+<br/><br/>
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
