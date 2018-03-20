@@ -116,12 +116,12 @@ Update Click
 |  | lumi.magnet.aq2  |  O  |
 | Xiaomi weather sensor | lumi.weather  |  O  |
 | Xiaomi power socket | lumi.plug  |  O  |
+| Xiaomi Button | lumi.switch  |  X  |
+|  | lumi.switch.v2  |  O  |
+|  | lumi.86sw1  |  X  |
+|  | lumi.86sw2  |  X  |
+| Xiaomi Cube | lumi.cube  |  X  |
 
-
-
-
-&nbsp;&nbsp;- xiaomi button<br/>
-&nbsp;&nbsp;- xiaomi cube(Not yet tested)<br/>
 
 <br/><br/>
 ## Library
