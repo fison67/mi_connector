@@ -33,7 +33,7 @@ You must install docker on your nas
 ![image](../../../imgs/install/nas/image7.png) 
 <br/><br/>
 
-### Management URL
+### Management Web URL
 http://nas_address:30000
 
 If other application in nas use 30000, 30001 port, you have to modify ports.
