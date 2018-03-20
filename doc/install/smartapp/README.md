@@ -19,14 +19,15 @@
 
 ## Open Smartthings App.<br/>
 
-#### Click New Smartapp<br/>
+#### Click Automation Tab and click Add a SmartApp<br/>
 ![create](../../../imgs/smartapp/app-add1.jpg) 
 
-#### Click New Smartapp<br/>
+#### Click My Smartapp<br/>
 ![create](../../../imgs/smartapp/app-add2.jpg) 
 
-#### Click New Smartapp<br/>
+#### Select Mi Connector<br/>
 ![create](../../../imgs/smartapp/app-add3.jpg) 
 
-#### Click New Smartapp<br/>
+#### Fill the blank with local address.<br/>
+> Be careful. The address is not external ip.
 ![create](../../../imgs/smartapp/app-add4.jpg) 
