@@ -36,14 +36,7 @@ Example Video<br/>
 
 <br/><br/>
 # DTH Example<br/>
-Xiaomi Vacuum<br/>
-![vacuum_](./imgs/vacuum_.png) 
-
-Xiaomi Air Purifier<br/>
-![air_pir](./imgs/air_pir.png) 
-
-Xiaomi Gateway<br/>
-![gateway](./imgs/gateway.jpg) 
+![total2](./imgs/total2.png) 
 
 
 
