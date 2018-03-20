@@ -177,7 +177,7 @@ def addDevice(){
         }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
-        }else if(params.type == "rockrobo.vacuum.v1"){
+        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.s5"){
         	dth = "Xiaomi Vacuums";
             name = "Xiaomi Vacuums";
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
