@@ -7,5 +7,8 @@ You must install docker on your nas
 ```
 <br/><br/>
 
-#### Search
+### Search docker image
 ![search](../../../imgs/install/nas/search.png) 
+
+### Download image
+![image](../../../imgs/install/nas/image.png) 
