@@ -80,15 +80,15 @@ Loop until all of file is registered
 
 ## Install Smartapps<br/>
 ```
-Connect to the Smartthings IDE<br/>
-Click My Smartapps<br/>
-Click New Smartapp<br/>
-Click From Code <br/>
-Copy content of mi_connector.groovy to area<br/>
-Click Create<br/>
-Click My Smartapps & Edit properties (Mi-Connector)<br/>
-Enable OAuth<br/>
-Update Click<br/>
+Connect to the Smartthings IDE
+Click My Smartapps
+Click New Smartapp
+Click From Code 
+Copy content of mi_connector.groovy & Paste
+Click Create
+Click My Smartapps & Edit properties (Mi-Connector)
+Enable OAuth
+Update Click
 ```
 
 <br/><br/>
