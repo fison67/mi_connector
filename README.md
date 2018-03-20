@@ -30,6 +30,14 @@ Example Video<br/>
 ![total2](./imgs/total2.png) 
 
 
+<br/><br/>
+
+# Install
+## Preparing
+```
+Raspbery pi or Synology Nas
+```
+<br/><br/>
 
 ## Install API Server<br/>
 a. raspberry pi<br/>
