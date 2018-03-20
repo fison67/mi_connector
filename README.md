@@ -50,7 +50,7 @@ docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connect
 ```
 
 ###### Synology nas<br/>
-> You must install docker first.
+> You must install docker first.<br/>
 See the [Manual](doc/install/synology/README.md) file for details
 ```
 make folder /docker/mi-connector
