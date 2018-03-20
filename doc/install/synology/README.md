@@ -9,25 +9,29 @@ You must install docker on your nas
 
 ### Search docker image
 ![search](../../../imgs/install/nas/search.png) 
+<br/>
 
 ### Download image
 ![image](../../../imgs/install/nas/image.png) 
+<br/>
 
 ### Launch image
 ![image](../../../imgs/install/nas/image2.png) 
+<br/>
 
 ### Setting volume
 ![image](../../../imgs/install/nas/image3.png) 
 ![image](../../../imgs/install/nas/image4.png) 
 ![image](../../../imgs/install/nas/image5.png) 
-
+<br/>
 
 ### Setting network
 ![image](../../../imgs/install/nas/image6.png) 
+<br/>
 
 ### Finish
 ![image](../../../imgs/install/nas/image7.png) 
-
+<br/><br/>
 
 ### Default URL
 http://nas_address:30000/
