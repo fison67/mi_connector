@@ -39,7 +39,7 @@ You need a Raspbery pi or Synology Nas to install Mi Connector API Server
 <br/><br/>
 
 ## Install API Server<br/>
-### raspberry pi<br/>
+#### Raspberry pi<br/>
 ```
 sudo mkdir /docker
 sudo mkdir /docker/mi-connector
@@ -48,7 +48,7 @@ docker pull fison67/mi-connector-arm:0.0.1
 docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1
 ```
 
-### synology nas<br/>
+#### Synology nas<br/>
 See the [Manual](doc/install/synology/README.md) file for details
 ```
 make folder /docker/mi-connector
