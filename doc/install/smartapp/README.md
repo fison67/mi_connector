@@ -9,4 +9,9 @@
 #### Paste code<br/>
 ![create](../../../imgs/smartapp/create3.png) 
 
+#### Click Edit Properties<br/>
+![create](../../../imgs/smartapp/update1.png) 
+
+#### Click Enable OAuth<br/>
+![create](../../../imgs/smartapp/update2.png) 
 
