@@ -88,7 +88,12 @@ Update Click
 <br/><br/>
 
 ## Support devices<br/>
-- xiaomi air purifier<br/>
+- xiaomi air purifier (zhimi.airpurifier.m1, 
+, zhimi.airpurifier.v1
+, zhimi.airpurifier.v2
+, zhimi.airpurifier.v3
+, zhimi.airpurifier.v6
+, zhimi.airpurifier.ma2) <br/>
 - xiaomi humidifier<br/>
 - xiaomi vacuum<br/>
 - xiaomi air monitor<br/>
