@@ -31,8 +31,7 @@ Example Video<br/>
 <br/><br/>
 
 ## Management Web Mobile Version.<br/>
-![web-setup](./imgs/main.jpg) 
-![app-add-manual2](./imgs/app-add-manual2.jpg) 
+![total](./imgs/total.png) 
 
 
 <br/><br/>
