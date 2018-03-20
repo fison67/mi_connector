@@ -47,23 +47,23 @@ Xiaomi Gateway<br/>
 ## Install API Server<br/>
 a. raspberry pi<br/>
 ```
-&nbsp;&nbsp;sudo mkdir /docker<br/>
-&nbsp;&nbsp;sudo mkdir /docker/mi-connector<br/>
-&nbsp;&nbsp;sudo chown -R pi:pi /docker<br/>
-&nbsp;&nbsp;docker pull fison67/mi-connector-arm:0.0.1<br/>
-&nbsp;&nbsp;docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1<br/>
+sudo mkdir /docker<br/>
+sudo mkdir /docker/mi-connector<br/>
+sudo chown -R pi:pi /docker<br/>
+docker pull fison67/mi-connector-arm:0.0.1<br/>
+docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-arm:0.0.1<br/>
 ```
 
 b. synology nas<br/>
 ```
-&nbsp;&nbsp;make folder /docker/mi-connector<br/>
-&nbsp;&nbsp;Run Docker<br/>
-&nbsp;&nbsp;&nbsp;-> Registery <br/>
-&nbsp;&nbsp;&nbsp;-> Search fison67/mi-connector<br/>
-&nbsp;&nbsp;&nbsp;-> Advanced Settings<br/>
-&nbsp;&nbsp;&nbsp;-> Volume tab -> folder -> Select mi-connector & Mount path '/config'<br/>
-&nbsp;&nbsp;&nbsp;-> Network tab -> Check 'use same network as Docker Host'<br/>
-&nbsp;&nbsp;&nbsp;-> Complete<br/>
+make folder /docker/mi-connector<br/>
+Run Docker<br/>
+-> Registery <br/>
+-> Search fison67/mi-connector<br/>
+-> Advanced Settings<br/>
+-> Volume tab -> folder -> Select mi-connector & Mount path '/config'<br/>
+-> Network tab -> Check 'use same network as Docker Host'<br/>
+-> Complete<br/>
 ```
 <br/><br/>
  
