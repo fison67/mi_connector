@@ -92,8 +92,6 @@ Update Click
 <br/><br/>
 
 ## Problem solving
-> Smartapp doesn't receive data from xiaomi devices.
--> Check ST app_url, app_id, access_token is null or not in config.json or web
 <br/><br/>
 
 ## Support devices<br/>
