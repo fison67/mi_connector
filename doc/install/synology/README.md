@@ -11,4 +11,4 @@ You must install docker on your nas
 ```
 Run Docker
 ```
-![search](./imgs/install/nas/search.png) 
+![search](../../../imgs/install/nas/search.png) 
