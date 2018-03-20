@@ -49,6 +49,7 @@ docker run -d -v /docker/mi-connector:/config --net=host fison67/mi-connector-ar
 ```
 
 b. synology nas<br/>
+See the [Install](/doc/install/nas/README) file for details
 ```
 make folder /docker/mi-connector
 Run Docker
