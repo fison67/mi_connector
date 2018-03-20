@@ -88,16 +88,16 @@ Update Click
 <br/><br/>
 
 ## Support devices<br/>
-- xiaomi air purifier (zhimi.airpurifier.m1, 
+- xiaomi air purifier (zhimi.airpurifier.m1
 , zhimi.airpurifier.v1
 , zhimi.airpurifier.v2
 , zhimi.airpurifier.v3
 , zhimi.airpurifier.v6
 , zhimi.airpurifier.ma2) <br/>
-- xiaomi humidifier<br/>
-- xiaomi vacuum<br/>
-- xiaomi air monitor<br/>
-- xiaomi gateway<br/>
+- xiaomi humidifier (zhimi.humidifier.v1)<br/>
+- xiaomi vacuum (rockrobo.vacuum.v1)<br/>
+- xiaomi air monitor (zhimi.airmonitor.v1)<br/>
+- xiaomi gateway (lumi.gateway.v2, lumi.gateway.v3)<br/>
 &nbsp;&nbsp;- xiaomi motion sensor<br/>
 &nbsp;&nbsp;- xiaomi door/window sensor<br/>
 &nbsp;&nbsp;- xiaomi button<br/>
