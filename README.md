@@ -90,14 +90,13 @@ Update Click
 ## Support devices<br/>
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
-| xiaomi air purifier  | zhimi.airpurifier.m1  | tested |
+| xiaomi air purifier  | zhimi.airpurifier.m1  | O |
+|   | zhimi.airpurifier.v1  | X |
+|   | zhimi.airpurifier.v2  | X |
+|   | zhimi.airpurifier.v3  | X |
+|   | zhimi.airpurifier.v6  | X |
+|   | zhimi.airpurifier.ma2  | X |
 
-- xiaomi air purifier (zhimi.airpurifier.m1
-, zhimi.airpurifier.v1
-, zhimi.airpurifier.v2
-, zhimi.airpurifier.v3
-, zhimi.airpurifier.v6
-, zhimi.airpurifier.ma2) <br/>
 - xiaomi humidifier (zhimi.humidifier.v1)<br/>
 - xiaomi vacuum (rockrobo.vacuum.v1)<br/>
 - xiaomi air monitor (zhimi.airmonitor.v1)<br/>
