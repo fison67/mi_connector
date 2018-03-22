@@ -187,10 +187,10 @@ def addDevice(){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
-     //   	dth = "Xiaomi Wall Switch1";
-     //       name = "Xiaomi Wall Switch1";
+    //    	dth = "Xiaomi Wall Switch1";
+    //        name = "Xiaomi Wall Switch1";
         }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
-     //   	dth = "Xiaomi Wall Switch2";
+    //    	dth = "Xiaomi Wall Switch2";
     //        name = "Xiaomi Wall Switch2";
         }else if(params.type == "lumi.sensor_ht"){
         	dth = "Xiaomi Sensor HT";
@@ -201,7 +201,9 @@ def addDevice(){
         }else if(params.type == "lumi.weather"){
         	dth = "Xiaomi Weather";
             name = "Xiaomi Weather";
-        	
+        }else if(params.type == "lumi.smoke"){
+        	dth = "Xiaomi Smoke Dectector";
+            name = "Xiaomi Smoke Dectector";
         }
         
         if(dth == null){
@@ -209,6 +211,32 @@ def addDevice(){
             def resultString = new groovy.json.JsonOutput().toJson("result":"nonExist")
             render contentType: "application/javascript", data: resultString
         	
+        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
+        	try{
+            	for (i = 0; i <2; i++) {
+                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + (i+1)), location.hubs[0].id, [
+                        "label": name + (i+1)
+                    ])    
+                    childDevice.setInfo(settings.address, id)
+                    childDevice.setSubInfo(i+1)
+                    log.debug "Success >> ADD Device : ${type} DNI=${dni}"
+                    data.each { key, value ->
+                    //	log.debug "Key:" + key + ", " + value
+                        def map = [:]
+                        map['key'] = key
+                        map['data'] = value
+                        childDevice.setStatus(map)
+                    }
+                }
+                
+                def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
+                render contentType: "application/javascript", data: resultString
+            	
+            }catch(e){
+                console.log("Failed >> ADD Device Error : " + e);
+                def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
+                render contentType: "application/javascript", data: resultString
+            }
         }else{
             try{
                 def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
