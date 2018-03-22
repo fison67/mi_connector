@@ -70,24 +70,24 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4, canChangeIcon: true){
 			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "initiating", label:'${name}', backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"off"
-                attributeState "charger-offline", label:'${name}', backgroundColor:"#000000", icon:"st.Electronics.electronics1", action:"on"
-                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"charge"
-                attributeState "cleaning", label:'${name}', backgroundColor:"#4286f4", icon:"st.Electronics.electronics1", action:"off"
-                attributeState "returning", label:'${name}', backgroundColor:"#4e25a8", icon:"st.Electronics.electronics1", action:"on"
-                attributeState "charging", label:'${name}',   backgroundColor:"#25a896", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "initiating", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"off"
+                attributeState "charger-offline", label:'${name}', backgroundColor:"#000000", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
+                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"charge"
+                attributeState "cleaning", label:'${name}', backgroundColor:"#4286f4", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
+                attributeState "returning", label:'${name}', backgroundColor:"#4e25a8", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
+                attributeState "charging", label:'${name}',   backgroundColor:"#25a896", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
                 
-                attributeState "charging-error", label:'${name}',  backgroundColor:"#ff2100", icon:"st.Electronics.electronics1", action:"on"
-                attributeState "paused", label:'${name}',  backgroundColor:"#09540d", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "charging-error", label:'${name}',  backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
+                attributeState "paused", label:'${name}',  backgroundColor:"#09540d", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
                 
-                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#a0e812", icon:"st.Electronics.electronics1", action:"off"
-                attributeState "error", label:'${name}',   backgroundColor:"#ff2100", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#a0e812", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
+                attributeState "error", label:'${name}',   backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
                 
-                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc", icon:"st.Electronics.electronics1", action:"on"
-                attributeState "updating", label:'${name}',  backgroundColor:"#ffa0ea", icon:"st.Electronics.electronics1", action:"on"
+                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
+                attributeState "updating", label:'${name}',  backgroundColor:"#ffa0ea", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
                 
-                attributeState "docking", label:'${name}', backgroundColor:"#9049bc", icon:"st.Electronics.electronics1", action:"off"
-                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#91f268", icon:"st.Electronics.electronics1", action:"off"
+                attributeState "docking", label:'${name}', backgroundColor:"#9049bc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"off"
+                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#91f268", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
                 
                 attributeState "full", label:'${name}', backgroundColor:"#ffffff", icon:"st.Electronics.electronics1", action:"on"
                 
