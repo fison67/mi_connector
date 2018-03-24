@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Wall Switch1 (v.0.0.1)
+ *  Xiaomi Wall Switch (v.0.0.1)
  *
  * MIT License
  *
@@ -31,7 +31,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Wall Switch1", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Wall Switch", namespace: "fison67", author: "fison67") {
         capability "Switch"						
          
         attribute "switch", "string"
