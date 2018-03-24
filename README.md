@@ -97,14 +97,14 @@ Update Click
 And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out the blank. (IP & Token) > Click OK Button
 The product will be registered.
 These model below is not working with auto token.
-- Yeelight Desk Lamp
-- Yeelight Color Bulb
-- Yeelight White Bulb
-- Yeelight LED Strip
-- Mi Robot Vacuum
-- Mi Air Quality Monitor (PM2.5)
-- Mi Smart Power Strip 1
-- Mi Smart Power Strip 2
+Yeelight Desk Lamp
+Yeelight Color Bulb
+Yeelight White Bulb
+Yeelight LED Strip
+Mi Robot Vacuum
+Mi Air Quality Monitor (PM2.5)
+Mi Smart Power Strip 1
+Mi Smart Power Strip 2
 <br/><br/>
 
 ## Support devices<br/>
