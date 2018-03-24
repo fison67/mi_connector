@@ -215,7 +215,7 @@ def addDevice(){
                 def childDevice = addChildDevice("fison67", dth, (dni + "-1"), location.hubs[0].id, [
                     "label": name + "1"
                 ])    
-                childDevice.setInfo(settings.address, id, (i+1).toString())
+                childDevice.setInfo(settings.address, id, "1")
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
@@ -226,12 +226,14 @@ def addDevice(){
             }
         }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
         	try{
+            	def index = 1;
             	for (i = 0; i <2; i++) {
-                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + (i+1)), location.hubs[0].id, [
-                        "label": name + (i+1)
+                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + index), location.hubs[0].id, [
+                        "label": name + index
                     ])    
-                    childDevice.setInfo(settings.address, id, (i+1).toString())
+                    childDevice.setInfo(settings.address, id, index.toString())
                     log.debug "Success >> ADD Device : ${type} DNI=${dni}"
+                    index += 1
                 }
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
