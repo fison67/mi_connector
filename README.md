@@ -100,8 +100,6 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 ## These devices is not working auto mode.
 ### You must add device manually
 #### Management Web -> Manage Device -> Device List -> Fill the address & token -> Add Button
-- The product will be registered.
-- These model below is not working with auto token.
 - Yeelight Desk Lamp
 - Yeelight Color Bulb
 - Yeelight White Bulb
