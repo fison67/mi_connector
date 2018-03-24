@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Sensor Temperature & Humidity (v.0.0.1)
+ *  Xiaomi Sensor HT (v.0.0.1)
  *
  * MIT License
  *
