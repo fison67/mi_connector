@@ -227,7 +227,7 @@ def addDevice(){
         }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
         	try{
             	def index = 1;
-            	for (i = 0; i <2; i++) {
+            	for (def i = 0; i <2; i++) {
                 	def childDevice = addChildDevice("fison67", dth, (dni + "-" + index), location.hubs[0].id, [
                         "label": name + index
                     ])    
