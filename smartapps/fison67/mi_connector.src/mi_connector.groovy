@@ -188,10 +188,10 @@ def addDevice(){
             name = "Xiaomi Power Plug";
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
         	dth = "Xiaomi Wall Switch";
-            name = "Xiaomi Wall Switch1";
+            name = "Xiaomi Wall Switch";
         }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
         	dth = "Xiaomi Wall Switch";
-            name = "Xiaomi Wall Switch1";
+            name = "Xiaomi Wall Switch";
         }else if(params.type == "lumi.sensor_ht"){
         	dth = "Xiaomi Sensor HT";
             name = "Xiaomi Sensor HT";
