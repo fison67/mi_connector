@@ -35,7 +35,7 @@ metadata {
         capability "Smoke Detector"    //"detected", "clear", "tested"
          
         attribute "battery", "string"
-        
+        attribute "density", "string"        
         attribute "lastCheckin", "Date"
         
         command "refresh"
@@ -48,13 +48,22 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"smoke", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.smoke", key: "PRIMARY_CONTROL") {
-               	attributeState "clear", label:'${name}', icon:"st.alarm.smoke.clear" , backgroundColor:"#ffffff"
-            	attributeState "detected", label:'${name}', icon:"st.alarm.smoke.smoke" , backgroundColor:"#e86d13"
+               	attributeState "clear", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#ffffff"
+            	attributeState "detected", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#e86d13"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
 		}
+        
+        valueTile("density", "device.density", width: 2, height: 2) {
+            state ("val", label:'${currentValue}obs./m', defaultState: true, 
+            	backgroundColors:[
+                    [value: 00, color: "#fde9e5"],
+                    [value: 1000, color: "#600e00"]
+                ]
+             )
+        }
         
         valueTile("battery", "device.battery", width: 2, height: 2) {
             state "val", label:'${currentValue}', defaultState: true
@@ -78,6 +87,9 @@ def setStatus(params){
  	switch(params.key){
     case "smokeDetected":
     	sendEvent(name:"smoke", value: (params.data == "true" ? "detected" : "clear") )
+    	break;
+    case "density":
+    	sendEvent(name:"density", value: params.data)
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data + "%")
