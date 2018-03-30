@@ -177,7 +177,7 @@ def addDevice(){
         }else if(params.type == "lumi.cube"){
         	dth = "Xiaomi Cube";
             name = "Xiaomi Cube";
-        }else if(params.type == "zhimi.humidifier.v1"){
+        }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.strip1"){
