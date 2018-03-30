@@ -50,14 +50,14 @@ metadata {
 	simulator {
 	}
 
-	tiles {
+	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'${name}', action:"off", icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMzAw/MDAxNTIyMDQxNTc1NjIx.CQDEOYh7wDWwPWjLSIrAp9Kaak_e3uV070XumPqCjBUg.GU36EBE7o_IO-SnjHAEv-SBtZBCFmCMN7cJCnFnkC6kg.PNG.fuls/pm2_75.png?type=w773", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"on", icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMzAw/MDAxNTIyMDQxNTc1NjIx.CQDEOYh7wDWwPWjLSIrAp9Kaak_e3uV070XumPqCjBUg.GU36EBE7o_IO-SnjHAEv-SBtZBCFmCMN7cJCnFnkC6kg.PNG.fuls/pm2_75.png?type=w773", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"off", icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMzAw/MDAxNTIyMDQxNTc1NjIx.CQDEOYh7wDWwPWjLSIrAp9Kaak_e3uV070XumPqCjBUg.GU36EBE7o_IO-SnjHAEv-SBtZBCFmCMN7cJCnFnkC6kg.PNG.fuls/pm2_75.png?type=w773", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"on", icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMzAw/MDAxNTIyMDQxNTc1NjIx.CQDEOYh7wDWwPWjLSIrAp9Kaak_e3uV070XumPqCjBUg.GU36EBE7o_IO-SnjHAEv-SBtZBCFmCMN7cJCnFnkC6kg.PNG.fuls/pm2_75.png?type=w773", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
