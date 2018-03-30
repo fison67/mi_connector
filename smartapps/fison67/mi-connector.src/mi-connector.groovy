@@ -165,15 +165,27 @@ def addDevice(){
         }else if(params.type == "lumi.motion" || params.type == "lumi.motion.aq2"){
         	dth = "Xiaomi Motion";
             name = "Xiaomi Motion";
-        }else if(params.type == "lumi.switch" || params.type == "lumi.switch.v2" || params.type == "lumi.86sw1" || params.type == "lumi.86sw2" || params.type == "lumi.cube"){
-        	dth = "Xiaomi Switch";
-            name = "Xiaomi Switch";
+        }else if(params.type == "lumi.switch"){
+        	dth = "Xiaomi Button Ori";
+            name = "Xiaomi Button Ori";
+        }else if(params.type == "lumi.86sw1" || params.type == "lumi.switch.v2"){
+        	dth = "Xiaomi Button AQ";
+            name = "Xiaomi Button AQ";
+        }else if(params.type == "lumi.86sw2"){
+        	dth = "Xiaomi Button SW";
+            name = "Xiaomi Button SW";
+        }else if(params.type == "lumi.cube"){
+        	dth = "Xiaomi Cube";
+            name = "Xiaomi Cube";
         }else if(params.type == "zhimi.humidifier.v1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.color1" || params.type == "yeelink.light.strip1"){
+        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.strip1"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
+        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1"){
+        	dth = "Xiaomi Light Mono";
+            name = "Xiaomi Light Mono";
         }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
