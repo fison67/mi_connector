@@ -184,13 +184,13 @@ metadata {
         }
         
         valueTile("buzzer_label", "", decoration: "flat") {
-            state "default", label:'부저음'
+            state "default", label:'Buzzer'
         }        
         valueTile("led_label", "", decoration: "flat") {
             state "default", label:'LED'
         }        
         valueTile("time_label", "", decoration: "flat") {
-            state "default", label:'사용 \n시간'
+            state "default", label:'Use Time'
         }        
         standardTile("buzzer", "device.buzzer") {
             state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#BAA7BC", nextState:"turningOff"
