@@ -133,13 +133,13 @@ metadata {
 
 
         valueTile("temp_label", "", decoration: "flat") {
-            state "default", label:'온도'
+            state "default", label:'Temperature'
         }
         valueTile("humi_label", "", decoration: "flat") {
-            state "default", label:'습도'
+            state "default", label:'Humidity'
         }
         valueTile("water_label", "", decoration: "flat") {
-            state "default", label:'물양'
+            state "default", label:'Water'
         }
 
         valueTile("temperature", "device.temperature") {
