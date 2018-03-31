@@ -282,10 +282,9 @@ def setStatus(params){
         sendEvent(name:"limit_hum", value: params.data)
     	break;
     case "depth":
-		def para = "${params.data}"
-		String data = para
-		def stf = Float.parseFloat(data)
-		def water = Math.round(stf/12*10)    
+		def stf = Float.parseFloat(params.data)
+		def water = Math.round(stf)    
+	//	def water = Math.round(stf/12*10)    
         sendEvent(name:"water", value: water )
     	break;
     case "buzzer":
