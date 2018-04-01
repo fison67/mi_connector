@@ -262,13 +262,16 @@ def addDevice(){
                 ])    
                 childDevice.setInfo(settings.address, id)
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
-                data.each { key, value ->
+            /*    data.each { key, value ->
                 //	log.debug "Key:" + key + ", " + value
                 	def map = [:]
                     map['key'] = key
                     map['data'] = value
                 	childDevice.setStatus(map)
-                }
+                }*/
+                try{
+                	childDevice.refresh()
+                }catch(e){}
                 
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
