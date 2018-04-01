@@ -40,6 +40,7 @@ metadata {
         
         attribute "lastCheckin", "Date"
 	command "reset"	
+	command "refresh"	
          
 	}
 
@@ -76,13 +77,15 @@ metadata {
         }
         
         valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}', defaultState: true
+            state "val", label:'${currentValue}%', defaultState: true
         }
                 standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", action:"reset", label: "Reset Motion", icon:"st.motion.motion.active"
         }
 
-
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
 	}
 }
 
@@ -100,7 +103,7 @@ def setInfo(String app_url, String id) {
 def setStatus(params){
  	switch(params.key){
     case "motion":
-        sendEvent(name:"motion", value: (params.data == "true" ? "active" : null) )
+        sendEvent(name:"motion", value: (params.data == "true" ? "active" : "inactive") )
         if (settings.motionReset == null || settings.motionReset == "" ) settings.motionReset = 120
         if (params.data == "true") runIn(settings.motionReset, stopMotion)
 		
@@ -109,13 +112,11 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data + "%")
     	break;
     case "illuminance":
-    	log.debug "illuminance >> ${params.data}"
     	sendEvent(name:"illuminance", value: params.data )
     	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    updateLastTime()
 }
 
 def callback(physicalgraph.device.HubResponse hubResponse){
@@ -123,13 +124,28 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+        log.debug jsonObj
+        
+        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+        sendEvent(name:"motion", value: jsonObj.properties.motion == true ? "active" : "inactive")
+        
+        if(jsonObj.properties.illuminance != null && jsonObj.properties.illuminance != ""){
+        	sendEvent(name:"illuminance", value: jsonObj.properties.illuminance.value + jsonObj.properties.illuminance.unit)
+        }
+      
+        updateLastTime()
+
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
 }
 
 def updated() {
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    sendEvent(name: "lastCheckin", value: now)
 }
 
 def stopMotion() {
@@ -156,4 +172,17 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
