@@ -32,12 +32,15 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Gateway", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
+        capability "Illuminance Measurement"
          
         attribute "switch", "string"
         attribute "color", "string"
         attribute "brightness", "string"
         
         attribute "lastCheckin", "Date"
+        
+        command "refresh"
          
         command "setColor"
         command "setBrightness"
@@ -82,7 +85,7 @@ metadata {
 	}
 
 	preferences {
-		input name:"volume", type:"number", title:"Volume", range: "0..100", defaultValue:50, description:"Gateway Alarm Volume"
+		input name:"volume", type:"number", title:"Volume", range: "0..100", defaultValue:10, description:"Gateway Alarm Volume"
 	}
 
 	tiles {
@@ -106,6 +109,23 @@ metadata {
                 attributeState "color", action:"setColor"
             }
 		}
+        
+        valueTile("illuminance", "device.illuminance", width: 2, height: 2) {
+            state "val", label:'${currentValue}lx', defaultState: true,
+                backgroundColors:[
+                    [value: 100, color: "#153591"],
+                    [value: 200, color: "#1e9cbb"],
+                    [value: 300, color: "#90d2a7"],
+                    [value: 600, color: "#44b621"],
+                    [value: 900, color: "#f1d801"],
+                    [value: 1200, color: "#d04e00"],
+                    [value: 1500, color: "#bc2323"]
+                ]
+        }
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
         
         standardTile("stopMusic", "device.stopMusic", inactiveLabel: false, width: 2, height: 2) {
             state "stop", label:'STOP', action:"stopMusic", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc"
@@ -213,23 +233,25 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
+    log.debug "${params.key} : ${params.data}"
+    
  	switch(params.key){
     case "power":
-    	log.debug "MI >> power " + (params.data == "true" ? "on" : "off")
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off") )
     	break;
     case "color":
     	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger()) )
     	break;
     case "brightness":
     	sendEvent(name:"brightness", value: params.data )
     	break;
+    case "illuminance":
+    	sendEvent(name:"illuminance", value: params.data.replace(" lx","") )
+    	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    updateLastTime()
 }
 
 def playMusic(id, volume){
@@ -238,7 +260,7 @@ def playMusic(id, volume){
         "id": state.id,
         "cmd": "playMusic",
         "data": id,
-        "subData": volume
+        "subData": volume.toInteger()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -299,15 +321,41 @@ def off(){
     sendCommand(options, null)
 }
 
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
+}
+
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+
+		if(jsonObj.properties.illuminance != null){
+        	sendEvent(name:"illuminance", value: jsonObj.properties.illuminance.value)
+        }
+        sendEvent(name:"brightness", value: jsonObj.state.brightness)
+        sendEvent(name:"switch", value: jsonObj.state.brightness == 0 ? "off" : "on")
+        sendEvent(name:"color", value: String.format("#%02x%02x%02x", jsonObj.state.rgb.red.toInteger(), jsonObj.state.rgb.green.toInteger(), jsonObj.state.rgb.blue.toInteger()) )
+        
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    sendEvent(name: "lastCheckin", value: now)
 }
 
 def updated() {
@@ -334,11 +382,14 @@ def makeCommand(body){
 
 
 def makeAlarmContent(id){
+	if(settings.volume == null){
+    	settings.volume = 10
+    }
 	def body = [
         "id": state.id,
         "cmd": "playMusic",
         "data": id,
-        "subData": settings.volume
+        "subData": settings.volume.toInteger()
     ]
     return body
 }
