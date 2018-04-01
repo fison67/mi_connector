@@ -58,7 +58,11 @@ metadata {
 		}
         
         valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}', defaultState: true
+            state "val", label:'${currentValue}%', defaultState: true
+        }
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
 	}
 }
@@ -81,12 +85,11 @@ def setStatus(params){
     	sendEvent(name:"door", value: (params.data == "true" ? "closed" : "open") )
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data + "%")
+    	sendEvent(name:"battery", value: params.data)
     	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    updateLastTime()
 }
 
 def callback(physicalgraph.device.HubResponse hubResponse){
@@ -94,7 +97,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+        sendEvent(name:"contact", value: (jsonObj.properties.contact == "true" ? "closed" : "open"))
+        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+    
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
@@ -103,7 +109,22 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 def updated() {
 }
 
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    sendEvent(name: "lastCheckin", value: now)
+}
+
 def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
 
 def sendCommand(options, _callback){
