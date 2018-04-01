@@ -33,11 +33,14 @@ metadata {
 	definition (name: "Xiaomi Weather", namespace: "fison67", author: "fison67") {
         capability "Sensor"						
          
+        attribute "battery", "string"
         attribute "temperature", "string"
         attribute "humidity", "string"
         attribute "airPressure", "string"
         
         attribute "lastCheckin", "Date"
+        
+        command "refresh"
 	}
 
 
@@ -66,7 +69,7 @@ metadata {
 		}
         
          valueTile("humidity", "device.humidity", width: 2, height: 2, unit: "%") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}%', defaultState: true, 
             	backgroundColors:[
                     [value: 10, color: "#bfbdef"],
                     [value: 20, color: "#a29fea"],
@@ -82,11 +85,19 @@ metadata {
         
         
         valueTile("airPressure", "device.airPressure", width: 2, height: 2) {
-            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
+            state("val", label:'${currentValue}kpa', defaultState: true, backgroundColor:"#00a0dc")
+        }
+        
+        valueTile("battery", "device.battery", width: 2, height: 2) {
+            state "val", label:'${currentValue}%', defaultState: true
+        }
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
         
         main (["temperature"])
-      	details(["temperature", "humidity", "airPressure"])
+      	details(["temperature", "humidity", "airPressure", "battery", "refresh"])
 	}
 }
 
@@ -106,17 +117,24 @@ def setStatus(params){
  
  	switch(params.key){
     case "temperature":
-    	sendEvent(name:"temperature", value: params.data)
+    	sendEvent(name:"temperature", value: params.data.replace("C",""))
     	break;
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data + "%")
+    	sendEvent(name:"humidity", value: params.data)
     	break;
     case "atmosphericPressure":
-    	sendEvent(name:"airPressure", value: params.data)
+    	sendEvent(name:"airPressure", value: params.data.replace("Pa","").replace(",","").toInteger() / 1000)
+    	break;
+    case "batteryLevel":
+    	sendEvent(name:"battery", value: params.data)
     	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    updateLastTime()
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
 }
 
@@ -124,7 +142,7 @@ def refresh(){
 	log.debug "Refresh"
     def options = [
      	"method": "GET",
-        "path": "/get?id=${state.id}",
+        "path": "/devices/get/${state.id}",
         "headers": [
         	"HOST": state.app_url,
             "Content-Type": "application/json"
@@ -133,13 +151,20 @@ def refresh(){
     sendCommand(options, callback)
 }
 
+
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
-//        setStatus(jsonObj.state)
+        
+ 		sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value)
+        sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity)
+        sendEvent(name:"airPressure", value: jsonObj.properties.atmosphericPressure.value / 1000)
+        
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
