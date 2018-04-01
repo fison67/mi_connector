@@ -169,7 +169,7 @@ metadata {
             ]
         }        
         valueTile("temperature", "device.temperature") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}°', defaultState: true, 
             	backgroundColors:[
                     [value: -1, color: "#bcbcbc"],
                     [value: 0, color: "#bcbcbc"],
@@ -375,7 +375,7 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-        sendEvent(name:"temperature", value: tem +"°" )
+        sendEvent(name:"temperature", value: tem)
     	break;
     case "buzzer":
         sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off"))
@@ -610,7 +610,7 @@ def setBrightDim(){
     def body = [
         "id": state.id,
         "cmd": "ledBrightness",
-        "data": "brightDim"
+        "data": "dim"
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -661,7 +661,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         sendEvent(name:"mode", value: jsonObj.properties.mode)
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
     	sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity + "%" )
-    	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value + "°" )
+    	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value  )
         
         if(jsonObj.properties.aqi != null && jsonObj.properties.aqi != ""){
         	sendEvent(name:"pm25_value", value: jsonObj.properties.aqi)
