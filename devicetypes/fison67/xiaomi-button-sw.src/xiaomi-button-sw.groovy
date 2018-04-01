@@ -45,6 +45,7 @@ metadata {
         command "btn1-click"
         command "btn1-double_click"
         command "both_click"
+        command "refresh"
 	}
 
 
@@ -72,7 +73,11 @@ metadata {
         }
 
         valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}', defaultState: true
+            state "val", label:'${currentValue}%', defaultState: true
+        }
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
 	}
 }
@@ -99,29 +104,41 @@ def setStatus(params){
  	switch(params.key){
     case "action":
     	if(params.data == "btn0-click") {
-        buttonEvent(1, "pushed")
-        }
-        else if(params.data == "btn1-click") {
-        buttonEvent(2, "pushed")
-        }
-        else if(params.data == "both_click") {
-        buttonEvent(3, "pushed")
-        }
-        else {
-	    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    	sendEvent(name: "lastCheckin", value: now)
+        	buttonEvent(1, "pushed")
+        } else if(params.data == "btn1-click") {
+       	 	buttonEvent(2, "pushed")
+        } else if(params.data == "both_click") {
+        	buttonEvent(3, "pushed")
+        } else {
         }
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data + "%" )
-	    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    	sendEvent(name: "lastCheckin", value: now)
+    	sendEvent(name:"battery", value: params.data)
     	break;
     }
+    updateLastTime()
  }
 
 def buttonEvent(Integer button, String action) {
     sendEvent(name: "button", value: action, data: [buttonNumber: button], descriptionText: "$device.displayName button $button was $action", isStateChange: true)
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    sendEvent(name: "lastCheckin", value: now)
+}
+
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
 
 def callback(physicalgraph.device.HubResponse hubResponse){
@@ -129,7 +146,9 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+
+        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
