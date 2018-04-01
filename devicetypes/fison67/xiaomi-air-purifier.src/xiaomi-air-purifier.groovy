@@ -35,19 +35,20 @@ metadata {
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-		capability "Filter Status"
-		capability "Air Quality Sensor"
-		capability "Fan Speed"
 		capability "Refresh"
 		capability "Sensor"
 		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
          
         attribute "switch", "string"
-        attribute "buzzer", "enum", ["on", "off"]        
-        attribute "ledBrightness", "enum", ["bright", "dim", "off"]        
-        attribute "f1_hour_used", "number"
-        attribute "filter1_life", "number"
-        attribute "average_aqi", "number"
+        attribute "temperature", "string"
+        attribute "humidity", "string"
+        attribute "pm25", "string"
+        attribute "buzzer", "string"
+        attribute "mode", "string"
+        attribute "ledBrightness", "string"
+        attribute "f1_hour_used", "string"
+        attribute "filter1_life", "string"
+        attribute "average_aqi", "string"
         attribute "mode", "enum", ["auto", "silent", "favorite", "low", "medium", "high", "strong"]        
         
         attribute "lastCheckin", "Date"
@@ -106,19 +107,19 @@ metadata {
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
-            tileAttribute ("device.fanSpeed", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"FanSpeed.setFanSpeed"
+            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+                attributeState "level", action:"switch level.setLevel"
             }            
 		}
         standardTile("modemain", "device.mode", width: 2, height: 2) {
                 state "off", label:'off', action:"setModeAuto", icon:"http://blogfiles.naver.net/MjAxODAzMjdfMTk4/MDAxNTIyMTMyNzMxMjEz.BdXDvyyncHtsRwYxAHHWI4zCZaGxYkKAcCbrRYvRtEcg.HHz2i2rn7IdfCFJd-5heHMCllb0TJgXAq8dHtdM1beEg.PNG.shin4299/MiAirPurifier2S_off_tile.png?type=w1", backgroundColor:"#ffffff", nextState:"turningOn"
-                state "auto", label:'auto', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#73C1EC", nextState:"modechange"
-                state "silent", label:'silent', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#6eca8f", nextState:"modechange"
-                state "favorite", label:'favorite', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#ff9eb2", nextState:"modechange"
-                state "low", label:'low', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#FFDE61", nextState:"modechange"
-                state "medium", label:'medium', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#f9b959", nextState:"modechange"
-                state "high", label:'high', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#ff9eb2", nextState:"modechange"
-                state "strong", label:'strong', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#db5764", nextState:"modechange"
+                state "auto", label:'auto', action:"setModeSilent", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#73C1EC", nextState:"modechange"
+                state "silent", label:'silent', action:"setModeFavorite", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#6eca8f", nextState:"modechange"
+                state "favorite", label:'favorite', action:"setModeAuto", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#ff9eb2", nextState:"modechange"
+                state "low", label:'low', action:"setModeMedium", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#FFDE61", nextState:"modechange"
+                state "medium", label:'medium', action:"setModeHigh", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#f9b959", nextState:"modechange"
+                state "high", label:'high', action:"setModeStrong", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#ff9eb2", nextState:"modechange"
+                state "strong", label:'strong', action:"setModeAuto", icon:"http://blogfiles.naver.net/MjAxODAzMjdfNzQg/MDAxNTIyMTMyNzMxMjEy.i1IvtTLdQ-Y3yHOyI0cwM0QKo8SobVo5vo0-zu72ZZkg.m7o9vNcIoiQBozog9FUXnE3w9O8U0kHeNxDeuWOfaWIg.PNG.shin4299/MiAirPurifier2S_on_tile.png?type=w1", backgroundColor:"#db5764", nextState:"modechange"
                 
                 state "turningOn", label:'${name}', action:"switch.off", icon:"http://blogfiles.naver.net/MjAxODAzMjdfMTk4/MDAxNTIyMTMyNzMxMjEz.BdXDvyyncHtsRwYxAHHWI4zCZaGxYkKAcCbrRYvRtEcg.HHz2i2rn7IdfCFJd-5heHMCllb0TJgXAq8dHtdM1beEg.PNG.shin4299/MiAirPurifier2S_off_tile.png?type=w1", backgroundColor:"#00a0dc", nextState:"turningOff"
                 state "modechange", label:'${name}', icon:"st.quirky.spotter.quirky-spotter-motion", backgroundColor:"#C4BBB5"
@@ -156,7 +157,7 @@ metadata {
             	[value: 500, color: "#970203"]
             ]
         }
-		valueTile("aqi", "device.airQuality", decoration: "flat") {
+		valueTile("aqi", "device.airQualityLevel", decoration: "flat") {
         	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
 				[value: -1, color: "#bcbcbc"],
 				[value: 0, color: "#bcbcbc"],
@@ -283,26 +284,30 @@ metadata {
         }
         
         valueTile("filter1_life", "device.filter1_life", width: 2, height: 1) {
-            state("val", label:'${currentValue} days', defaultState: true, backgroundColor:"#bcbcbc")
+            state("val", label:'${currentValue}%', defaultState: true, backgroundColor:"#bcbcbc")
+        }
+		
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
 
 
+        main (["modemain"])
+        details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
+            "pm25_value", "aqi", "temperature", "humidity", 
+            "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
+            "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
+            "strong_label", "buzzer_label", "led_label",  "usage_label", "f1_hour_used", 
+            "mode7", "buzzer", "ledBrightness", "remain_label", "filter1_life", "refresh"
+        ])
 
-   	main (["modemain"])
-	details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
-    "pm25_value", "aqi", "temperature", "humidity", 
-    "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
-    "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
-    "strong_label", "led_label", "buzzer_label", "usage_label", "f1_hour_used", 
-    "mode7", "buzzer", "ledBrightness", "remain_label", "filter1_life"
-    ])
         
 	}
 }
 
 def updated() {
     if(model == "MiAirPurifier"){
-		sendEvent(name:"airQuality", value: "N/A" )
+		sendEvent(name:"airQualityLevel", value: "N/A" )
 		sendEvent(name:"mode3", value: "notab" )
 		sendEvent(name:"temperature", value: "N/A" )
 		sendEvent(name:"humidity", value: "N/A" )
@@ -316,7 +321,7 @@ def updated() {
 		sendEvent(name:"mode5", value: "notab" )
 		sendEvent(name:"mode6", value: "notab" )
 		sendEvent(name:"mode7", value: "notab" )
-		sendEvent(name:"airQuality", value: 20 )
+		sendEvent(name:"airQualityLevel", value: 20 )
 		sendEvent(name:"mode3", value: "default" )
 		sendEvent(name:"temperature", value: 20 )
 		sendEvent(name:"humidity", value: 40 )
@@ -370,11 +375,7 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-	    if(model == "MiAirPurifier"){
-    	}
-    	else {
         sendEvent(name:"temperature", value: tem +"°" )
-        }
     	break;
     case "buzzer":
         sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off"))
@@ -387,7 +388,7 @@ def setStatus(params){
 		String data = para
 		def stf = Float.parseFloat(data)
 		def speed = Math.round(stf*625/100)    
-        sendEvent(name:"fanSpeed", value: speed)
+        sendEvent(name:"level", value: speed)
     	break;
     case "led":
         sendEvent(name:"ledBrightness", value: (params.data == "true" ? "bright" : "off"))
@@ -399,16 +400,11 @@ def setStatus(params){
 		def use = Math.round(stf/24)    
     	sendEvent(name:"f1_hour_used", value: use)
         break;
-    case "filter1_life":
-		def para = "${params.data}"
-		String data = para
-		def stf = Float.parseFloat(data)
-		def life = Math.round(stf*1.435)    
-    	sendEvent(name:"filter1_life", value: life)
+    case "filter1_life": 
+    	sendEvent(name:"filter1_life", value: params.data)
     	break;
     case "average_aqi":
-    
-    	sendEvent(name:"airQuality", value: params.data  + "㎍/㎥")
+    	sendEvent(name:"aqi", value: params.data  + "㎍/㎥")
     	break;
     }
     
@@ -420,7 +416,7 @@ def refresh(){
 	log.debug "Refresh"
     def options = [
      	"method": "GET",
-        "path": "/get?id=${state.id}",
+        "path": "/devices/get/${state.id}",
         "headers": [
         	"HOST": state.app_url,
             "Content-Type": "application/json"
@@ -429,12 +425,9 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def setFanSpeed(level){
+def setLevel(level){
 	def speed = Math.round(level/625*100)    
 	log.debug "setSpeed >> ${state.id}, speed=" + speed
-    if(model == "MiAirPurifier"){
-    }
-    else {
     def body = [
         "id": state.id,
         "cmd": "speed",
@@ -443,8 +436,8 @@ def setFanSpeed(level){
     def options = makeCommand(body)
     sendCommand(options, null)
 	sendEvent(name: "level", value: speed)
-	}
 }
+
 def setModeAuto(){
 	log.debug "setModeAuto >> ${state.id}"
     def body = [
@@ -663,7 +656,31 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
-//        setStatus(jsonObj.state)
+        
+        sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
+        sendEvent(name:"mode", value: jsonObj.properties.mode)
+        sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
+    	sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity + "%" )
+    	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value + "°" )
+        
+        if(jsonObj.properties.aqi != null && jsonObj.properties.aqi != ""){
+        	sendEvent(name:"pm25_value", value: jsonObj.properties.aqi)
+        }
+        if(jsonObj.properties.averageAqi != null && jsonObj.properties.averageAqi != ""){
+        	sendEvent(name:"airQualityLevel", value: jsonObj.properties.averageAqi)
+        }
+        if(jsonObj.state.filterLifeRemaining != null && jsonObj.state.filterLifeRemaining != ""){
+    		sendEvent(name:"filter1_life", value: jsonObj.state.filterLifeRemaining )
+        }
+        if(jsonObj.state.filterHoursUsed != null && jsonObj.state.filterHoursUsed != ""){
+    		sendEvent(name:"f1_hour_used", value: Math.round(jsonObj.state.filterHoursUsed/24) )
+        }
+        if(jsonObj.properties.ledBrightness != null && jsonObj.properties.ledBrightness != ""){
+        	sendEvent(name:"ledBrightness", value: jsonObj.properties.ledBrightness)
+        }
+        def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+        sendEvent(name: "lastCheckin", value: now)
+
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
