@@ -32,24 +32,30 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67") {
         capability "Motion Sensor"
+        capability "Illuminance Measurement"
+        capability "Configuration"
+        capability "Sensor"
          
-        attribute "motion", "string"
         attribute "battery", "string"
-        attribute "illuminance", "string"
         
         attribute "lastCheckin", "Date"
+	command "reset"	
          
 	}
 
 
 	simulator {
 	}
+	preferences {
+		input "motionReset", "number", title: "Motion Reset Time", description: "", value:120, displayDuringSetup: true
+	}
 
-	tiles {
+
+	tiles(scale: 2) {
 		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
-				attributeState "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#00a0dc"
-				attributeState "inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
+				attributeState "active", label:'motion', icon:"https://postfiles.pstatic.net/MjAxODAzMjNfMjc4/MDAxNTIxNzM3NjEwOTA4.AVNFyqM4bd-a1VMujIbLN9MVBYFb75X0jROHPuG9pKkg.U6TX1CZoDPe-8odhwyt1YYSrS37jddX3EldEMxd56k0g.PNG.fuls/Motion_active_75.png?type=w773", backgroundColor:"#00a0dc"
+				attributeState "inactive", label:'no motion', icon:"https://postfiles.pstatic.net/MjAxODAzMjNfMjcy/MDAxNTIxNzM3NjEwOTA4.q1xS4KkstlJxdvxeTeS-cPZ44Bppv766hjez9tb5vZ4g.ap9JW3w27LXOUH_z2cPFXX6LUmL-fY4CRa7M6XxWWx0g.PNG.fuls/Motion_inactive_75.png?type=w773", backgroundColor:"#ffffff"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -72,7 +78,11 @@ metadata {
         valueTile("battery", "device.battery", width: 2, height: 2) {
             state "val", label:'${currentValue}', defaultState: true
         }
-        
+                standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", action:"reset", label: "Reset Motion", icon:"st.motion.motion.active"
+        }
+
+
 	}
 }
 
@@ -90,7 +100,10 @@ def setInfo(String app_url, String id) {
 def setStatus(params){
  	switch(params.key){
     case "motion":
-        sendEvent(name:"motion", value: (params.data == "true" ? "active" : "inactive") )
+        sendEvent(name:"motion", value: (params.data == "true" ? "active" : null) )
+        if (settings.motionReset == null || settings.motionReset == "" ) settings.motionReset = 120
+        if (params.data == "true") runIn(settings.motionReset, stopMotion)
+		
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data + "%")
@@ -117,6 +130,14 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 }
 
 def updated() {
+}
+
+def stopMotion() {
+   sendEvent(name:"motion", value:"inactive")
+}
+
+def reset() {
+   sendEvent(name:"motion", value:"inactive")
 }
 
 def sendCommand(options, _callback){
