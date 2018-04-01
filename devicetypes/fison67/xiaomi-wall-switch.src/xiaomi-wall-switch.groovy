@@ -40,6 +40,8 @@ metadata {
         
         command "on"
         command "off"
+        command "refresh"
+
 	}
 
 	simulator { }
@@ -58,6 +60,10 @@ metadata {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
 		}
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
 	}
 }
 
@@ -79,16 +85,20 @@ def setStatus(params){
  	switch(params.key){
     case "power":
  		def power = params.data
-    	sendEvent(name:"switch", value: power)
+    	sendEvent(name:"switch", value: (power == "true" ? "on" : "off") )
     	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    updateLastTime()
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
 }
 
 def on(){
-    log.debug "On >> ${state.id}"
+    log.debug "On >> ${state.id} >> ${state.deviceIndex}"
     def body = [
         "id": state.id,
         "cmd": "power",
@@ -100,7 +110,7 @@ def on(){
 }
 
 def off(){
-	log.debug "Off >> ${state.id}"
+	log.debug "Off >> ${state.id} >> ${state.deviceIndex}"
 	def body = [
         "id": state.id,
         "cmd": "power",
@@ -111,16 +121,33 @@ def off(){
     sendCommand(options, null)
 }
 
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
+}
+
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+        
+     	sendEvent(name:"switch", value: jsonObj.state.power ? "on" : "off")
+        
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
 }
+
 
 def updated() {
 }
