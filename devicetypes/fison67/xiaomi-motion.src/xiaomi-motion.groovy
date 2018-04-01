@@ -109,7 +109,7 @@ def setStatus(params){
 		
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data + "%")
+    	sendEvent(name:"battery", value: params.data)
     	break;
     case "illuminance":
     	sendEvent(name:"illuminance", value: params.data )
