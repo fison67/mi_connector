@@ -49,6 +49,7 @@ metadata {
          
         command "on"
         command "off"
+        command "refresh"
         
         command "find"
         command "clean"
@@ -132,7 +133,7 @@ metadata {
         }
         
         valueTile("battery", "device.battery",  height: 2, width: 2) {
-            state "val", label:'${currentValue}', defaultState: true,
+            state "val", label:'${currentValue}%', defaultState: true,
             	backgroundColors:[
                     [value: 10, color: "#ff002a"],
                     [value: 20, color: "#f4425f"],
@@ -150,8 +151,12 @@ metadata {
 			state ("volume", label:'${currentValue}', action:"setVolumeWithTest")
 		}
         
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
+        
         main (["mode"])
-      	details(["mode", "switch", "paused", "fanSpeed", "spot", "charge", "find", "battery", "volume"])
+      	details(["mode", "switch", "paused", "fanSpeed", "spot", "charge", "find", "battery", "volume", "refresh"])
 	}
 }
 
@@ -177,7 +182,7 @@ def setStatus(params){
         }
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data + "%" )
+    	sendEvent(name:"battery", value: params.data)
     	break;
     case "fanSpeed":
     	def val = params.data.toInteger()
@@ -207,8 +212,25 @@ def setStatus(params){
     	break;
     }
     
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+    updateLastTime()
+}
+
+def updateLastTime(){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
+}
+
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
 
 def setVolume(volume){
@@ -358,7 +380,32 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+        
+        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+        
+        sendEvent(name:"mode", value: jsonObj.state.state)
+        log.debug (jsonObj.properties.cleaning ? "on" : "off")
+        sendEvent(name:"switch", value: (jsonObj.properties.cleaning ? "on" : "off") )
+       	sendEvent(name:"paused", value: jsonObj.properties.cleaning ? "paused" : "restart" )  
+        
+        def fanSpeed;
+        switch(jsonObj.state.fanSpeed){
+        case 38:
+        	fanSpeed = "quiet"
+        	break;
+        case 60:
+        	fanSpeed = "balanced"
+        	break;
+        case 77:
+        	fanSpeed = "turbo"
+        	break;
+        case 90:
+        	fanSpeed = "fullSpeed"
+        	break;
+        }
+    	sendEvent(name:"fanSpeed", value: fanSpeed )
+        
+        updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
