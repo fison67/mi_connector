@@ -180,9 +180,12 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.strip1"){
+        }else if(params.type == "yeelink.light.color1"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
+        }else if(params.type == "yeelink.light.strip1"){
+        	dth = "Xiaomi Light Strip";
+            name = "Xiaomi Light Strip";
         }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1"){
         	dth = "Xiaomi Light Mono";
             name = "Xiaomi Light Mono";
