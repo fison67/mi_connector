@@ -48,20 +48,31 @@ definition(
 preferences {
    page(name: "mainPage")
    page(name: "monitorPage")
+   page(name: "langPage")
 }
 
 
 def mainPage() {
+	def languageList = ["English", "Korean"]
     dynamicPage(name: "mainPage", title: "Home Assistant Manage", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
         	input "address", "string", title: "Server address", required: true
+            input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
         }
-       
+        
        	section() {
             paragraph "View this SmartApp's configuration to use it in other places."
             href url:"${apiServerUrl("/api/smartapps/installations/${app.id}/config?access_token=${state.accessToken}")}", style:"embedded", required:false, title:"Config", description:"Tap, select, copy, then click \"Done\""
        	}
+    }
+}
+
+def langPage(){
+	dynamicPage(name: "langPage", title:"Select a Language") {
+    	section ("Select") {
+        	input "Korean",  title: "Korean", multiple: false, required: false
+        }
     }
 }
 
@@ -85,6 +96,18 @@ def updated() {
     initialize()
 }
 
+def updateLanguage(){
+    log.debug "Languge >> ${settings.selectedLang}"
+    def list = getChildDevices()
+    list.each { child ->
+        try{
+        	child.setLanguage(settings.selectedLang)
+        }catch(e){
+        	log.error "DTH is not supported to select language"
+        }
+    }
+}
+
 def initialize() {
 	log.debug "initialize"
     
@@ -104,6 +127,8 @@ def initialize() {
     log.debug options
     def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: null])
     sendHubCommand(myhubAction)
+    
+    updateLanguage()
 }
 
 def dataCallback(physicalgraph.device.HubResponse hubResponse) {
@@ -180,7 +205,7 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-        }else if(params.type == "yeelink.light.color1"){
+       	}else if(params.type == "yeelink.light.color1"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
         }else if(params.type == "yeelink.light.strip1"){
@@ -231,6 +256,10 @@ def addDevice(){
                     "label": name + "1"
                 ])    
                 childDevice.setInfo(settings.address, id, "1")
+                
+                try{ childDevice.refresh() }catch(e){}
+                try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+                
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
@@ -247,6 +276,10 @@ def addDevice(){
                         "label": name + index
                     ])    
                     childDevice.setInfo(settings.address, id, index.toString())
+                    
+                	try{ childDevice.refresh() }catch(e){}
+                	try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+                    
                     log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                     index += 1
                 }
@@ -265,16 +298,9 @@ def addDevice(){
                 ])    
                 childDevice.setInfo(settings.address, id)
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
-            /*    data.each { key, value ->
-                //	log.debug "Key:" + key + ", " + value
-                	def map = [:]
-                    map['key'] = key
-                    map['data'] = value
-                	childDevice.setStatus(map)
-                }*/
-                try{
-                	childDevice.refresh()
-                }catch(e){}
+         
+                try{ childDevice.refresh() }catch(e){}
+                try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
                 
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
