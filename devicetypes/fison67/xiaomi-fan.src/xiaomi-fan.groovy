@@ -43,6 +43,7 @@ metadata {
         attribute "anglelevel", "string"
         attribute "ledBrightness", "string"
         attribute "speedlevel", "string"
+        attribute "processTimer", "number"
         attribute "fanspeedstep", "enum", ["low", "medium", "high", "strong"]        
         attribute "setangle", "enum", ["off", "on", "30", "60", "90", "120"]        
         attribute "settimer", "enum", ["off", "15", "30", "60", "90", "120"]        
@@ -57,8 +58,7 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
-        command "on"
-        command "off"
+        command "multiatt"
         command "generalOn"
         command "naturalOn"
         
@@ -83,6 +83,7 @@ metadata {
         command "setAngle60"
         command "setAngle90"
         command "setAngle120"
+        command "setdirectionfault"
         command "setMoveLeft"
         command "setMoveRight"
         command "settimeroff"
@@ -116,7 +117,10 @@ metadata {
             }            
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-   			attributeState("default", label:'${currentValue}')
+   			attributeState("default", label:'${currentValue}                      ')
+          }
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+   			attributeState("default", label:'                                               AC${currentValue}')
           }
 		}
         standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
@@ -132,8 +136,8 @@ metadata {
         valueTile("rotation_label", "", decoration: "flat") {
             state "default", label:'Rotation'
         }
-        valueTile("speed_label", "", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'Fan Speed Control'
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
         }
         valueTile("temperature", "device.temperature") {
             state("val", label:'${currentValue}', defaultState: true, 
@@ -144,30 +148,21 @@ metadata {
             )
         }   
         valueTile("anglelevel", "device.anglelevel") {
-            state("val", label:'${currentValue}', defaultState: true, 
-            )
-        }   
-        standardTile("speed1", "device.fanspeedstep") {
-			state "default", label: "Low", action: "setFanSpeed1", icon:"st.quirky.spotter.quirky-spotter-luminance-dark", backgroundColor:"#FFDE61"
+            state("val", label:'${currentValue}', defaultState: true)
+        }
+	controlTile("timerset", "device.level", "slider", height: 1, width: 1, range:"(1..120)") {
+	    state "level", action:"switch level.setLevel"
 		}
-        standardTile("speed2", "device.fanspeedstep") {
-			state "default", label: "Medium", action: "setFanSpeed2", icon:"st.quirky.spotter.quirky-spotter-luminance-light", backgroundColor:"#f9b959"
-		}
-        standardTile("speed3", "device.fanspeedstep") {
-			state "default", label: "High", action: "setFanSpeed3", icon:"st.quirky.spotter.quirky-spotter-luminance-bright", backgroundColor:"#ff9eb2"
-		}
-        standardTile("speed4", "device.fanspeedstep") {
-			state "default", label: "Strong", action: "setFanSpeed4", icon:"st.Weather.weather1", backgroundColor:"#db5764"
-		}
+        
         standardTile("angle", "device.setangle") {
             state "on", label:'ON', action:"setAngleOff", icon:"st.motion.motion.inactive", backgroundColor:"#b2cc68", nextState:"turningOff"
             state "off", label:'OFF', action:"setAngleOn", icon:"st.tesla.tesla-locked", backgroundColor:"#cad2b5", nextState:"turningOn"
              
-        	state "turningOn", label:'turningOn', action:"setAngleOff", icon:"st.tesla.tesla-locked", backgroundColor:"#cad2b5", nextState:"turningOff"
+            state "turningOn", label:'turningOn', action:"setAngleOff", icon:"st.tesla.tesla-locked", backgroundColor:"#cad2b5", nextState:"turningOff"
             state "turningOff", label:'turningOff', action:"setAngleOn", icon:"st.motion.motion.inactive", backgroundColor:"#b2cc68", nextState:"turningOn"
         }
         
-        valueTile("angle_label", "", decoration: "flat", width: 4, height: 1) {
+        valueTile("angle_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Control Angle'
         }
         valueTile("head_label", "", decoration: "flat", width: 2, height: 1) {
@@ -186,10 +181,14 @@ metadata {
 			state "default", label: "120°", action: "setAngle120", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMjIw/MDAxNTIyMzIzNjE4NjIx.t6DneqY6JyAZAicutP3NtV9Vf0wWGNAXWnVDIxnL_0gg.-5LlfL2aVTqW3ziuAXWOHFQ6C436d5-XZc_NVHxgS9Mg.PNG.shin4299/Fan_120.png?type=w580", backgroundColor:"#b1d6de"
 		}
         standardTile("headl", "device.setdirection") {
-			state "default", label: "Left", action: "setMoveLeft", icon:"st.thermostat.thermostat-left", backgroundColor:"#bda1b0"
+			state "off", label: "Left", action: "setMoveLeft", icon:"st.thermostat.thermostat-left", backgroundColor:"#d897be"
+			state "on", label: "Left", action: "setdirectionfault", icon:"st.thermostat.thermostat-left", backgroundColor:"#bcbabc", nextState:"on1"
+			state "on1", label: "Left", action: "setdirectionfault", icon:"st.thermostat.thermostat-left", backgroundColor:"#bcbabc", nextState:"on"
 		}
         standardTile("headr", "device.setdirection") {
-			state "default", label: "Right", action: "setMoveRight", icon:"st.thermostat.thermostat-right", backgroundColor:"#bda1b0"
+			state "off", label: "Right", action: "setMoveRight", icon:"st.thermostat.thermostat-right", backgroundColor:"#d897be"
+			state "on", label: "Right", action: "setdirectionfault", icon:"st.thermostat.thermostat-right", backgroundColor:"#bcbabc", nextState:"on1"
+			state "on1", label: "Right", action: "setdirectionfault", icon:"st.thermostat.thermostat-right", backgroundColor:"#bcbabc", nextState:"on"
 		}
         standardTile("mode", "device.fanmode") {
             state "general", label:'general', action:"naturalOn", icon:"st.Appliances.appliances11", backgroundColor:"#73C1EC", nextState:"natural"
@@ -197,23 +196,22 @@ metadata {
              
             state "change", label:'....', action:"naturalOn", backgroundColor:"#d6c6c9"
         }
-
+        valueTile("refresh", "device.refresh", decoration: "flat") {
+            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
+        }        
         valueTile("led_label", "", decoration: "flat") {
             state "default", label:'LED'
         }
         valueTile("buzzer_label", "", decoration: "flat") {
             state "default", label:'Buzzer'
         }        
-        valueTile("timer_label", "", decoration: "flat", width: 1, height: 2) {
-            state "default", label:'Set Timer'
-        }
         
         standardTile("buzzer", "device.buzzer") {
-            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#73C1EC", nextState:"turningOff"
+            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#f9b959", nextState:"turningOff"
             state "off", label:'Mute', action:"buzzerOn", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOn"
              
         	state "turningOn", label:'....', action:"buzzerOff", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOff"
-            state "turningOff", label:'....', action:"buzzerOn", icon: "st.custom.sonos.unmuted", backgroundColor:"#73C1EC", nextState:"turningOn"
+            state "turningOff", label:'....', action:"buzzerOn", icon: "st.custom.sonos.unmuted", backgroundColor:"#f9b959", nextState:"turningOn"
         }
         
         standardTile("ledBrightness", "device.ledBrightness") {
@@ -222,36 +220,14 @@ metadata {
             state "off", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"bright"
         } 
         standardTile("tiemr0", "device.settimer") {
-			state "default", label: "OFF", action: "settimeroff", icon:"st.Health & Wellness.health7", backgroundColor:"#c3d6d4"
+			state "default", label: "OFF", action: "settimeroff", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
-        standardTile("tiemr1", "device.settimer") {
-			state "default", label: "15", action: "settimer15", icon:"st.Health & Wellness.health7", backgroundColor:"#d5eeec"
-			state "t15", label: "15", action: "settimer15", icon:"st.Health & Wellness.health7", backgroundColor:"#db5764"
-		}
-        standardTile("tiemr2", "device.settimer") {
-			state "default", label: "30", action: "settimer30", icon:"st.Health & Wellness.health7", backgroundColor:"#b9e4df"
-			state "t30", label: "30", action: "settimer30", icon:"st.Health & Wellness.health7", backgroundColor:"#db5764"
-		}
-        standardTile("tiemr3", "device.settimer") {
-			state "default", label: "60", action: "settimer60", icon:"st.Health & Wellness.health7", backgroundColor:"#abded9"
-			state "t60", label: "60", action: "settimer60", icon:"st.Health & Wellness.health7", backgroundColor:"#db5764"
-		}
-        standardTile("tiemr4", "device.settimer") {
-			state "default", label: "90", action: "settimer90", icon:"st.Health & Wellness.health7", backgroundColor:"#9dd9d2"
-			state "t90", label: "90", action: "settimer90", icon:"st.Health & Wellness.health7", backgroundColor:"#db5764"
-		}
-        standardTile("tiemr5", "device.settimer") {
-			state "default", label: "120", action: "settimer120", icon:"st.Health & Wellness.health7", backgroundColor:"#8fd3cc"
-			state "t120", label: "120", action: "settimer120", icon:"st.Health & Wellness.health7", backgroundColor:"#db5764"
-		}
-
+		
    	main (["switch2"])
-	details(["switch", "mode_label", "rotation_label", "speed_label", 
-    "mode", "angle", "speed1", "speed2", "speed3", "speed4", 
-    "head_label", "angle_label",  
-     "headl", "headr", "angle1", "angle2", "angle3", "angle4",
-    "buzzer_label", "led_label", "timer_label", "tiemr0", "tiemr1", "tiemr2", 
-    "buzzer", "ledBrightness", "tiemr3", "tiemr4", "tiemr5"
+	details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
+    "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "timerset", 
+    "head_label", "angle_label", "refresh",
+     "headl", "headr", "angle1", "angle2", "angle3", "angle4"
     ])
 
 	}
@@ -271,25 +247,34 @@ def setInfo(String app_url, String id) {
 def setStatus(params){
     log.debug "${params.key} : ${params.data}"
     def now = new Date().format("HH:mm:ss", location.timeZone)
-	def currenttemp = device.currentState('temperature')?.value
-	def currenthumi = device.currentState('humidity')?.value
-	def currentangle = device.currentState('anglelevel')?.value
+//	state.currenttemp = device.currentState('temperature')?.value
+//	state.currenthumi = device.currentState('humidity')?.value
+//	state.currentangle = device.currentState('anglelevel')?.value
     
  	switch(params.key){
+    case "temperature":
+		def para = "${params.data}"
+		String data = para
+		def st = data.replace("C","");
+		def stf = Float.parseFloat(st)
+		int tem = Math.round(stf)
+	state.currenttemp = tem
+	multiatt()
+    	break;
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data + "%")
-    	sendEvent(name:"lastCheckin", value: " 온도: " + currenttemp + "° 습도: " + params.data + " 회전: " + currentangle + "° (" + now + ")")
+	state.currenthumi = params.data
+	multiatt()
     	break;
     case "angleLevel":
-        sendEvent(name:"anglelevel", value: params.data)
-    	sendEvent(name:"lastCheckin", value: " 온도: " + currenttemp + "° 습도: " + currenthumi + " 회전: " + params.data + "° (" + now + ")")
+	state.currentangle = params.data
+	multiatt()
     	break;        
     case "speedLevel":
         sendEvent(name:"fanSpeed", value: params.data)
 		def para = params.data
 		String data = para
 		def stf = Float.parseFloat(data)
-		def tem = Math.round((stf+12)/25)        
+		int tem = Math.round((stf+12)/25)        
         sendEvent(name:"speedlevel", value: tem)
     	break;        
     case "naturalLevel":
@@ -308,58 +293,122 @@ def setStatus(params){
     	break;        
     case "angleEnable":
         sendEvent(name:"setangle", value: params.data)
+        sendEvent(name:"setdirection", value: params.data)
     	break;        
         
     case "fanNatural":
         sendEvent(name:"fanSpeed", value: params.data)
     	break;        
+    case "acPower":
+    	state.acPower = (params.data == "on" ? "☈: " : "✕: ")
+	multiatt()
+    	break;        
+    case "batteryLevel":
+	state.batteryLe = params.data	
+	multiatt()
+    	break;
     case "power":
+    	state.power = (params.data == "true" ? "on" : "off")
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
     case "buzzer":
     	sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off"))
     	break;
-    case "temperature":
-		def para = "${params.data}"
-		String data = para
-		def st = data.replace("C","");
-		def stf = Float.parseFloat(st)
-		def tem = Math.round(stf)
-        sendEvent(name:"temperature", value: tem)
-    	sendEvent(name:"lastCheckin", value: " 온도:" + tem + "° 습도:" + currenthumi + " 회전:" + currentangle + "° (" + now + ")")        
+    case "ledBrightness":
+    	sendEvent(name:"ledBrightness", value: params.data )
     	break;
     }
+}
+//----------------------------
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def timter(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(state.power == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timter)
+        }
+        updateTimer()
+    }
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+	log.debug "Left time >> ${timeStr}"
+    sendEvent(name:"leftTime", value: "${timeStr}")
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timter)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timter)
+    }else{
+    	state.timerCount = second
+    }
+    log.debug "Time >> ${state.timerCount}"
+    updateTimer()
 }
 
 def settimeroff() { 
 	unschedule()
-    sendEvent(name:"settimer", value: "default")
-
+	log.debug "Timer Off"
+	state.timerCount = 0
+	updateTimer()
 }
+def setLevel(level) { 
+	log.debug "Timer ${level}Min >> ${state.timerCount}"
+    processTimer(level * 60)
+}
+
 def settimer15() { 
-    sendEvent(name:"settimer", value: "t15")
-	unschedule()
-	runIn(15*60, off)
+	log.debug "Timer 15Min >> ${state.timerCount}"
+    processTimer(15 * 60)
 }
 def settimer30() { 
-    sendEvent(name:"settimer", value: "t30")
-	unschedule()
-	runIn(30*60, off)
+	log.debug "Timer 30Min >> ${state.timerCount}"
+    processTimer(30 * 60)
 }
 def settimer60() { 
-    sendEvent(name:"settimer", value: "t60")
-	unschedule()
-	runIn(60*60, off)
+	log.debug "Timer 60Min >> ${state.timerCount}"
+    processTimer(60 * 60)
 }
 def settimer90() { 
-    sendEvent(name:"settimer", value: "t90")
-	unschedule()
-	runIn(90*60, off)
+	log.debug "Timer 90Min >> ${state.timerCount}"
+    processTimer(90 * 60)
 }
 def settimer120() { 
-    sendEvent(name:"settimer", value: "t120")
-	unschedule()
-	runIn(120*60, off)
+	log.debug "Timer 120Min >> ${state.timerCount}"
+    processTimer(120 * 60)
 }
 
 def setFanSpeed(speed){
@@ -408,7 +457,8 @@ def tempDown(){
 
 def setFanSpeed1(){
 	log.debug "setFanstep1 >> ${state.id}"
-	def currentState = device.currentValue("fanmode")    
+	def currentState = device.currentValue("fanmode")
+        sendEvent(name:"speedlevel", value: 1)
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
@@ -426,11 +476,13 @@ def setFanSpeed1(){
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
+        
 	}
 }
 
 def setFanSpeed2(){
 	log.debug "setFanstep2 >> ${state.id}"
+        sendEvent(name:"speedlevel", value: 2)
 	def currentState = device.currentValue("fanmode")    
     if(currentState =="natural"){
     	def body = [
@@ -455,6 +507,7 @@ def setFanSpeed2(){
 def setFanSpeed3(){
 	log.debug "setFanstep3 >> ${state.id}"
 	def currentState = device.currentValue("fanmode")    
+        sendEvent(name:"speedlevel", value: 3)
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
@@ -478,6 +531,7 @@ def setFanSpeed3(){
 def setFanSpeed4(){
 	log.debug "setFanstep4 >> ${state.id}"
 	def currentState = device.currentValue("fanmode")    
+        sendEvent(name:"speedlevel", value: 4)
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
@@ -690,7 +744,39 @@ def off(){
 
 def updated() {
 }
+def setdirectionfault() {
+}
 
+def callback(physicalgraph.device.HubResponse hubResponse){
+	def msg
+    try {
+        msg = parseLanMessage(hubResponse.description)
+		def jsonObj = new JsonSlurper().parseText(msg.body)
+        log.debug jsonObj
+	state.currenthumi = jsonObj.properties.relativeHumidity
+	int temp = jsonObj.properties.temperature.value
+	state.currenttemp = temp
+	state.currentangle = jsonObj.properties.angleLevel
+	state.acPower = (jsonObj.properties.acPower == "on" ? "☈: " : "✕: ") 
+	state.batteryLe = jsonObj.state.batteryLevel
+        sendEvent(name:"setangle", value: jsonObj.properties.angleEnable)
+        sendEvent(name:"setdirection", value: jsonObj.properties.angleEnable)
+        sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
+        sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
+        sendEvent(name:"ledBrightness", value: jsonObj.state.ledBrightness)
+	    
+        def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+        sendEvent(name: "lastCheckin", value: now)
+	multiatt()
+    } catch (e) {
+        log.error "Exception caught while parsing data: "+e;
+    }
+}
+
+def multiatt(){
+    	sendEvent(name:"lastCheckin", value: " 온도: " + state.currenttemp + "° 습도: " + state.currenthumi + "% 회전: " + state.currentangle + "°")
+	sendEvent(name:"battery", value: state.acPower + state.batteryLe + "%" )
+}
 def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
