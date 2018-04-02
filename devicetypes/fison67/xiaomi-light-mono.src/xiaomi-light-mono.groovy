@@ -89,9 +89,24 @@ metadata {
 
 			}
         }
+        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
+        }        
+        valueTile("lastOn_label", "", decoration: "flat") {
+            state "default", label:'Last\nON'
+        }
+        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("lastOff_label", "", decoration: "flat") {
+            state "default", label:'Last\nOFF'
+        }
+        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        
    	main (["switch2"])
-	details(["switch"])               
-       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff" ])       
 	}
 }
 
@@ -107,18 +122,36 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
+    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
     	log.debug "MI >> power " + (params.data == "true" ? "on" : "off")
-    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off") )
+        if(params.data == "true"){
+    	sendEvent(name:"switch", value: "on")
+	    sendEvent(name: "lastOn", value: now)
+        } else {
+        sendEvent(name:"switch", value: "off")
+	    sendEvent(name: "lastOff", value: now)
+        }
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
     }
-    
-    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
+}
+
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
 
 def setLevel(brightness){
@@ -172,11 +205,18 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
- //       setStatus(jsonObj)
+        log.debug jsonObj
+        sendEvent(name:"level", value: jsonObj.properties.brightness)
+        sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
+	    
+        def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
+        sendEvent(name: "lastCheckin", value: now)
+	multiatt()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
 }
+
 
 def updated() {}
 
