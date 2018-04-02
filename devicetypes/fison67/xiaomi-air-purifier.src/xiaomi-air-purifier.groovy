@@ -28,6 +28,19 @@
  */
  
 import groovy.json.JsonSlurper
+import groovy.transform.Field
+
+@Field 
+LANGUAGE_MAP = [
+    "temperature": [
+        "Korean": "온도",
+        "English": "Temperature"
+    ],
+    "humidity": [
+        "Korean": "습도",
+        "English": "Humidity"
+    ]
+]
 
 metadata {
 	definition (name: "Xiaomi Air Purifier", namespace: "fison67", author: "fison67") {
@@ -52,6 +65,8 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
+        command "setLanguage" 
+        
         command "setSpeed"
         command "setStatus"
         command "refresh"
@@ -85,6 +100,7 @@ metadata {
 	}
 	preferences {
 		input name:"model", type:"enum", title:"Select Model", options:["MiAirPurifier", "MiAirPurifier2", "MiAirPurifierPro", "MiAirPurifier2S"], description:"Select Your Airpurifier Model"
+        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
 	}
 
 	tiles {
@@ -140,11 +156,11 @@ metadata {
         valueTile("aqi_label", "", decoration: "flat") {
             state "default", label:'AQI \n㎍/㎥'
         }        
-        valueTile("temp_label", "", decoration: "flat") {
-            state "default", label:'temperature'
+        valueTile("temp_label", "device.temp_label", decoration: "flat") {
+            state("val", label:'${currentValue}', defaultState: true)
         }
-        valueTile("humi_label", "", decoration: "flat") {
-            state "default", label:'humidity'
+        valueTile("humi_label", "device.humi_label", decoration: "flat") {
+            state "val", label:'${currentValue}', defaultState: true
         }
 		valueTile("pm25_value", "device.fineDustLevel", decoration: "flat") {
         	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
@@ -302,8 +318,16 @@ metadata {
 
 def updated() {
 	refresh()
+    setLanguage(settings.selectedLang)
 }
 
+def setLanguage(language){
+    log.debug "Languge >> ${language}"
+	state.language = language
+    
+    sendEvent(name:"temp_label", value: LANGUAGE_MAP["temperature"][language] )
+    sendEvent(name:"humi_label", value: LANGUAGE_MAP["humidity"][language] )
+}
 
 // parse events into attributes
 def parse(String description) {
