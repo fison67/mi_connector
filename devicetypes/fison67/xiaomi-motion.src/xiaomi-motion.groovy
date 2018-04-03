@@ -35,12 +35,13 @@ metadata {
         capability "Illuminance Measurement"
         capability "Configuration"
         capability "Sensor"
+        capability "Refresh"
          
         attribute "battery", "string"
-        
+        attribute "lastMotion", "Date"
+
         attribute "lastCheckin", "Date"
 	command "reset"	
-	command "refresh"	
          
 	}
 
@@ -55,11 +56,14 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
-				attributeState "active", label:'motion', icon:"https://postfiles.pstatic.net/MjAxODAzMjNfMjc4/MDAxNTIxNzM3NjEwOTA4.AVNFyqM4bd-a1VMujIbLN9MVBYFb75X0jROHPuG9pKkg.U6TX1CZoDPe-8odhwyt1YYSrS37jddX3EldEMxd56k0g.PNG.fuls/Motion_active_75.png?type=w773", backgroundColor:"#00a0dc"
-				attributeState "inactive", label:'no motion', icon:"https://postfiles.pstatic.net/MjAxODAzMjNfMjcy/MDAxNTIxNzM3NjEwOTA4.q1xS4KkstlJxdvxeTeS-cPZ44Bppv766hjez9tb5vZ4g.ap9JW3w27LXOUH_z2cPFXX6LUmL-fY4CRa7M6XxWWx0g.PNG.fuls/Motion_inactive_75.png?type=w773", backgroundColor:"#ffffff"
+				attributeState "active", label:'motion', icon:"http://postfiles1.naver.net/MjAxODA0MDNfMTAz/MDAxNTIyNzI0MDQ3OTU1.KlL6RhQNyk29a6B2xLdYi8f7mWkZ_hDJmvLTcUYxFUog.zOxJRz6RrrZsUTkFj8BefZycoyKxoL0Eeq7Ep6Pdxw0g.PNG.shin4299/motion_on1.png?type=w3", backgroundColor:"#00a0dc"
+				attributeState "inactive", label:'no motion', icon:"http://postfiles5.naver.net/MjAxODA0MDNfMTky/MDAxNTIyNzIzMDU3MTM4.mWDrfCVxx5OgUmoCZos7CkVgVY8jm3Ho4WgWeFnMbhMg.MB0MzqQCJM80xAFZ19imwE9AnHQ58Px2gHAOr9DSJLQg.PNG.shin4299/motion_off.png?type=w3", backgroundColor:"#ffffff"
 			}
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
         
@@ -76,9 +80,6 @@ metadata {
                 ]
         }
         
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
                 standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", action:"reset", label: "Reset Motion", icon:"st.motion.motion.active"
         }
@@ -86,6 +87,12 @@ metadata {
 		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
+        valueTile("lastMotion_label", "", decoration: "flat") {
+            state "default", label:'Last\nMotion'
+        }
+        valueTile("lastMotion", "device.lastMotion", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }		
 	}
 }
 
@@ -101,11 +108,14 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
+	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "motion":
         sendEvent(name:"motion", value: (params.data == "true" ? "active" : "inactive") )
         if (settings.motionReset == null || settings.motionReset == "" ) settings.motionReset = 120
         if (params.data == "true") runIn(settings.motionReset, stopMotion)
+	if (params.data == "true") sendEvent(name: "lastMotion", value: now)	
+
 		
     	break;
     case "batteryLevel":
