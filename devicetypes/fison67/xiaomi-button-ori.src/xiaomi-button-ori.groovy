@@ -34,17 +34,16 @@ metadata {
         capability "Sensor"						//"on", "off"
         capability "Button"
         capability "Configuration"
-         
+        capability "Battery"
+	capability "Refresh"
+
         attribute "status", "string"
-        attribute "battery", "string"
         
         attribute "lastCheckin", "Date"
         
         command "click"
         command "double_click"
         command "long_click_release"
-        command "refresh"
-         
 	}
 
 
@@ -56,8 +55,11 @@ metadata {
 			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
                 attributeState "click", label:'\nButton', icon:"http://postfiles1.naver.net/MjAxODA0MDJfMjQ3/MDAxNTIyNjcwOTc1OTA0.g_GeJwDzpJhau4j0OOi2LzKoT8Qtnlq4sHnGVBnQYHwg.DpHVKVGEZfmefd-tfuz4VnAg5vknwkfA7XDo-_Cow88g.PNG.shin4299/buttonOr_main.png?type=w3", backgroundColor:"#8CB8C9"                
 			}
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
         valueTile("click", "device.button", decoration: "flat", width: 2, height: 2) {
@@ -69,11 +71,7 @@ metadata {
 
         valueTile("long_click_press", "device.button", decoration: "flat", width: 2, height: 2) {
             state "default", label:"Button#3_Core \n long_click", action:"long_click_release"
-        }
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
+        }      
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
