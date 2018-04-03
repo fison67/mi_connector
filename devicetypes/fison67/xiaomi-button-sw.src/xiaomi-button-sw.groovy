@@ -34,9 +34,10 @@ metadata {
         capability "Sensor"						//"on", "off"
         capability "Button"
         capability "Configuration"
-         
+        capability "Battery"
+	capability "Refresh"
+
         attribute "status", "string"
-        attribute "battery", "string"
         
         attribute "lastCheckin", "Date"
         
@@ -45,7 +46,7 @@ metadata {
         command "btn1-click"
         command "btn1-double_click"
         command "both_click"
-        command "refresh"
+        command "refesh"
 	}
 
 
@@ -57,8 +58,11 @@ metadata {
 			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
                 attributeState "click", label:'\nButton', icon:"http://postfiles9.naver.net/MjAxODA0MDJfOSAg/MDAxNTIyNjcwOTc2MTcx.Eq3RLdNXT6nbshuDgjG4qbfMjCob8eTjYv6fltmg7Zcg.1W8CkaPojCBp07iCYi5JYkJl5YTWxQL5aDG-TQ0XF_kg.PNG.shin4299/buttonSW_main.png?type=w3", backgroundColor:"#8CB8C9"
 			}
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
         
@@ -72,10 +76,6 @@ metadata {
             state "default", label:"Button#3_Core \n Both_click", action:"both_click"
         }
 
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
