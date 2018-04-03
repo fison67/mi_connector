@@ -34,15 +34,16 @@ metadata {
         capability "Sensor"						//"on", "off"
         capability "Button"
         capability "Configuration"
-         
+        capability "Battery"
+	capability "Refresh"
+               
+       
         attribute "status", "string"
-        attribute "battery", "string"
         
         attribute "lastCheckin", "Date"
         
         command "click"
         command "double_click"
-        command "refresh"
 	}
 
 
@@ -54,30 +55,25 @@ metadata {
 			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
                 attributeState "click", label:'\nButton', icon:"http://postfiles10.naver.net/MjAxODA0MDJfMTYy/MDAxNTIyNjcwOTc1NTE4.h-TVphSLTwUCzXdPnKElZ45Yr4lJLWkL7MF4pt21f5Ig.CmdFO36k5AW8xK08ahvYlWhN3_rk48SJkmknMYVcFycg.PNG.shin4299/buttonAQ_main.png?type=w3", backgroundColor:"#8CB8C9"
 			}
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
-//        valueTile("main", "device.button", decoration: "flat", width: 2, height: 2) {
-//            state "default", label:'Button', action:"click", icon:"http://www.asihome.com/images/Fibaro%20Button%20Orange.png", backgroundColor:"#f48600"
-//        }
         valueTile("click", "device.button", decoration: "flat", width: 2, height: 2) {
             state "default", label:'Button#1_Core \n one_click', action:"click"
         }
         valueTile("double_click", "device.button", decoration: "flat", width: 2, height: 2) {
             state "default", label:"Button#2_Core \n double_click", action:"double_click"
-        }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
+        }        
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
         
         main (["button"])
-        details(["button", "click", "double_click", "battery", "refresh"])        
+        details(["button", "click", "double_click", "refresh"])        
 	}
 }
 
