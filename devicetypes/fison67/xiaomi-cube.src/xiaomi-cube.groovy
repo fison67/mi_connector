@@ -35,7 +35,7 @@ metadata {
         capability "Button"
         capability "Configuration"
          
-        attribute "status", "string"
+        attribute "rotate", "string"
         attribute "battery", "string"
         
         attribute "lastCheckin", "Date"
@@ -86,9 +86,13 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-	log.debug "${params.key} >> ${params.data}"
+	log.debug "${params.key} >> ${params.data}" + (params.subData != "" ? " (" + params.subData + ")" : "")
+    
  	switch(params.key){
     case "action":
+    	if(params.data == "rotate"){
+    		sendEvent(name:"rotate", value: params.subData )
+        }
     	sendEvent(name:"button", value: params.data )
     	break;
     case "batteryLevel":
