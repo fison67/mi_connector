@@ -28,6 +28,39 @@
  */
 
 import groovy.json.JsonSlurper
+import groovy.transform.Field
+
+@Field 
+LANGUAGE_MAP = [
+    "temp": [
+        "Korean": "온도",
+        "English": "Tem"
+    ],
+    "hum": [
+        "Korean": "습도",
+        "English": "Humi"
+    ],
+    "buz": [
+        "Korean": "부저음",
+        "English": "Buzzer"
+    ],
+    "angle": [
+        "Korean": "회전",
+        "English": "Ang"
+    ],
+    "mode": [
+        "Korean": "모드",
+        "English": "Mode"
+    ],
+    "con": [
+        "Korean": "회전 각도",
+        "English": "Control Angle"
+    ],
+    "direc": [
+        "Korean": "좌우 이동",
+        "English": "Direction"
+    ]
+]
 
 metadata {
 	definition (name: "Xiaomi Fan", namespace: "fison67", author: "fison67") {
@@ -97,6 +130,9 @@ metadata {
 
 	simulator {
 	}
+	preferences {
+	        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+	}
 
 	tiles {
 		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
@@ -130,11 +166,11 @@ metadata {
         	state "turningOn", label:'turningOn', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNDIg/MDAxNTIyMzIzNDI2NjM3.kLKELF4VIDpDZoWz3FGdj1IeNl5-1QTnTUj3PpD_O54g.coZVo_0F8xdhdKxWSuUH_0ldi7v-TpkTXDJtcEMpT34g.PNG.shin4299/Fan_main_off.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
             state "turningOff", label:'turningOff', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTcw/MDAxNTIyMzIzNDI2NjQ3.-DR_CT7fGBUGj65di_Ku0jLCvA4oSgWbFSivfsbA26og.ajX0-he2ip3P3kI_0OqhYwSzKblR8zzIeEa4QtJfSHcg.PNG.shin4299/Fan_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
         }
-        valueTile("mode_label", "", decoration: "flat") {
-            state "default", label:'Mode'
-        }
-        valueTile("rotation_label", "", decoration: "flat") {
-            state "default", label:'Rotation'
+        valueTile("mode_label", "device.mode_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
+        }        
+        valueTile("rotation_label", "device.rotation_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
         valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
             state "default", label:'Set Timer\n${currentValue}'
@@ -162,11 +198,11 @@ metadata {
             state "turningOff", label:'turningOff', action:"setAngleOn", icon:"st.motion.motion.inactive", backgroundColor:"#b2cc68", nextState:"turningOn"
         }
         
-        valueTile("angle_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Control Angle'
+        valueTile("angle_label", "device.angle_label", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
         }
-        valueTile("head_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Direction'
+        valueTile("head_label", "device.head_label", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'${currentValue}'
         }
         standardTile("angle1", "device.setangle") {
 			state "default", label: "30°", action: "setAngle30", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTAy/MDAxNTIyMzIzNjE4NjE2.2N1NVfE2fmK85H1EhwK_gqEs0FK0qSaJ1KCimGnxZFcg.CAcpOhL3yJXAlvS-JoBcGz1Uf2UnjuICzGs4hBwwK8kg.PNG.shin4299/Fan_20.png?type=w580", backgroundColor:"#b1d6de"
@@ -202,8 +238,8 @@ metadata {
         valueTile("led_label", "", decoration: "flat") {
             state "default", label:'LED'
         }
-        valueTile("buzzer_label", "", decoration: "flat") {
-            state "default", label:'Buzzer'
+        valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }        
         
         standardTile("buzzer", "device.buzzer") {
@@ -743,7 +779,24 @@ def off(){
 }
 
 def updated() {
+    refresh()
+    setLanguage(settings.selectedLang)
 }
+
+def setLanguage(language){
+    log.debug "Languge >> ${language}"
+	state.language = language
+	state.hum = LANGUAGE_MAP["hum"][language]
+	state.temp = LANGUAGE_MAP["temp"][language]
+	state.angle = LANGUAGE_MAP["angle"][language]
+	
+	sendEvent(name:"mode_label", value: LANGUAGE_MAP["mode"][language] )
+	sendEvent(name:"rotation_label", value: LANGUAGE_MAP["angle"][language] )
+	sendEvent(name:"buzzer_label", value: LANGUAGE_MAP["buz"][language] )
+	sendEvent(name:"angle_label", value: LANGUAGE_MAP["con"][language] )
+	sendEvent(name:"head_label", value: LANGUAGE_MAP["direc"][language] )
+}
+
 def setdirectionfault() {
 }
 
@@ -774,7 +827,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 }
 
 def multiatt(){
-    	sendEvent(name:"lastCheckin", value: " 온도: " + state.currenttemp + "° 습도: " + state.currenthumi + "% 회전: " + state.currentangle + "°")
+    	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°")
 	sendEvent(name:"battery", value: state.acPower + state.batteryLe + "%" )
 }
 def sendCommand(options, _callback){
