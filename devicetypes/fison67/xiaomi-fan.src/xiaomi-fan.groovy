@@ -72,7 +72,7 @@ metadata {
 	capability "Refresh"
 	capability "Sensor"
 	capability "Battery"
-	capability "Powersource"
+	capability "Power source"
          
         attribute "buzzer", "string"
         attribute "anglelevel", "string"
@@ -835,7 +835,7 @@ def multiatt(){
     	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°")
 	sendEvent(name:"battery", value: state.acPower + state.batteryLe + "%" )
 //	for new smartthings app	
-	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery")
+	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
 }
 def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
