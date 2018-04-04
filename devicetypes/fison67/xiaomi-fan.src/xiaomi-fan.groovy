@@ -68,9 +68,11 @@ metadata {
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-		capability "Fan Speed"
-		capability "Refresh"
-		capability "Sensor"
+	capability "Fan Speed"
+	capability "Refresh"
+	capability "Sensor"
+	capability "Battery"
+	capability "Power source"
          
         attribute "buzzer", "string"
         attribute "anglelevel", "string"
@@ -85,8 +87,6 @@ metadata {
         attribute "naturalLevel", "string"
         attribute "speed", "string"
         attribute "powerOffTime", "string"
-        attribute "acPower", "string"
-        attribute "batteryLevel", "string"
         attribute "childLock", "string"
         
         attribute "lastCheckin", "Date"
@@ -258,6 +258,11 @@ metadata {
         standardTile("tiemr0", "device.settimer") {
 			state "default", label: "OFF", action: "settimeroff", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
+//	for new smartthings app	
+        standardTile("powerSource", "device.powerSource") {
+            state "dc", label:'DC'
+            state "battery", label:'Battery'
+        }
 		
    	main (["switch2"])
 	details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
@@ -829,6 +834,8 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 def multiatt(){
     	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°")
 	sendEvent(name:"battery", value: state.acPower + state.batteryLe + "%" )
+//	for new smartthings app	
+	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
 }
 def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
