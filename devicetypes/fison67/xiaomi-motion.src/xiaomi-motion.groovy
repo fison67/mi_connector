@@ -35,6 +35,7 @@ metadata {
         capability "Illuminance Measurement"
         capability "Configuration"
         capability "Sensor"
+	capability "Battery"
         capability "Refresh"
          
         attribute "battery", "string"
