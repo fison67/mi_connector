@@ -41,10 +41,8 @@ metadata {
         
         attribute "lastCheckin", "Date"
         
-        command "btn0-click"
-        command "btn0-double_click"
-        command "btn1-click"
-        command "btn1-double_click"
+        command "Lclick"
+        command "Rclick"
         command "both_click"
         command "refesh"
 	}
