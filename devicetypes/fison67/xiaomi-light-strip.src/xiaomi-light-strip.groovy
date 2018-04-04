@@ -31,7 +31,6 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Light Strip", namespace: "fison67", author: "fison67") {
-	definition (name: "Xiaomi Light", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
         capability "Configuration"
