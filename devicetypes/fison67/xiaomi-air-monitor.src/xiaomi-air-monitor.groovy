@@ -32,10 +32,14 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Air Monitor", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
-         
+        capability "Battery"
+	capability "Refresh"
+	capability "Sensor"
+	capability "Power Source"
+	capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
+
         attribute "switch", "string"
         attribute "pm25", "string"
-        attribute "battery", "string"
         attribute "usb_state", "string"
         
         attribute "lastCheckin", "Date"
@@ -51,46 +55,59 @@ metadata {
 	}
 
 	tiles {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+		multiAttributeTile(name:"fineDustLevel", type: "generic", width: 6, height: 4){
+			tileAttribute ("device.fineDustLevel", key: "PRIMARY_CONTROL") {
+                attributeState "default", label:'${currentValue}㎍/㎥', unit:"㎍/㎥", backgroundColors:[
+			[value: -1, color: "#C4BBB5"],
+            		[value: 0, color: "#7EC6EE"],
+            		[value: 15, color: "#51B2E8"],
+            		[value: 50, color: "#e5c757"],
+            		[value: 75, color: "#E40000"],
+            		[value: 500, color: "#970203"]
+            		]
 			}
             
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
-        
-         valueTile("pm25", "device.pm25", width: 2, height: 2, unit: "") {
-            state("val", label:'${currentValue}㎍/㎥', defaultState: true, 
-            	backgroundColors:[
-                    [value: 31, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-                    [value: 74, color: "#44b621"],
-                    [value: 84, color: "#f1d801"],
-                    [value: 95, color: "#d04e00"],
-                    [value: 96, color: "#bc2323"]
-                ]
-            )
+		valueTile("pm25", "device.fineDustLevel", decoration: "flat", width: 2, height: 2) {
+        	state "default", label:'${currentValue}㎍/㎥', icon:"http://postfiles9.naver.net/MjAxODA0MDNfMjkw/MDAxNTIyNzI3NjY0Mzk0.yVQdGxRJMGFrGQLVzb-OUThZptHXIBmTaMEZO3LoipAg.v0Rw0_zvHr7wBk-VeH5KQxNry_zUOz4aXUn6I1QQ9xkg.PNG.shin4299/pm25_on.png?type=w3", unit:"㎍/㎥", backgroundColors:[
+			[value: -1, color: "#C4BBB5"],
+            		[value: 0, color: "#7EC6EE"],
+            		[value: 15, color: "#51B2E8"],
+            		[value: 50, color: "#e5c757"],
+            		[value: 75, color: "#E40000"],
+            		[value: 500, color: "#970203"]
+            ]
         }
         
+        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2) {
+            state "on", label:'ON', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'OFF', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
+             
+        	state "turningOn", label:'turningOn', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'turningOff', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
         
         valueTile("battery", "device.battery", width: 2, height: 2) {
             state("val", label:'${currentValue}%', defaultState: true, backgroundColor:"#00a0dc")
         }
         
-        valueTile("usb_state", "device.usb_state", width: 2, height: 2) {
-            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#00a0dc")
+        standardTile("powerSource", "device.powerSource", width: 2, height: 2) {
+            state "dc", label:'USB', icon:"st.quirky.spotter.quirky-spotter-plugged", backgroundColor:"#00a0dc"
+            state "battery", label:'Battery', icon:"https://www.shareicon.net/data/128x128/2015/03/06/3189_battery_32x32.png", backgroundColor:"#ffffff"
         }
         
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
+   	main (["pm25"])
+	details(["fineDustLevel", "switch", "powerSource", "refresh"])
+		
 	}
 }
 
@@ -110,10 +127,10 @@ def setStatus(params){
  
  	switch(params.key){
     case "pm2.5":
-    	sendEvent(name:"pm25", value: params.data)
+    	sendEvent(name:"fineDustLevel", value: params.data)
     	break;
     case "aqi":
-    	sendEvent(name:"pm25", value: params.data)
+    	sendEvent(name:"fineDustLevel", value: params.data)
     	break;
     case "power":
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
@@ -122,7 +139,7 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data)
         break;
     case "usb_state":
-    	sendEvent(name:"usb_state", value: params.data)
+    	sendEvent(name:"powerSource", value: (params.data == "on" ? "dc" : "battery"))
     	break;
     }
     
@@ -169,6 +186,7 @@ def off(){
     sendCommand(options, null)
 }
 
+//[state:[batteryLevel:100, charging:true, aqi:7, power:true], properties:[batteryLevel:100, pm2.5:7, charging:true, power:true]]
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
     try {
@@ -176,7 +194,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
 
-		sendEvent(name:"switch", value: (jsonObj.state.power ? "on" : "off") )
+		sendEvent(name:"switch", value: (jsonObj.state.power == true ? "on" : "off") )
+		sendEvent(name:"fineDustLevel", value: jsonObj.state.aqi )
+		sendEvent(name:"powerSource", value: (jsonObj.state.charging == true ? "dc" : "battery") )
+		sendEvent(name:"battery", value: jsonObj.state.batteryLevel )
 		updateLastTime()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
