@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light (v.0.0.1)
+ *  Xiaomi Strip (v.0.0.1)
  *
  * MIT License
  *
