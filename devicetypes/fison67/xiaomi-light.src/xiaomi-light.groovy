@@ -55,7 +55,7 @@ metadata {
         command "off"
         
         command "setColor"
-        command "setBrightness"
+        command "setLevel"
         
 	}
 
