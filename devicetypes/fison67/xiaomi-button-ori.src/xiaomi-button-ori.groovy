@@ -81,7 +81,7 @@ metadata {
 
 def click() {buttonEvent(1, "pushed")}
 def double_click() {buttonEvent(2, "pushed")}
-def long_click_press() {buttonEvent(3, "pushed")}
+def long_click_release() {buttonEvent(3, "pushed")}
 
 // parse events into attributes
 def parse(String description) {
