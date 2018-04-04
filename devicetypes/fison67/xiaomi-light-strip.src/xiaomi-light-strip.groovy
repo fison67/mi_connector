@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Strip(v.0.0.1)
+ *  Xiaomi Light (v.0.0.1)
  *
  * MIT License
  *
@@ -31,32 +31,21 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Light Strip", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Light", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
         capability "Configuration"
         capability "Refresh"
-		capability "Color Control"
+	capability "Color Control"
         capability "Switch Level"
         capability "Health Check"
         capability "Light"
 
-         
-        attribute "switch", "string"
-        attribute "color", "string"
-        attribute "brightness", "string"
         attribute "lastOn", "string"
         attribute "lastOff", "string"
         
         attribute "lastCheckin", "Date"
-         
-        command "localOn"
-        command "localOff"
-        command "on"
-        command "off"
-        
-        command "setColor"
-        command "setBrightness"
-        
+      
 	}
 
 
