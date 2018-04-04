@@ -40,23 +40,11 @@ metadata {
         capability "Health Check"
         capability "Light"
 
-         
-        attribute "switch", "string"
-        attribute "color", "string"
-        attribute "brightness", "string"
         attribute "lastOn", "string"
         attribute "lastOff", "string"
         
         attribute "lastCheckin", "Date"
          
-        command "localOn"
-        command "localOff"
-        command "on"
-        command "off"
-        
-        command "setColor"
-        command "setLevel"
-        
 	}
 
 
