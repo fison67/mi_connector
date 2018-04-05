@@ -193,9 +193,12 @@ def addDevice(){
         }else if(params.type == "lumi.switch"){
         	dth = "Xiaomi Button Ori";
             name = "Xiaomi Button Ori";
-        }else if(params.type == "lumi.86sw1" || params.type == "lumi.switch.v2"){
+        }else if(params.type == "lumi.switch.v2"){
         	dth = "Xiaomi Button AQ";
             name = "Xiaomi Button AQ";
+        }else if(params.type == "lumi.86sw1"){
+        	dth = "Xiaomi Button SW1";
+            name = "Xiaomi Button SW1";
         }else if(params.type == "lumi.86sw2"){
         	dth = "Xiaomi Button SW";
             name = "Xiaomi Button SW";
