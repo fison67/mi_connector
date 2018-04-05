@@ -408,7 +408,7 @@ def setStatus(params){
 		def para = "${params.data}"
 		String data = para
 		def stf = Float.parseFloat(data)
-		def life = Math.round(stf*1.435)    
+		def life = Math.round(stf*1.45)    
     	sendEvent(name:"filter1_life", value: life)
     	break;
     case "average_aqi":
@@ -708,7 +708,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
         
         if(jsonObj.state.filterLifeRemaining != null && jsonObj.state.filterLifeRemaining != ""){
-    		sendEvent(name:"filter1_life", value: jsonObj.state.filterLifeRemaining )
+    		sendEvent(name:"filter1_life", value: Math.round(jsonObj.state.filterLifeRemaining*1.45) )    
         }
         if(jsonObj.state.filterHoursUsed != null && jsonObj.state.filterHoursUsed != ""){
     		sendEvent(name:"f1_hour_used", value: Math.round(jsonObj.state.filterHoursUsed/24) )
