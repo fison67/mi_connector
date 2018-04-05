@@ -134,7 +134,7 @@ def refresh(){
 	log.debug "Refresh"
     def options = [
      	"method": "GET",
-        "path": "/devices/get/${state.id}",
+        "path": "/devices/get/${state.id}:${state.deviceIndex}",
         "headers": [
         	"HOST": state.app_url,
             "Content-Type": "application/json"
@@ -148,8 +148,8 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        
-     	sendEvent(name:"switch", value: jsonObj.state.power ? "on" : "off")
+                log.debug jsonObj
+     	sendEvent(name:"switch", value: (jsonObj.state.power == "true" ? "on" : "off") )
         
         updateLastTime()
     } catch (e) {
