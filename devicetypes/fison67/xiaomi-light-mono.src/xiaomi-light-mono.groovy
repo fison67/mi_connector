@@ -36,24 +36,12 @@ metadata {
         capability "Configuration"
         capability "Refresh"
         capability "Switch Level"
-        capability "Health Check"
         capability "Light"
-
-         
-        attribute "switch", "string"
-        attribute "color", "string"
-        attribute "brightness", "string"
         
+        attribute "lastOn", "string"
+        attribute "lastOff", "string"
         attribute "lastCheckin", "Date"
          
-        command "localOn"
-        command "localOff"
-        command "on"
-        command "off"
-        
-        command "setColor"
-        command "setBrightness"
-        
 	}
 
 
@@ -211,7 +199,6 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 	    
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
         sendEvent(name: "lastCheckin", value: now)
-	multiatt()
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
