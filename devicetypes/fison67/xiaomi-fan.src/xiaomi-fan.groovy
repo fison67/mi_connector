@@ -72,7 +72,7 @@ metadata {
 	capability "Refresh"
 	capability "Sensor"
 	capability "Battery"
-	capability "Power source"
+	capability "Power Source"
          
         attribute "buzzer", "string"
         attribute "anglelevel", "string"
@@ -153,10 +153,7 @@ metadata {
             }            
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-   			attributeState("default", label:'${currentValue}                      ')
-          }
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-   			attributeState("default", label:'                                               AC${currentValue}')
+   			attributeState("default", label:'${currentValue}')
           }
 		}
         standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
@@ -180,6 +177,10 @@ metadata {
             )
         }
         valueTile("humidity", "device.humidity") {
+            state("val", label:'${currentValue}', defaultState: true, 
+            )
+        }   
+        valueTile("battery", "device.battery") {
             state("val", label:'${currentValue}', defaultState: true, 
             )
         }   
@@ -288,9 +289,6 @@ def setInfo(String app_url, String id) {
 def setStatus(params){
     log.debug "${params.key} : ${params.data}"
     def now = new Date().format("HH:mm:ss", location.timeZone)
-//	state.currenttemp = device.currentState('temperature')?.value
-//	state.currenthumi = device.currentState('humidity')?.value
-//	state.currentangle = device.currentState('anglelevel')?.value
     
  	switch(params.key){
     case "temperature":
@@ -832,9 +830,11 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 }
 
 def multiatt(){
-    	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°")
-	sendEvent(name:"battery", value: state.acPower + state.batteryLe + "%" )
+    	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°" + " AC" + state.acPower + state.batteryLe + "%")
 //	for new smartthings app	
+	sendEvent(name:"temperature", value: state.currenttemp)
+	sendEvent(name:"humidity", value: state.currenthumi)
+	sendEvent(name:"battery", value:state.batteryLe)
 	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
 }
 def sendCommand(options, _callback){
