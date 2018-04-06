@@ -45,8 +45,8 @@ You need a Raspbery pi or Synology Nas to install Mi Connector API Server
 sudo mkdir /docker
 sudo mkdir /docker/mi-connector
 sudo chown -R pi:pi /docker
-docker pull fison67/mi-connector-arm:0.0.1
-docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector-arm --net=host fison67/mi-connector-arm:0.0.1 
+docker pull fison67/mi-connector-arm:lastest
+docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector-arm --net=host fison67/mi-connector-arm:lastest
 ```
 
 ###### Synology nas<br/>
@@ -121,14 +121,20 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | zhimi.airpurifier.v6  |   X |
 |   | zhimi.airpurifier.ma2  |   X |
 | Xiaomi humidifier  | zhimi.humidifier.v1  |   X |
+| Xiaomi humidifier2 | zhimi.humidifier.ca1  |   O |
 | Xiaomi vacuum  | rockrobo.vacuum.v1  |   O |
 |   | roborock.vacuum.s5  |   X |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
 |   | chuangmi.plug.v2  |   X |
 |   | chuangmi.plug.m1  |   X |
-| Xiaomi air monitor  | zhimi.airmonitor.v1  |   X |
+| Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
+| Xiaomi Fan  | zhimi.fan.v3  |   O |
+| Yeelight Mono  | yeelink.light.lamp1  |   X |
+| Yeelight Mono  | yeelink.light.mono1  |   O |
+| Yeelight Color  | yeelink.light.color1  |   O |
+| Yeelight Color  | yeelink.light.strip1  |   O |
 
 #### Zigbee Version
 | Type  | Model | Tested |
@@ -138,12 +144,17 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi door/window sensor | lumi.magnet  |  X  |
 |  | lumi.magnet.aq2  |  O  |
 | Xiaomi weather sensor | lumi.weather  |  O  |
+| Xiaomi weather sensor | lumi.sensor_ht  |  O  |
 | Xiaomi power socket | lumi.plug  |  O  |
 | Xiaomi Button | lumi.switch  |  X  |
 |  | lumi.switch.v2  |  O  |
-|  | lumi.86sw1  |  X  |
-|  | lumi.86sw2  |  X  |
-| Xiaomi Cube | lumi.cube  |  X  |
+|  | lumi.86sw1  |  O  |
+|  | lumi.86sw2  |  O  |
+| Xiaomi Cube | lumi.cube  |  O  |
+| Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |
+| Xiaomi Wall Switch | lumi.ctrl_neutral2  |  O  |
+| Xiaomi Smoke Sensor | lumi.smoke  |  O  |
+
 
 
 <br/><br/>
