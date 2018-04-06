@@ -132,9 +132,9 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | lumi.gateway.v3  |   O |
 | Xiaomi Fan  | zhimi.fan.v3  |   O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |
-| Yeelight Mono  | yeelink.light.mono1  |   O |
+|   | yeelink.light.mono1  |   O |
 | Yeelight Color  | yeelink.light.color1  |   O |
-| Yeelight Color  | yeelink.light.strip1  |   O |
+|   | yeelink.light.strip1  |   O |
 
 #### Zigbee Version
 | Type  | Model | Tested |
