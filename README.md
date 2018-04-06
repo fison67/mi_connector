@@ -146,7 +146,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi weather sensor | lumi.weather  |  O  |
 | Xiaomi weather sensor | lumi.sensor_ht  |  O  |
 | Xiaomi power socket | lumi.plug  |  O  |
-| Xiaomi Button | lumi.switch  |  X  |
+| Xiaomi Button | lumi.switch  |  O  |
 |  | lumi.switch.v2  |  O  |
 |  | lumi.86sw1  |  O  |
 |  | lumi.86sw2  |  O  |
