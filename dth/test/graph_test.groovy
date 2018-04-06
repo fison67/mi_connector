@@ -39,9 +39,6 @@ mappings {
       path("/getGraphHTML") {action: [ GET: "getGraphHTML" ]}
 }
 
-def getDataList(){
-	return ['11', '22', '33', '44', '55']
-}
 
 def getGraphHTML() {
 	state.testVal = 11
