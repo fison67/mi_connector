@@ -11,7 +11,8 @@ You don't have to do something to add xiaomi device in Smartthings IDE.
 
 <br/><br/>
 
-
+## Current Version
+0.0.2
 
 <br/><br/>
 ## Management Web Desktop Version.<br/>
