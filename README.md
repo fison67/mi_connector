@@ -14,7 +14,7 @@ You don't have to do something to add xiaomi device in Smartthings IDE.
 ## History
 ### Version: 0.0.2
 ```
-Added Log page. You can check wrong token or can't take token yourself.
+Added Log page. You can check for an invalid token or see if Mi Connector can not get a token.
 Fixed bugs.
 Added support devices.
 ```
