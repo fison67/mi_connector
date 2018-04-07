@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Smoke Dectector", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Smoke Detector", namespace: "fison67", author: "fison67") {
         capability "Sensor"
         capability "Smoke Detector"    //"detected", "clear", "tested"
          
