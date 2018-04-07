@@ -156,14 +156,14 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Smoke Sensor | lumi.smoke  |  O  |
 
 
-<img src="./imgs/product/button.jpg" title="Button" width="250px"><img src="./imgs/product/button_aq.png" title="Button" width="250px"><img src="./imgs/product/cube.png" title="Button" width="250px">
-<img src="./imgs/product/door.jpg" title="Button" width="250px"><img src="./imgs/product/door_aq.png" title="Button" width="250px"><img src="./imgs/product/fire.jpg" title="Button" width="250px">
-<img src="./imgs/product/gateway.jpg" title="Button" width="250px"><img src="./imgs/product/humidifier.jpg" title="Button" width="250px"><img src="./imgs/product/humidifier2.png" title="Button" width="250px">
-<img src="./imgs/product/motion.jpg" title="Button" width="250px"><img src="./imgs/product/motion_aq.png" title="Button" width="250px"><img src="./imgs/product/smoke.jpg" title="Button" width="250px">
-<img src="./imgs/product/socket.png" title="Button" width="250px"><img src="./imgs/product/wall_socket_1.png" title="Button" width="250px"><img src="./imgs/product/wall_socket_2.png" title="Button" width="250px">
-<img src="./imgs/product/weather.jpeg" title="Button" width="250px"><img src="./imgs/product/weather_aq.png" title="Button" width="250px"><img src="./imgs/product/xiaomi_fan.jpg" title="Button" width="250px">
-<img src="./imgs/product/wireless_1.png" title="Button" width="250px"><img src="./imgs/product/wireless_2.png" title="Button" width="250px"><img src="./imgs/product/yeelight_color.jpg" title="Button" width="250px">
-<img src="./imgs/product/yeelight_mono.jpg" title="Button" width="250px"><img src="./imgs/product/air_purifier.jpg" title="Button" width="250px">
+<img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button" width="200px"><img src="./imgs/product/cube.png" title="Button" width="200px">
+<img src="./imgs/product/door.jpg" title="Button" width="200px"><img src="./imgs/product/door_aq.png" title="Button" width="200px"><img src="./imgs/product/fire.jpg" title="Button" width="200px">
+<img src="./imgs/product/gateway.jpg" title="Button" width="200px"><img src="./imgs/product/humidifier.jpg" title="Button" width="200px"><img src="./imgs/product/humidifier2.png" title="Button" width="200px">
+<img src="./imgs/product/motion.jpg" title="Button" width="200px"><img src="./imgs/product/motion_aq.png" title="Button" width="200px"><img src="./imgs/product/smoke.jpg" title="Button" width="200px">
+<img src="./imgs/product/socket.png" title="Button" width="200px"><img src="./imgs/product/wall_socket_1.png" title="Button" width="200px"><img src="./imgs/product/wall_socket_2.png" title="Button" width="200px">
+<img src="./imgs/product/weather.jpeg" title="Button" width="200px"><img src="./imgs/product/weather_aq.png" title="Button" width="200px"><img src="./imgs/product/xiaomi_fan.jpg" title="Button" width="200px">
+<img src="./imgs/product/wireless_1.png" title="Button" width="200px"><img src="./imgs/product/wireless_2.png" title="Button" width="200px"><img src="./imgs/product/yeelight_color.jpg" title="Button" width="200px">
+<img src="./imgs/product/yeelight_mono.jpg" title="Button" width="200px"><img src="./imgs/product/air_purifier.jpg" title="Button" width="200px">
 
 
 <br/><br/>
