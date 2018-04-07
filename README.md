@@ -159,6 +159,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/button.jpg" title="Button" width="250px"><img src="./imgs/product/button_aq.png" title="Button" width="250px"><img src="./imgs/product/cube.png" title="Button" width="250px">
 <img src="./imgs/product/door.jpg" title="Button" width="250px"><img src="./imgs/product/door_aq.png" title="Button" width="250px"><img src="./imgs/product/fire.jpg" title="Button" width="250px">
 <img src="./imgs/product/gateway.jpg" title="Button" width="250px"><img src="./imgs/product/humidifier.jpg" title="Button" width="250px"><img src="./imgs/product/humidifier2.png" title="Button" width="250px">
+<img src="./imgs/product/motion.jpg" title="Button" width="250px"><img src="./imgs/product/motion_aq.png" title="Button" width="250px"><img src="./imgs/product/smoke.jpg" title="Button" width="250px">
 
 <br/><br/>
 ## Library
