@@ -245,7 +245,7 @@ def addDevice(){
         	dth = "Xiaomi Weather";
             name = "Xiaomi Weather";
         }else if(params.type == "lumi.smoke"){
-        	dth = "Xiaomi Smoke Dectector";
+        	dth = "Xiaomi Smoke Detector";
             name = "Xiaomi Smoke Dectector";
         }
         
