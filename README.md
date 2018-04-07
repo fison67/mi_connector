@@ -11,8 +11,14 @@ You don't have to do something to add xiaomi device in Smartthings IDE.
 
 <br/><br/>
 
-## Current Version
-0.0.2
+## History
+### Version: 0.0.2
+```
+Added Log page. You can check wrong token or can't take token yourself.
+Fixed bugs.
+Added support devices.
+```
+
 
 <br/><br/>
 ## Management Web Desktop Version.<br/>
