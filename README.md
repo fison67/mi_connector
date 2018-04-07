@@ -176,7 +176,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 <br/><br/>
-## Donation Button
+## Donation
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
 
