@@ -65,14 +65,15 @@ LANGUAGE_MAP = [
 metadata {
 	definition (name: "Xiaomi Fan", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
+		capability "Fan Speed"
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-	capability "Fan Speed"
-	capability "Refresh"
-	capability "Sensor"
-	capability "Battery"
-	capability "Power Source"
+		capability "Refresh"
+		capability "Sensor"
+		capability "Battery"
+		capability "Timed Session"
+		capability "Power Source"
          
         attribute "buzzer", "string"
         attribute "anglelevel", "string"
@@ -88,9 +89,11 @@ metadata {
         attribute "speed", "string"
         attribute "powerOffTime", "string"
         attribute "childLock", "string"
+        attribute "setTimeRemaining", "number"
         
         attribute "lastCheckin", "Date"
          
+        command "setTimeRemaining"
         command "multiatt"
         command "generalOn"
         command "naturalOn"
@@ -120,11 +123,6 @@ metadata {
         command "setMoveLeft"
         command "setMoveRight"
         command "settimeroff"
-        command "settimer15"
-        command "settimer30"
-        command "settimer60"
-        command "settimer90"
-        command "settimer120"
 	}
 
 
@@ -143,18 +141,22 @@ metadata {
                 attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjkg/MDAxNTIyMzIzNDI2NjQ4.b5E7CPu8ljgF_eHdHFDmK7wLHQG6iymo2DErBeN2u3Ug.61d9mZ5QYaP-oUoIPnXaHA_rocGnrRxBArjSbjctQGwg.PNG.shin4299/Fan_tile_off.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
                 attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjIg/MDAxNTIyMzIzNDI2NjQ2.cPAScBLV_hQaqFRkRqjImmaqyFmY7FY23A23k-t8RZ4g.ORO7eIOdaPHIJwR3tMXLLvU741B6NrncFi2a29ZDWbwg.PNG.shin4299/Fan_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
+                        
 		    tileAttribute("device.speedlevel", key: "VALUE_CONTROL") {
 	        attributeState("VALUE_UP", action: "tempUp")
     	    attributeState("VALUE_DOWN", action: "tempDown")
     		}
             
-            tileAttribute ("device.fanSpeed", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"FanSpeed.setFanSpeed"
+            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+                attributeState "level", action:"switch level.setLevel"
             }            
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
    			attributeState("default", label:'${currentValue}')
           }
+//            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+//   			attributeState("default", label:'                                               AC${currentValue}')
+//          }
 		}
         standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
             state "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTcw/MDAxNTIyMzIzNDI2NjQ3.-DR_CT7fGBUGj65di_Ku0jLCvA4oSgWbFSivfsbA26og.ajX0-he2ip3P3kI_0OqhYwSzKblR8zzIeEa4QtJfSHcg.PNG.shin4299/Fan_main_on.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
@@ -173,11 +175,11 @@ metadata {
             state "default", label:'Set Timer\n${currentValue}'
         }
         valueTile("temperature", "device.temperature") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}°', unit:'C', defaultState: true, 
             )
         }
         valueTile("humidity", "device.humidity") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}', unit:'%', defaultState: true, 
             )
         }   
         valueTile("battery", "device.battery") {
@@ -187,8 +189,8 @@ metadata {
         valueTile("anglelevel", "device.anglelevel") {
             state("val", label:'${currentValue}', defaultState: true)
         }
-	controlTile("timerset", "device.level", "slider", height: 1, width: 1, range:"(1..120)") {
-	    state "level", action:"switch level.setLevel"
+	controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(1..120)") {
+	    state "time", action:"setTimeRemaining"
 		}
         
         standardTile("angle", "device.setangle") {
@@ -256,8 +258,8 @@ metadata {
             state "dim", label: 'Dim', action: "setBrightOff", icon: "st.illuminance.illuminance.light", backgroundColor: "#ffc2cd", nextState:"off"
             state "off", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"bright"
         } 
-        standardTile("tiemr0", "device.settimer") {
-			state "default", label: "OFF", action: "settimeroff", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
 //	for new smartthings app	
         standardTile("powerSource", "device.powerSource") {
@@ -267,7 +269,7 @@ metadata {
 		
    	main (["switch2"])
 	details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
-    "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "timerset", 
+    "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "time", 
     "head_label", "angle_label", "refresh",
      "headl", "headr", "angle1", "angle2", "angle3", "angle4"
     ])
@@ -309,7 +311,7 @@ def setStatus(params){
 	multiatt()
     	break;        
     case "speedLevel":
-        sendEvent(name:"fanSpeed", value: params.data)
+        sendEvent(name:"level", value: params.data)
 		def para = params.data
 		String data = para
 		def stf = Float.parseFloat(data)
@@ -327,7 +329,7 @@ def setStatus(params){
 		def tem = Math.round((stf+12)/25)        
         sendEvent(name:"speedlevel", value: tem)        
         sendEvent(name:"fanmode", value: "natural")
-        sendEvent(name:"fanSpeed", value: para)
+        sendEvent(name:"level", value: para)
         }
     	break;        
     case "angleEnable":
@@ -336,7 +338,7 @@ def setStatus(params){
     	break;        
         
     case "fanNatural":
-        sendEvent(name:"fanSpeed", value: params.data)
+        sendEvent(name:"level", value: params.data)
     	break;        
     case "acPower":
     	state.acPower = (params.data == "on" ? "☈: " : "✕: ")
@@ -344,6 +346,7 @@ def setStatus(params){
     	break;        
     case "batteryLevel":
 	state.batteryLe = params.data	
+        sendEvent(name:"battery", value: params.data)
 	multiatt()
     	break;
     case "power":
@@ -402,6 +405,7 @@ def updateTimer(){
     def timeStr = msToTime(state.timerCount)
 	log.debug "Left time >> ${timeStr}"
     sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
 }
 
 def processTimer(second){
@@ -418,46 +422,26 @@ def processTimer(second){
     updateTimer()
 }
 
-def settimeroff() { 
+def stop() { 
 	unschedule()
 	log.debug "Timer Off"
 	state.timerCount = 0
 	updateTimer()
 }
-def setLevel(level) { 
-	log.debug "Timer ${level}Min >> ${state.timerCount}"
-    processTimer(level * 60)
+def setTimeRemaining(time) { 
+	log.debug "Timer ${time}Min >> ${state.timerCount}"
+    processTimer(time * 60)
 }
 
-def settimer15() { 
-	log.debug "Timer 15Min >> ${state.timerCount}"
-    processTimer(15 * 60)
-}
-def settimer30() { 
-	log.debug "Timer 30Min >> ${state.timerCount}"
-    processTimer(30 * 60)
-}
-def settimer60() { 
-	log.debug "Timer 60Min >> ${state.timerCount}"
-    processTimer(60 * 60)
-}
-def settimer90() { 
-	log.debug "Timer 90Min >> ${state.timerCount}"
-    processTimer(90 * 60)
-}
-def settimer120() { 
-	log.debug "Timer 120Min >> ${state.timerCount}"
-    processTimer(120 * 60)
-}
 
-def setFanSpeed(speed){
+def setLevel(level){
 	log.debug "setFanSpeed >> ${state.id}"
 	def currentState = device.currentValue("fanmode")    
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
         	"cmd": "fanNatural",
-        	"data": speed
+        	"data": level
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -466,7 +450,7 @@ def setFanSpeed(speed){
     	def body = [
         	"id": state.id,
         	"cmd": "fanSpeed",
-        	"data": speed
+        	"data": level
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -820,7 +804,22 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
         sendEvent(name:"ledBrightness", value: jsonObj.state.ledBrightness)
-	    
+        sendEvent(name:"battery", value: state.batteryLe)
+	if( jsonObj.properties.naturalLevel > 0 ) {
+		sendEvent(name:"fanmode", value: "natural")
+		String data = jsonObj.properties.naturalLevel
+		def stf = Float.parseFloat(data)
+		def tem = Math.round((stf+12)/25)        
+        	sendEvent(name:"speedlevel", value: tem)        
+        	sendEvent(name:"level", value: jsonObj.properties.naturalLevel)
+	} else {
+		sendEvent(name:"fanmode", value: "general")
+		String data = jsonObj.properties.speedLevel
+		def stf = Float.parseFloat(data)
+		def tem = Math.round((stf+12)/25)        
+        	sendEvent(name:"speedlevel", value: tem)        
+        	sendEvent(name:"level", value: jsonObj.properties.speedLevel)
+	}
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
         sendEvent(name: "lastCheckin", value: now)
 	multiatt()
@@ -832,7 +831,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 def multiatt(){
     	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°" + " AC" + state.acPower + state.batteryLe + "%")
 //	for new smartthings app	
-	sendEvent(name:"temperature", value: state.currenttemp)
+	sendEvent(name:"temperature", value: state.currenttemp, unit: "C")
 	sendEvent(name:"humidity", value: state.currenthumi)
 	sendEvent(name:"battery", value:state.batteryLe)
 	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
