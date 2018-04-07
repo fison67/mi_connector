@@ -247,7 +247,10 @@ def addDevice(){
         }else if(params.type == "lumi.smoke"){
         	dth = "Xiaomi Smoke Detector";
             name = "Xiaomi Smoke Dectector";
-        }
+	}else if(params.type == "lumi.gas"){
+		dth = "Xiaomi Gas Detector";
+            name = "Xiaomi Gas Dectector";
+	}
         
         if(dth == null){
         	log.warn("Failed >> Non exist DTH!!! Type >> " + type);
