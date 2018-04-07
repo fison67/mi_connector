@@ -156,7 +156,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Smoke Sensor | lumi.smoke  |  O  |
 
 
-![Button](./imgs/product/button.jpg)
+![Button](./imgs/product/button.jpg =100x100)
 
 <br/><br/>
 ## Library
