@@ -16,6 +16,7 @@ You don't have to do something to add xiaomi device in Smartthings IDE.
 ```
 Added Log page. You can check for an invalid token or see if Mi Connector can not get a token.
 Fixed bugs.
+Added refresh feature.
 Added support devices.
 ```
 
