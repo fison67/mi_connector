@@ -31,15 +31,13 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Gas Detector", namespace: "fison67", author: "fison67") {
-        capability "Carbon Monoxide Detector"    //"detected", "clear", "tested"
         capability "Sensor"
+        capability "Carbon Monoxide Detector"    //"detected", "clear", "tested"
         capability "Refresh"
-        attribute "battery", "string"
         attribute "density", "string"        
         attribute "lastCheckin", "Date"
         
 	}
-
 
 	simulator {
 	}
@@ -63,11 +61,7 @@ metadata {
                 ]
              )
         }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
+                
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
@@ -94,9 +88,6 @@ def setStatus(params){
     case "density":
     	sendEvent(name:"density", value: params.data, unit:"㎍/㎥")
     	break;
-    case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data)
-    	break;
     }
     
     updateLastTime()
@@ -113,7 +104,6 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         
-        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
         sendEvent(name:"density", value: jsonObj.properties.density, unit:"㎍/㎥")
         
         updateLastTime()
