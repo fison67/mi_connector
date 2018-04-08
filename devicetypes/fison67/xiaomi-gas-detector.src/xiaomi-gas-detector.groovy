@@ -32,24 +32,21 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Gas Detector", namespace: "fison67", author: "fison67") {
         capability "Sensor"
-     //   capability "Smoke Detector"    //"detected", "clear", "tested"
-         
-        attribute "battery", "string"
+        capability "Carbon Monoxide Detector"    //"detected", "clear", "tested"
+        capability "Refresh"
         attribute "density", "string"        
         attribute "lastCheckin", "Date"
         
-        command "refresh"
 	}
-
 
 	simulator {
 	}
 
 	tiles {
 		multiAttributeTile(name:"gas", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.gas", key: "PRIMARY_CONTROL") {
-               	attributeState "clear", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#ffffff"
-            	attributeState "detected", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#e86d13"
+			tileAttribute ("device.carbonMonoxide", key: "PRIMARY_CONTROL") {
+               	attributeState "clear", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTg0/MDAxNTIyNjcwOTc2ODE1.2rSncv314VWU8irUYinoIi9JLQ3muxYJOVv0zNi_hpsg.ti_b998of00LFlzxjoNnD6Y2zAhq-I2Np7KvWXRaEHMg.PNG.shin4299/gas_main_off.png?type=w3" , backgroundColor:"#ffffff"
+            	attributeState "detected", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI3/MDAxNTIyNjcwOTc2OTQ3.BhACHbETMGGIUQohpJx2USQ_QwLmvOtHMkTe5tTQBzgg.2BXHQDUXhu0f5GCsZ5IFwBvdDJY0DTXmPvs4YjVD6K4g.PNG.shin4299/gas_main_on.png?type=w3" , backgroundColor:"#e86d13"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -57,18 +54,14 @@ metadata {
 		}
         
         valueTile("density", "device.density", width: 2, height: 2) {
-            state ("val", label:'${currentValue}obs./m', defaultState: true, 
+            state ("val", label:'${currentValue}㎍/㎥', unit:"㎍/㎥", defaultState: true, 
             	backgroundColors:[
                     [value: 00, color: "#fde9e5"],
                     [value: 1000, color: "#600e00"]
                 ]
              )
         }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
+                
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
@@ -90,13 +83,10 @@ def setStatus(params){
 	log.debug "${params.key} : ${params.data}"
  	switch(params.key){
     case "gasDetected":
-    	sendEvent(name:"gas", value: (params.data == "true" ? "detected" : "clear") )
+    	sendEvent(name:"carbonMonoxide", value: (params.data == "true" ? "detected" : "clear") )
     	break;
     case "density":
-    	sendEvent(name:"density", value: params.data)
-    	break;
-    case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data)
+    	sendEvent(name:"density", value: params.data, unit:"㎍/㎥")
     	break;
     }
     
@@ -114,8 +104,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         
-        sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
-        sendEvent(name:"density", value: jsonObj.properties.density)
+        sendEvent(name:"density", value: jsonObj.properties.density, unit:"㎍/㎥")
         
         updateLastTime()
     } catch (e) {
