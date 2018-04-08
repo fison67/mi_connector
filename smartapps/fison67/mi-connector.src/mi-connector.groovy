@@ -250,6 +250,9 @@ def addDevice(){
 	}else if(params.type == "lumi.gas"){
 		dth = "Xiaomi Gas Detector";
             name = "Xiaomi Gas Dectector";
+	}else if(params.type == "lumi.water"){
+		dth = "Xiaomi Water Detector";
+            name = "Xiaomi Water Dectector";
 	}
         
         if(dth == null){
