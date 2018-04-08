@@ -101,6 +101,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         
         sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
+        sendEvent(name:"water", value: jsonObj.properties.waterDetected ? "wet" : "dry")
         
         updateLastTime()
     } catch (e) {
