@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Water Detector", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Water Detection", namespace: "fison67", author: "fison67") {
         capability "Sensor"
         capability "Water Sensor"     //  ["dry", "wet"]
         capability "Refresh"
