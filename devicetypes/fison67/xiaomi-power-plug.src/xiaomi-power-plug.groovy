@@ -115,7 +115,7 @@ def setStatus(params){
     case "powerConsumed":
 		def para = "${params.data}"
 		String data = para
-		def st = data.replace("J","");
+		def st = data.replace(" J","").replace(",","")
 		def stf = Float.parseFloat(st)
 		def powerc = Math.round(stf)/1000
     	sendEvent(name:"energyMeter", value: powerc)
