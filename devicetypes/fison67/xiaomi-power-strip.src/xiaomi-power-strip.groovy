@@ -31,16 +31,27 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Power Strip", namespace: "fison67", author: "fison67") {
-        capability "Switch"						
+    	capability "Actuator"
+        capability "Switch"				
+        capability "Power Meter"
+        capability "Energy Meter"			//"on", "off"
+        capability "Temperature Measurement"	
+        capability "Refresh"
          
         attribute "status", "string"
         attribute "switch", "string"
         attribute "mode", "string"
+        attribute "current", "string"
         
         attribute "lastCheckin", "Date"
         
         command "on"
         command "off"
+        
+        command "wifiLedOn"
+        command "wifiLedOff"
+        command "realTimePowerOn"
+        command "realTimePowerOff"
         
         command "setModeGreen"
         command "setModeNormal"
@@ -49,8 +60,8 @@ metadata {
 	simulator { }
 
 	tiles {
-		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
+		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
                 attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
                 attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
                 
@@ -63,9 +74,44 @@ metadata {
             }
 		}
         
-        standardTile("mode", "device.mode", width: 2, height: 2, canChangeIcon: true) {
-            state "normal", label: 'Normal', action: "setModeGreen", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"green"
-            state "green", label: 'Green', action: "setModeNormal", icon: "st.switches.switch.on", backgroundColor: "#00a0dc", nextState:"normal"
+        valueTile("powerMeter", "device.powerMeter", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
+        	state "powerMeter", label: 'Meter\n${currentValue} w', defaultState: true
+		}
+        
+        valueTile("current", "device.current", width:2, height:2, inactiveLabel: false, decoration: "flat") {
+            state "current", label:'${currentValue}'
+        }   
+        
+        valueTile("temperature", "device.temperature", width:2, height:2, inactiveLabel: false, decoration: "flat") {
+            state "temperature", label:'${currentValue}°', unit:"°"
+        }    
+        
+        standardTile("wifiLed", "device.wifiLed", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
+            state "on", label:'Led ${name}', action:"wifiLedOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'Led ${name}', action:"wifiLedOn", backgroundColor:"#ffffff", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"wifiLedOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"wifiLedOn", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        /* 
+        standardTile("realTime", "device.realTime", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
+            state "on", label:'${name}', action:"realTimePowerOn", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'${name}', action:"realTimePowerOff", backgroundColor:"#42f46b", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"realTimePowerOn", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"realTimePowerOff", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        */
+        standardTile("mode", "device.mode", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
+            state "normal", label:'${name}', action:"setModeGreen", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "green", label:'${name}', action:"setModeNormal", backgroundColor:"#42f46b", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"setModeGreen", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"setModeNormal", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
 	}
 }
@@ -91,10 +137,66 @@ def setStatus(params){
     case "power":
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
+    case "powerConsumeRate":
+    	sendEvent(name:"powerMeter", value: params.data )
+    	break;
+    case "temperature":
+    	sendEvent(name:"temperature", value: params.data.replace(" C","").toFloat()/2)
+    	break;
+    case "current":
+    	sendEvent(name:"current", value: params.data )
+    	break;
+    case "wifiLed":
+    	sendEvent(name:"wifiLed", value: params.data )
+    	break;
     }
     
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now)
+}
+
+def realTimePowerOn(){
+	log.debug "setRealTimePowerOn >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "realTimePower",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def realTimePowerOff(){
+	log.debug "setRealTimePowerOff >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "realTimePower",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def wifiLedOn(){
+	log.debug "setWifiLedOn >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "wifiLed",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def wifiLedOff(){
+	log.debug "setWifiLedOff >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "wifiLed",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
 }
 
 def setModeGreen(){
@@ -146,10 +248,31 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        setStatus(jsonObj.state)
+     
+     	sendEvent(name:"temperature", value: (jsonObj.state.temperature).toFloat()/2)
+     	sendEvent(name:"powerMeter", value: jsonObj.state.powerConsumeRate)
+     	sendEvent(name:"power", value: jsonObj.state.power)
+     	sendEvent(name:"wifiLed", value: jsonObj.state.wifiLed)
+     	sendEvent(name:"mode", value: jsonObj.state.mode)
+        
+        
+        
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
+}
+
+def refresh(){
+	log.debug "Refresh"
+    def options = [
+     	"method": "GET",
+        "path": "/devices/get/${state.id}",
+        "headers": [
+        	"HOST": state.app_url,
+            "Content-Type": "application/json"
+        ]
+    ]
+    sendCommand(options, callback)
 }
 
 def updated() {
