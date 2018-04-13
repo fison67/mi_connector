@@ -251,7 +251,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
      
      	sendEvent(name:"temperature", value: (jsonObj.state.temperature).toFloat()/2)
      	sendEvent(name:"powerMeter", value: jsonObj.state.powerConsumeRate)
-     	sendEvent(name:"power", value: jsonObj.state.power)
+     	sendEvent(name:"switch", value: jsonObj.state.power ? "on" : "off")
      	sendEvent(name:"wifiLed", value: jsonObj.state.wifiLed)
      	sendEvent(name:"mode", value: jsonObj.state.mode)
         
