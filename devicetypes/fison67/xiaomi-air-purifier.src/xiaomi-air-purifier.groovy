@@ -32,13 +32,65 @@ import groovy.transform.Field
 
 @Field 
 LANGUAGE_MAP = [
-    "temperature": [
+    "temp": [
         "Korean": "온도",
-        "English": "Temperature"
+        "English": "Temper\n-ature"
     ],
-    "humidity": [
+    "humi": [
         "Korean": "습도",
-        "English": "Humidity"
+        "English": "Humi\n-dity"
+    ],
+    "buz": [
+        "Korean": "부저음",
+        "English": "Buzzer"
+    ],
+    "led": [
+        "Korean": "LED\n밝기",
+        "English": "LED\nBright"
+    ],
+    "filter": [
+        "Korean": "필터\n수명",
+        "English": "Filter\nLife"
+    ],
+    "auto": [
+        "Korean": "자동",
+        "English": "Auto\nMode"
+    ],
+    "silent": [
+        "Korean": "저소음",
+        "English": "Silent\nMode"
+    ],
+    "favorit": [
+        "Korean": "선호",
+        "English": "Favorite\nMode"
+    ],
+    "low": [
+        "Korean": "약하게",
+        "English": "Low\nMode"
+    ],
+    "medium": [
+        "Korean": "중간",
+        "English": "Medium\nMode"
+    ],
+    "high": [
+        "Korean": "강하게",
+        "English": "High\nMode"
+    ],
+    "strong": [
+        "Korean": "최대",
+        "English": "Strong\nMode"
+    ],
+    "usage": [
+        "Korean": "사용시간",
+        "English": "Usage"
+    ],
+    "remain": [
+        "Korean": "남은시간",
+        "English": "Remain"
+    ],
+    "day": [
+        "Korean": "일",
+        "English": "d"
     ]
 ]
 
@@ -65,8 +117,6 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
-        command "setLanguage" 
-        
         command "setSpeed"
         command "setStatus"
         command "refresh"
@@ -157,10 +207,10 @@ metadata {
             state "default", label:'AQI \n㎍/㎥'
         }        
         valueTile("temp_label", "device.temp_label", decoration: "flat") {
-            state("val", label:'${currentValue}', defaultState: true)
+            state "default", label:'${currentValue}'
         }
         valueTile("humi_label", "device.humi_label", decoration: "flat") {
-            state "val", label:'${currentValue}', defaultState: true
+            state "default", label:'${currentValue}'
         }
 		valueTile("pm25_value", "device.fineDustLevel", decoration: "flat") {
         	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
@@ -215,38 +265,38 @@ metadata {
             )
         }   
         
-        valueTile("auto_label", "", decoration: "flat") {
-            state "default", label:'Auto \nMode'
+        valueTile("auto_label", "device.auto_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("silent_label", "", decoration: "flat") {
-            state "default", label:'Silent \nMode'
+        valueTile("silent_label", "device.silent_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("favorit_label", "", decoration: "flat") {
-            state "default", label:'Favorite \nMode'
+        valueTile("favorit_label", "device.favorit_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("low_label", "", decoration: "flat") {
-            state "default", label:'Low \nMode'
+        valueTile("low_label", "device.low_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("medium_label", "", decoration: "flat") {
-            state "default", label:'Medium \nMode'
+        valueTile("medium_label", "device.medium_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("high_label", "", decoration: "flat") {
-            state "default", label:'High \nMode'
+        valueTile("high_label", "device.high_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("strong_label", "", decoration: "flat") {
-            state "default", label:'Strong \nMode'
+        valueTile("strong_label", "device.strong_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("led_label", "", decoration: "flat") {
-            state "default", label:'LED\nBrightness'
+        valueTile("led_label", "device.led_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("buzzer_label", "", decoration: "flat") {
-            state "default", label:'Buzzer'
+        valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("usage_label", "", decoration: "flat") {
-            state "default", label:'Filter\nLife'
+        valueTile("usage_label", "device.usage_label", decoration: "flat") {
+            state "default", label:'${currentValue}'
         }
-        valueTile("refresh", "device.refresh", decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
+        standardTile("refresh", "device.refresh") {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh", backgroundColor:"#A7ADBA"
         }        
         
         standardTile("mode1", "device.mode1") {
@@ -295,11 +345,11 @@ metadata {
         }         
 
         valueTile("f1_hour_used", "device.f1_hour_used", width: 2, height: 1) {
-            state("val", label:'Usage ${currentValue}d', defaultState: true, backgroundColor:"#bcbcbc")
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
         }
         
         valueTile("filter1_life", "device.filter1_life", width: 2, height: 1) {
-            state("val", label:'Remain ${currentValue}d', defaultState: true, backgroundColor:"#bcbcbc")
+            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
         }
 
 
@@ -316,18 +366,6 @@ metadata {
 	}
 }
 
-def updated() {
-	refresh()
-    setLanguage(settings.selectedLang)
-}
-
-def setLanguage(language){
-    log.debug "Languge >> ${language}"
-	state.language = language
-    
-    sendEvent(name:"temp_label", value: LANGUAGE_MAP["temperature"][language] )
-    sendEvent(name:"humi_label", value: LANGUAGE_MAP["humidity"][language] )
-}
 
 // parse events into attributes
 def parse(String description) {
@@ -402,14 +440,14 @@ def setStatus(params){
 		String data = para
 		def stf = Float.parseFloat(data)
 		def use = Math.round(stf/24)    
-    	sendEvent(name:"f1_hour_used", value: use)
+    	sendEvent(name:"f1_hour_used", value: state.usage + " " + use + state.day )
         break;
     case "filter1_life":
 		def para = "${params.data}"
 		String data = para
 		def stf = Float.parseFloat(data)
 		def life = Math.round(stf*1.45)    
-    	sendEvent(name:"filter1_life", value: life)
+    	sendEvent(name:"filter1_life", value: state.remain + " " + life + state.day )
     	break;
     case "average_aqi":
     
@@ -661,6 +699,34 @@ def off(){
     sendCommand(options, null)
 }
 
+
+def updated() {
+    refresh()
+    setLanguage(settings.selectedLang)
+}
+
+def setLanguage(language){
+    log.debug "Languge >> ${language}"
+	state.language = language
+	state.usage = LANGUAGE_MAP["usage"][language]
+	state.remain = LANGUAGE_MAP["remain"][language]
+	state.day = LANGUAGE_MAP["day"][language]
+	
+    sendEvent(name:"buzzer_label", value: LANGUAGE_MAP["buz"][language] )
+    sendEvent(name:"temp_label", value: LANGUAGE_MAP["temp"][language] )
+    sendEvent(name:"humi_label", value: LANGUAGE_MAP["humi"][language] )
+	sendEvent(name:"auto_label", value: LANGUAGE_MAP["auto"][language] )
+	sendEvent(name:"silent_label", value: LANGUAGE_MAP["silent"][language] )
+	sendEvent(name:"favorit_label", value: LANGUAGE_MAP["favorit"][language] )
+	sendEvent(name:"low_label", value: LANGUAGE_MAP["low"][language] )
+	sendEvent(name:"medium_label", value: LANGUAGE_MAP["medium"][language] )
+	sendEvent(name:"high_label", value: LANGUAGE_MAP["high"][language] )
+	sendEvent(name:"strong_label", value: LANGUAGE_MAP["strong"][language] )
+	sendEvent(name:"led_label", value: LANGUAGE_MAP["led"][language] )
+	sendEvent(name:"usage_label", value: LANGUAGE_MAP["filter"][language] )
+}
+
+
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
     try {
@@ -708,10 +774,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
         
         if(jsonObj.state.filterLifeRemaining != null && jsonObj.state.filterLifeRemaining != ""){
-    		sendEvent(name:"filter1_life", value: Math.round(jsonObj.state.filterLifeRemaining*1.45) )    
+    		sendEvent(name:"filter1_life", value: state.remain + " " + Math.round(jsonObj.state.filterLifeRemaining*1.45) + state.day )    
         }
         if(jsonObj.state.filterHoursUsed != null && jsonObj.state.filterHoursUsed != ""){
-    		sendEvent(name:"f1_hour_used", value: Math.round(jsonObj.state.filterHoursUsed/24) )
+    		sendEvent(name:"f1_hour_used", value: state.usage + " " + Math.round(jsonObj.state.filterHoursUsed/24) + state.day )
         }
         if(jsonObj.properties.ledBrightness != null && jsonObj.properties.ledBrightness != ""){
         	sendEvent(name:"ledBrightness", value: jsonObj.properties.ledBrightness)
