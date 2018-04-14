@@ -60,7 +60,7 @@ metadata {
 			}
             
             tileAttribute("device.powerMeter", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Meter: ${currentValue}\n ',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'Meter: ${currentValue} w\n ',icon: "st.Health & Wellness.health9")
             }
             tileAttribute("device.energyMeter", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'                                 Energy: ${currentValue}KWh\n ',icon: "st.Health & Wellness.health9")
@@ -70,7 +70,7 @@ metadata {
             }
 		}
         valueTile("powerMeter", "device.powerMeter", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "powerMeter", label: 'Meter\n${currentValue}', action: "power", defaultState: true
+        	state "powerMeter", label: 'Meter\n${currentValue} w', action: "power", defaultState: true
 		}
 //        valueTile("powerVolt", "device.powerVolt", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
 //        	state "volt", label: '현재전압\n${currentValue}', action: "volt", defaultState: true
@@ -107,7 +107,7 @@ def setStatus(params){
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
     case "powerLoad":
-    	sendEvent(name:"powerMeter", value: params.data)
+    	sendEvent(name:"powerMeter", value: params.data.replace(" w", ""))
     	break;
     case "loadVoltage":
     	sendEvent(name:"powerVolt", value: params.data)
