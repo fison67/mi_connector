@@ -34,7 +34,7 @@ Added support devices.
 
 <br/><br/>
 ## DTH Example<br/>
-![total2](./imgs/total2.png) 
+![total2](./imgs/dth/README.md) 
 
 
 <br/><br/>
