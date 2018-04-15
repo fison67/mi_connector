@@ -6,7 +6,7 @@
 <img src="./xiaomi-fan.jpg" title="Button" width="400px">
 
 ## Xiaomi Air Purifier
-<img src="./xiaomi-air-purifier.jpg" title="Button" width="400px">
+<img src="./xiaomi-air-pirifier.jpg" title="Button" width="400px">
 
 ## Xiaomi Humidifier
 <img src="./xiaomi-humidifier.jpg" title="Button" width="400px">
