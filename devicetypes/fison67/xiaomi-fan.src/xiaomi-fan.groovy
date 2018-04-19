@@ -154,8 +154,11 @@ metadata {
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
    			attributeState("default", label:'${currentValue}')
           }
-
-	standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
+//            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+//   			attributeState("default", label:'                                               AC${currentValue}')
+//          }
+		}
+        standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
             state "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTcw/MDAxNTIyMzIzNDI2NjQ3.-DR_CT7fGBUGj65di_Ku0jLCvA4oSgWbFSivfsbA26og.ajX0-he2ip3P3kI_0OqhYwSzKblR8zzIeEa4QtJfSHcg.PNG.shin4299/Fan_main_on.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
             state "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNDIg/MDAxNTIyMzIzNDI2NjM3.kLKELF4VIDpDZoWz3FGdj1IeNl5-1QTnTUj3PpD_O54g.coZVo_0F8xdhdKxWSuUH_0ldi7v-TpkTXDJtcEMpT34g.PNG.shin4299/Fan_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
              
