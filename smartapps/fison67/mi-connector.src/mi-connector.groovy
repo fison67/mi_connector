@@ -208,6 +208,12 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
+        }else if(params.type == "zhimi.fan.v3"){	
+        	dth = "Xiaomi Fan";	
+            name = "Xiaomi Fan";	
+        }else if(params.type == "zhimi.airmonitor.v1"){	
+        	dth = "Xiaomi Air Monitor";	
+            name = "Xiaomi Air Monitor";				
        	}else if(params.type == "yeelink.light.color1"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
