@@ -95,8 +95,7 @@ def setStatus(params){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "contact":
-	if(params.data == 
-	   "){
+	if(params.data == "true"){
     		sendEvent(name:"contact", value: "closed" )
     		sendEvent(name:"lastClosed", value: now )
 	} else {
