@@ -95,7 +95,8 @@ def setStatus(params){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "contact":
-	if(params.data == "true"){
+	if(params.data == 
+	   "){
     		sendEvent(name:"contact", value: "closed" )
     		sendEvent(name:"lastClosed", value: now )
 	} else {
@@ -116,7 +117,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        sendEvent(name:"contact", value: (jsonObj.properties.contact == "true" ? "closed" : "open"))
+        sendEvent(name:"contact", value: (jsonObj.properties.contact == true ? "closed" : "open"))
         sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
     
         updateLastTime()
