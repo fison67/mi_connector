@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling(v.0.0.1)
+ *  Xiaomi Light Ceiling(v.0.0.2)
  *
  * MIT License
  *
@@ -25,6 +25,9 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * Version. 0.0.2 >> Add Timer by fison67
 */
 
 import groovy.json.JsonSlurper
@@ -45,8 +48,9 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
+        command "setTimeRemaining"
+        command "stop"
 	}
-
 
 	simulator {
 	}
@@ -54,11 +58,11 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -75,11 +79,11 @@ metadata {
 		}
 		multiAttributeTile(name:"switch2", type: "lighting"){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'ON', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'OFF', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 
 			}
         }
@@ -99,9 +103,18 @@ metadata {
         valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
+        }
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
         
-   	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp" ])       
+        main (["switch2"])
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -156,18 +169,23 @@ def refresh(){
 
 def setLevel(brightness){
 	log.debug "setBrightness >> ${state.id}, val=${brightness}"
-    def body = [
-        "id": state.id,
-        "cmd": "brightness",
-        "data": brightness
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    if(brightness == 0){
+    	off()
+    }else{
+        def body = [
+            "id": state.id,
+            "cmd": "brightness",
+            "data": brightness
+        ]
+        def options = makeCommand(body)
+        sendCommand(options, null)
+
+    	setPowerByStatus(true)
+    }
 }
 
 def setColor(color){
-	log.debug "setColorTemperature >> ${state.id}"
-    log.debug "${color}"
+	log.debug "setColorTemperature >> ${state.id} >> ${color}"
     
     def body = [
         "id": state.id,
@@ -176,6 +194,8 @@ def setColor(color){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+    
+    setPowerByStatus(true)
 }
 
 def on(){
@@ -209,9 +229,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
-        def colors = jsonObj.properties.color.values
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+        
+        def colorRGB = colorTemperatureToRGB(jsonObj.state.colorTemperature)
+        String hex = String.format("#%02x%02x%02x", colorRGB[0], colorRGB[1], colorRGB[2]);  
+    	sendEvent(name:"color", value: colors )
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -239,4 +260,108 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+//	log.debug "Left Time >> ${state.timerCount}"
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+//    log.debug "Left Time >> ${state.timerCount} seconds"
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
+}
+
+def colorTemperatureToRGB(kelvin){
+    def temp = kelvin / 100;
+    def red, green, blue;
+    if( temp <= 66 ){ 
+        red = 255; 
+        green = temp;
+        green = 99.4708025861 * Math.log(green) - 161.1195681661;
+
+        if( temp <= 19){
+            blue = 0;
+        } else {
+            blue = temp-10;
+            blue = 138.5177312231 * Math.log(blue) - 305.0447927307;
+        }
+    } else {
+        red = temp - 60;
+        red = 329.698727446 * Math.pow(red, -0.1332047592);
+        
+        green = temp - 60;
+        green = 288.1221695283 * Math.pow(green, -0.0755148492 );
+
+        blue = 255;
+    }
+    return [ clamp(red,   0, 255), clamp(green, 0, 255), clamp(blue,  0, 255) ]
+}
+
+
+def clamp( x, min, max ) {
+    if(x<min){ return min; }
+    if(x>max){ return max; }
+    return x;
 }
