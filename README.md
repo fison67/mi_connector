@@ -78,7 +78,7 @@ Run Docker
 Go to the Smartthings IDE
 Click My Device Handlers
 Click Create New Device Handlers
-Copy content of file in the dth folder to the area
+Copy content of file in the devicetypes/fison67 folder to the area
 Click Create
 Loop until all of file is registered
 ```
