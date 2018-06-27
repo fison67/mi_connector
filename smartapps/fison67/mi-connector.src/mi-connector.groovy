@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.1)
+ *  Mi Connector (v.0.0.2)
  *
  * MIT License
  *
@@ -58,6 +58,8 @@ def mainPage() {
    		section("Request New Devices"){
         	input "address", "string", title: "Server address", required: true
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
+            input "externalAddress", "string", title: "External network address", required: false
+         //   input "timezone", "enum", title:"Time Zone", required: true, options: [ "Asia/Seoul","Ame" ]
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
         }
         
@@ -108,6 +110,18 @@ def updateLanguage(){
     }
 }
 
+def updateExternalNetwork(){
+	log.debug "External Network >> ${settings.externalAddress}"
+    def list = getChildDevices()
+    list.each { child ->
+        try{
+        	child.setExternalAddress(settings.externalAddress)
+        }catch(e){
+        	log.error "DTH is not supported to select external address"
+        }
+    }
+}
+
 def initialize() {
 	log.debug "initialize"
     
@@ -129,6 +143,7 @@ def initialize() {
     sendHubCommand(myhubAction)
     
     updateLanguage()
+    updateExternalNetwork()
 }
 
 def dataCallback(physicalgraph.device.HubResponse hubResponse) {
@@ -208,19 +223,16 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-        }else if(params.type == "zhimi.fan.v3"){	
+       	}else if(params.type == "zhimi.fan.v3"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
-        }else if(params.type == "zhimi.airmonitor.v1"){	
-        	dth = "Xiaomi Air Monitor";	
-            name = "Xiaomi Air Monitor";				
-       	}else if(params.type == "yeelink.light.color1"){
+        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
         }else if(params.type == "yeelink.light.strip1"){
         	dth = "Xiaomi Light Strip";
             name = "Xiaomi Light Strip";
-        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1"){
+        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
         	dth = "Xiaomi Light Mono";
             name = "Xiaomi Light Mono";
         }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
@@ -250,16 +262,28 @@ def addDevice(){
         }else if(params.type == "lumi.weather"){
         	dth = "Xiaomi Weather";
             name = "Xiaomi Weather";
-        }else if(params.type == "lumi.smoke"){
-        	dth = "Xiaomi Smoke Detector";
-            name = "Xiaomi Smoke Dectector";
-	}else if(params.type == "lumi.gas"){
-		dth = "Xiaomi Gas Detector";
+        }else if(params.type == "lumi.gas"){
+			dth = "Xiaomi Gas Detector";
             name = "Xiaomi Gas Dectector";
-	}else if(params.type == "lumi.water"){
-		dth = "Xiaomi Water Detector";
+		}else if(params.type == "lumi.smoke"){
+        	dth = "Xiaomi Smoke Dectector";
+            name = "Xiaomi Smoke Dectector";
+        }else if(params.type == "yeelink.light.ceiling1"){
+        	dth = "Xiaomi Light Ceiling";
+            name = "Xiaomi Light Ceiling";
+        }else if(params.type == "philips.light.ceiling"){
+        	dth = "Xiaomi Philips Light Ceiling";
+            name = "Xiaomi Philips Light Ceiling";
+        }else if(params.type == "lumi.curtain"){
+        	dth = "Xiaomi Curtain";
+            name = "Xiaomi Curtain";
+        }else if(params.type == "lumi.water"){
+			dth = "Xiaomi Water Detector";
             name = "Xiaomi Water Dectector";
-	}
+		}else if(params.type == "miband"){
+			dth = "Xiaomi Mi band";
+            name = "Xiaomi Miband";
+		}
         
         if(dth == null){
         	log.warn("Failed >> Non exist DTH!!! Type >> " + type);
@@ -274,6 +298,7 @@ def addDevice(){
                 
                 try{ childDevice.refresh() }catch(e){}
                 try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+                try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
                 
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
@@ -294,6 +319,7 @@ def addDevice(){
                     
                 	try{ childDevice.refresh() }catch(e){}
                 	try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+                	try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
                     
                     log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                     index += 1
@@ -316,11 +342,12 @@ def addDevice(){
          
                 try{ childDevice.refresh() }catch(e){}
                 try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+                try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
                 
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
             }catch(e){
-                console.log("Failed >> ADD Device Error : " + e);
+                log.error "Failed >> ADD Device Error : ${e}"
                 def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
                 render contentType: "application/javascript", data: resultString
             }
