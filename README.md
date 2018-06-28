@@ -134,7 +134,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | roborock.vacuum.s5  |   X |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
 |   | chuangmi.plug.v2  |   X |
-|   | chuangmi.plug.m1  |   X |
+|   | chuangmi.plug.m1  |   o |
 | Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
@@ -162,6 +162,9 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |
 | Xiaomi Wall Switch | lumi.ctrl_neutral2  |  O  |
 | Xiaomi Smoke Sensor | lumi.smoke  |  O  |
+| Xiaomi Gas Sensor | lumi.gas  |  O  |
+| Xiaomi Water Sensor | lumi.water  |  O  |
+| Xiaomi Curtain Motor | lumi.curtain  |  O  |
 
 
 <img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button" width="200px"><img src="./imgs/product/cube.png" title="Button" width="200px">
@@ -173,6 +176,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/wireless_1.png" title="Button" width="200px"><img src="./imgs/product/wireless_2.png" title="Button" width="200px"><img src="./imgs/product/yeelight_color.jpg" title="Button" width="200px">
 <img src="./imgs/product/yeelight_mono.jpg" title="Button" width="200px"><img src="./imgs/product/air_purifier.jpg" title="Button" width="200px">
 <img src="./imgs/product/water.jpg?raw=true" title="Button" width="200px">
+<img src="./imgs/product/curtain.png?raw=true" title="Button" width="200px">
 
 
 <br/><br/>
