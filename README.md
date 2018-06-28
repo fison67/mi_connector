@@ -126,7 +126,7 @@ Run Docker
 -> Port setup tab -> local port 33006, container post 3306
 -> Enviroment tab -> MYSQL_ROOT_PASSWORD (password1234),  TZ (Asia/Seoul)
 -> Complete
-```
+
 <br/>
 Fill the blank [db_url, db_port, db_password] on the Mi-connector web menu setup
 If you don't change value, it must be a [ localhost, 33006, password1234 ].
