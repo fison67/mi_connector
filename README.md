@@ -176,7 +176,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | yeelink.light.mono1  |   O |
 | Yeelight Color  | yeelink.light.color1  |   O |
 |   | yeelink.light.strip1  |   O |
-|   | yeelink.light.ceiling1  |   O |
+|  Yeelight Ceiling | yeelink.light.ceiling1  |   O |
 
 
 #### Zigbee Version
