@@ -23,7 +23,8 @@ Fixed bug when Zigbee device count is over 25, network error occured
 
 <img src="./imgs/v.0.0.3/xiaomi_weather_graph_temperature_total.png?raw=true" title="Button" width="300px"/>
 <img src="./imgs/v.0.0.3/mi_connector_graph2.png?raw=true" title="Button" width="500px"/>
-[readme](https://github.com/fison67/mi_connector/blob/master/imgs/v.0.0.3/README.md)
+(https://github.com/fison67/mi_connector/blob/master/imgs/v.0.0.3/README.md)
+[link to Google!](http://google.com)
 
 
 <br/>
