@@ -174,7 +174,9 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Fan  | zhimi.fan.v3  |   O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |
 |   | yeelink.light.mono1  |   O |
+|   | yeelink.light.ct2  |   O |
 | Yeelight Color  | yeelink.light.color1  |   O |
+|   | yeelink.light.color2  |   O |
 |   | yeelink.light.strip1  |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |
 
