@@ -16,11 +16,14 @@ You don't have to do anything to add xiaomi device in Smartthings IDE.
 ### Version: 0.0.3
 ```
 Added a graph in DTH & Web. [ Important!!! You must install a DB. ]
-<img src="./imgs/v.0.0.3/xiaomi_weather_graph_temperature_total.png?raw=true">
 Added support devices.
 Added function [find childs] in a gateway DTH.
 Fixed bug when Zigbee device count is over 25, network error occured
 ```
+![v.0.0.3/xiaomi_weather_graph_temperature_total](./imgs/v.0.0.3/xiaomi_weather_graph_temperature_total.png) 
+<img src="./imgs/v.0.0.3/mi_connector_graph2.png?raw=true">
+
+<br/>
 
 ### Version: 0.0.2
 ```
