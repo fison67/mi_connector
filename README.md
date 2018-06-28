@@ -231,7 +231,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <br/><br/>
 ## Donation
-
+If this project help you, you can give me a cup of coffee
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
 
 
