@@ -177,6 +177,8 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/yeelight_mono.jpg" title="Button" width="200px"><img src="./imgs/product/air_purifier.jpg" title="Button" width="200px">
 <img src="./imgs/product/water.jpg?raw=true" title="Button" width="200px">
 <img src="./imgs/product/curtain.png?raw=true" title="Button" width="200px">
+<img src="./imgs/product/yeelight-color-e27.jpg?raw=true" title="Button" width="200px">
+<img src="./imgs/product/yeelight-mono-e27.png?raw=true" title="Button" width="200px">
 
 
 <br/><br/>
