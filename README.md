@@ -20,7 +20,8 @@ Added support devices.
 Added function [find childs] in a gateway DTH.
 Fixed bug when Zigbee device count is over 25, network error occured
 ```
-![v.0.0.3/xiaomi_weather_graph_temperature_total](./imgs/v.0.0.3/README.md) 
+
+<a href="./imgs/v.0.0.3/README.md">![total](./v.0.0.3/xiaomi_weather_graph_temperature_total) 
 ![v.0.0.3/mi_connector_graph2](./imgs/v.0.0.3/README.md) 
 
 <br/>
