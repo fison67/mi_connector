@@ -12,6 +12,15 @@ You don't have to do anything to add xiaomi device in Smartthings IDE.
 <br/><br/>
 
 ## History
+
+### Version: 0.0.3
+```
+Added a graph in DTH & Web.
+Added support devices.
+Added function [find childs] in a gateway DTH.
+Fixed bug when Zigbee device count is over 25, network error occured
+```
+
 ### Version: 0.0.2
 ```
 Added Log page. You can check for an invalid token or see if Mi Connector can not get a token.
@@ -100,6 +109,30 @@ Update Click
 
 <br/><br/>
 
+
+## Install DB<br/>
+#### Raspberry pi<br/>
+> You must install docker first.
+```
+docker pull docker pull jsurf/rpi-mariadb
+docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=password1234 -e TZ=Asia/Seoul -p 33006:3306 -d jsurf/rpi-mariadb
+```
+###### Synology nas<br/>
+> You must install docker first.<br/>
+Run Docker
+-> Registery 
+-> Search mariadb
+-> Advanced Settings
+-> Port setup tab -> local port 33006, container post 3306
+-> Enviroment tab -> MYSQL_ROOT_PASSWORD (password1234),  TZ (Asia/Seoul)
+-> Complete
+```
+<br/>
+Fill the blank [db_url, db_port, db_password] on the Mi-connector web menu setup
+If you don't change value, it must be a [ localhost, 33006, password1234 ].
+Restart a Mi-connector container.
+<br/><br/>
+
 ## Problem solving
 #### Some of xiaomi product is not registered
 > Some of product is not getting token automatically like Xiaomi Vacuum. You have to get token yourself.<br/>
@@ -143,6 +176,8 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | yeelink.light.mono1  |   O |
 | Yeelight Color  | yeelink.light.color1  |   O |
 |   | yeelink.light.strip1  |   O |
+|   | yeelink.light.ceiling1  |   O |
+
 
 #### Zigbee Version
 | Type  | Model | Tested |
@@ -179,6 +214,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/curtain.png?raw=true" title="Button" width="200px">
 <img src="./imgs/product/yeelight-color-e27.jpg?raw=true" title="Button" width="200px">
 <img src="./imgs/product/yeelight-mono-e27.png?raw=true" title="Button" width="200px">
+<img src="./imgs/product/ceiling.jpg?raw=true" title="Button" width="200px">
 
 
 <br/><br/>
