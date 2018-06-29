@@ -5,7 +5,7 @@
 <img src="./xiaomi_weather_graph_temperature_total2.png?raw=true">
 
 <img src="./mi_connector_graph1.png?raw=true">
-<img src="./mi_connector_graph2.png?raw=true">
+<img src="./web-graph.png?raw=true">
 <img src="./mi_connector_graph3.png?raw=true">
 <img src="./mi_connector_graph4.png?raw=true">
 <img src="./mi_connector_graph5.png?raw=true">
