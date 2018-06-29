@@ -161,23 +161,23 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 #### Wi-Fi Version
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
-| Xiaomi air purifier  | zhimi.airpurifier.m1  |   O |
+| Xiaomi Air Purifier  | zhimi.airpurifier.m1  |   O |
 |   | zhimi.airpurifier.v1  |   X |
 |   | zhimi.airpurifier.v2  |   X |
 |   | zhimi.airpurifier.v3  |   X |
 |   | zhimi.airpurifier.v6  |   X |
 |   | zhimi.airpurifier.ma2  |   X |
-| Xiaomi humidifier  | zhimi.humidifier.v1  |   X |
-| Xiaomi humidifier2 | zhimi.humidifier.ca1  |   O |
-| Xiaomi vacuum  | rockrobo.vacuum.v1  |   O |
+| Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |
+|   | zhimi.humidifier.ca1  |   O |
+| Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |
 |   | roborock.vacuum.s5  |   X |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
 |   | chuangmi.plug.v2  |   X |
 |   | chuangmi.plug.m1  |   o |
 | Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |
 |   | zimi.powerstrip.v2  |   O |
-| Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
-| Xiaomi gateway  | lumi.gateway.v2  |   X |
+| Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |
+| Xiaomi Gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
 | Xiaomi Fan  | zhimi.fan.v3  |   O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |
@@ -192,13 +192,13 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 #### Zigbee Version
 | Type  | Model | Tested |
 | ------------- | ------------- | ------------- |
-| Xiaomi motion sensor | lumi.motion  |  X  |
+| Xiaomi Motion Sensor | lumi.motion  |  X  |
 |  | lumi.motion.aq2  |  O  |
-| Xiaomi door/window sensor | lumi.magnet  |  X  |
+| Xiaomi Door/Window Sensor | lumi.magnet  |  X  |
 |  | lumi.magnet.aq2  |  O  |
-| Xiaomi weather sensor | lumi.weather  |  O  |
-| Xiaomi weather sensor | lumi.sensor_ht  |  O  |
-| Xiaomi power socket | lumi.plug  |  O  |
+| Xiaomi Weather Sensor | lumi.weather  |  O  |
+| Xiaomi Weather Sensor | lumi.sensor_ht  |  O  |
+| Xiaomi Power Socket | lumi.plug  |  O  |
 | Xiaomi Button | lumi.switch  |  O  |
 |  | lumi.switch.v2  |  O  |
 |  | lumi.86sw1  |  O  |
