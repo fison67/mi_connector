@@ -145,6 +145,9 @@ Restart a Mi-connector container.
 And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out the blank. (IP & Token) > Click OK Button
 <br/><br/>
 
+#### How to get token
+> https://www.home-assistant.io/components/vacuum.xiaomi_miio/#retrieving-the-access-token
+
 ## These devices is not working auto mode.
 ### You must add device manually
 #### Management Web -> Manage Device -> Device List -> Fill the address & token -> Add Button
