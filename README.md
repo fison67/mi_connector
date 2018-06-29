@@ -6,6 +6,11 @@ If Mi-Connector is installed, virtual devices is registered automatically by Mi 
 You don't have to do anything to add xiaomi device in Smartthings IDE.
 
 <br/><br/>
+## Donation
+If this project help you, you can give me a cup of coffee<br/>
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
+<br/><br/>
+
 #### Example Video<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
@@ -200,7 +205,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Door/Window Sensor | lumi.magnet  |  X  |
 |  | lumi.magnet.aq2  |  O  |
 | Xiaomi Weather Sensor | lumi.weather  |  O  |
-| Xiaomi Weather Sensor | lumi.sensor_ht  |  O  |
+|  | lumi.sensor_ht  |  O  |
 | Xiaomi Power Socket | lumi.plug  |  O  |
 | Xiaomi Button | lumi.switch  |  O  |
 |  | lumi.switch.v2  |  O  |
@@ -243,8 +248,4 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 <br/><br/>
-## Donation
-If this project help you, you can give me a cup of coffee<br/>
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
-
 
