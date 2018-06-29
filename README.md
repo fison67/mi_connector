@@ -174,6 +174,8 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
 |   | chuangmi.plug.v2  |   X |
 |   | chuangmi.plug.m1  |   o |
+| Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |
+|   | zimi.powerstrip.v2  |   O |
 | Xiaomi air monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
@@ -218,12 +220,13 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/weather.jpeg" title="Button" width="200px"><img src="./imgs/product/weather_aq.png" title="Button" width="200px"><img src="./imgs/product/xiaomi_fan.jpg" title="Button" width="200px">
 <img src="./imgs/product/wireless_1.png" title="Button" width="200px"><img src="./imgs/product/wireless_2.png" title="Button" width="200px"><img src="./imgs/product/yeelight_color.jpg" title="Button" width="200px">
 <img src="./imgs/product/yeelight_mono.jpg" title="Button" width="200px"><img src="./imgs/product/air_purifier.jpg" title="Button" width="200px">
-<img src="./imgs/product/air-monitor.jpg?raw=true" title="Button" width="200px">
-<img src="./imgs/product/water.jpg?raw=true" title="Button" width="200px">
-<img src="./imgs/product/curtain.png?raw=true" title="Button" width="200px">
-<img src="./imgs/product/yeelight-color-e27.jpg?raw=true" title="Button" width="200px">
-<img src="./imgs/product/yeelight-mono-e27.png?raw=true" title="Button" width="200px">
-<img src="./imgs/product/ceiling.jpg?raw=true" title="Button" width="200px">
+<img src="./imgs/product/air-monitor.jpg?raw=true" title="Air Monitor" width="200px">
+<img src="./imgs/product/water.jpg?raw=true" title="Water Sensor" width="200px">
+<img src="./imgs/product/curtain.png?raw=true" title="Curtain" width="200px">
+<img src="./imgs/product/yeelight-color-e27.jpg?raw=true" title="Yeelight Color E27" width="200px">
+<img src="./imgs/product/yeelight-mono-e27.png?raw=true" title="Yeelight Mono E27" width="200px">
+<img src="./imgs/product/ceiling.jpg?raw=true" title="Ceiling" width="200px">
+<img src="./imgs/product/power-strip.png?raw=true" title="Power Strip" width="200px">
 
 
 <br/><br/>
