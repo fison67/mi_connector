@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.2)
+ *  Mi Connector (v.0.0.3)
  *
  * MIT License
  *
@@ -191,7 +191,7 @@ def addDevice(){
         def name = null
 
         if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2"){
-            dth = "Xiaomi Air Purifier";
+        	dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
         }else if(params.type == "lumi.gateway.v2"){
         	dth = "Xiaomi Gateway";
@@ -223,7 +223,7 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-       	}else if(params.type == "zhimi.fan.v3"){	
+       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2"){
