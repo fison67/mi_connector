@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.1)
+ *  Xiaomi Air Purifier (v.0.0.2)
  *
  * MIT License
  *
@@ -29,6 +29,7 @@
  
 import groovy.json.JsonSlurper
 import groovy.transform.Field
+import java.text.DateFormat
 
 @Field 
 LANGUAGE_MAP = [
@@ -122,9 +123,6 @@ metadata {
         command "refresh"
         command "any"
         
-        command "on"
-        command "off"
-        
         command "setModeAuto"
         command "setModeMedium"
         command "setModeLow"
@@ -143,6 +141,14 @@ metadata {
         command "setBright"
         command "setBrightDim"
         command "setBrightOff"
+        
+        command "chartPower"
+        command "chartTemperature"
+        command "chartHumidity"
+        command "chartPM25"
+        command "chartTotalTemperature"
+        command "chartTotalHumidity"
+        command "chartTotalPM25"
 	}
 
 
@@ -151,6 +157,16 @@ metadata {
 	preferences {
 		input name:"model", type:"enum", title:"Select Model", options:["MiAirPurifier", "MiAirPurifier2", "MiAirPurifierPro", "MiAirPurifier2S"], description:"Select Your Airpurifier Model"
         input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+        
+        input name: "totalChartType", title:"Total-Chart Type" , type: "enum", required: true, options: ["line", "bar"], defaultValue: "line", description:"Total Chart Type [ line, bar ]" 
+        
+		input name: "historyDayCount", type:"number", title: "Maximum days for single graph", description: "", defaultValue:1, displayDuringSetup: true
+		input name: "historyTotalDayCount", type:"number", title: "Maximum days for total graph", description: "", defaultValue:7, range: "2..31", displayDuringSetup: true
+        
+		input name: "powerHistoryDataMaxCount", type:"number", title: "Maximum Power data count", description: "", defaultValue:100, displayDuringSetup: true
+		input name: "temperatureHistoryDataMaxCount", type:"number", title: "Maximum Temperature data count", description: "x", defaultValue:0, displayDuringSetup: true
+		input name: "humidityHistoryDataMaxCount", type:"number", title: "Maximum Humidity data count", description: "", defaultValue:0, displayDuringSetup: true
+		input name: "pm25HistoryDataMaxCount", type:"number", title: "Maximum PM2.5 data count", description: "", defaultValue:0, displayDuringSetup: true
 	}
 
 	tiles {
@@ -234,7 +250,7 @@ metadata {
             ]
         }        
         valueTile("temperature", "device.temperature") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}°', defaultState: true, 
             	backgroundColors:[
                     [value: -1, color: "#bcbcbc"],
                     [value: 0, color: "#bcbcbc"],
@@ -250,7 +266,7 @@ metadata {
             )
         }
         valueTile("humidity", "device.humidity") {
-            state("val", label:'${currentValue}', defaultState: true, 
+            state("val", label:'${currentValue}%', defaultState: true, 
             	backgroundColors:[
                     [value: -1, color: "#bcbcbc"],
                     [value: 0, color: "#bcbcbc"],
@@ -351,17 +367,27 @@ metadata {
         valueTile("filter1_life", "device.filter1_life", width: 2, height: 1) {
             state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
         }
+        
+    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
+			state "chartPower", label:'Power', nextState: "chartTemperature", action: 'chartPower'
+			state "chartTemperature", label:'Temperature', nextState: "chartHumidity", action: 'chartTemperature'
+			state "chartHumidity", label:'Humidity', nextState: "chartPM25", action: 'chartHumidity'
+			state "chartPM25", label:'PM2.5', nextState: "chartTotalTemperature", action: 'chartPM25'
+			state "chartTotalTemperature", label:'T-Temperature', nextState: "chartTotalHumidity", action: 'chartTotalTemperature'
+			state "chartTotalHumidity", label:'T-Humidity', nextState: "chartTotalPM25", action: 'chartTotalHumidity'
+			state "chartTotalPM25", label:'T-PM2.5', nextState: "chartPower", action: 'chartTotalPM25'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
 
-
-
-   	main (["modemain"])
-	details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
-    "pm25_value", "aqi", "temperature", "humidity", 
-    "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
-    "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
-    "strong_label", "buzzer_label", "led_label", "usage_label", "f1_hour_used", 
-    "mode7", "buzzer", "ledBrightness", "refresh", "filter1_life"
-    ])
+        main (["modemain"])
+        details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
+        "pm25_value", "aqi", "temperature", "humidity", 
+        "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
+        "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
+        "strong_label", "buzzer_label", "led_label", "usage_label", "f1_hour_used", 
+        "mode7", "buzzer", "ledBrightness", "refresh", "filter1_life", "chartMode", "history"
+        ])
         
 	}
 }
@@ -396,7 +422,7 @@ def setStatus(params){
     	sendEvent(name:"fineDustLevel", value: params.data)
     	break;
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data +"%")
+    	sendEvent(name:"humidity", value: params.data)
     	break;
     case "power":
     	if(params.data == "true") {
@@ -416,7 +442,7 @@ def setStatus(params){
 	    if(model == "MiAirPurifier"){
     	}
     	else {
-        sendEvent(name:"temperature", value: tem +"°" )
+        sendEvent(name:"temperature", value: tem )
         }
     	break;
     case "buzzer":
@@ -451,7 +477,7 @@ def setStatus(params){
     	break;
     case "average_aqi":
     
-    	sendEvent(name:"airQuality", value: params.data  + "㎍/㎥")
+    	sendEvent(name:"airQuality", value: params.data )
     	break;
     }
     
@@ -726,6 +752,9 @@ def setLanguage(language){
 	sendEvent(name:"usage_label", value: LANGUAGE_MAP["filter"][language] )
 }
 
+def setExternalAddress(address){
+	state.externalAddress = address
+}
 
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
@@ -755,7 +784,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		sendEvent(name:"mode5", value: "notab" )
 		sendEvent(name:"mode6", value: "notab" )
 		sendEvent(name:"mode7", value: "notab" )
-	    sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity + "%" )
+	    sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity )
     	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value  )
 	        if(jsonObj.properties.aqi != null && jsonObj.properties.aqi != ""){
         		sendEvent(name:"fineDustLevel", value: jsonObj.properties.aqi)
@@ -806,4 +835,442 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+
+def getGraphPm25HTML(){
+	httpGet(makeParams("pm2.5")) { resp ->
+    
+    	def map = parseResponseNormalData(resp)
+        def content = htmlNormalContent(map.datas, map.labels, "PM2.5", "#00ffff")
+
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def getGraphTemperatureHTML() {
+    httpGet(makeParams("temperature")) { resp ->
+    
+    	def map = parseResponseNormalData(resp)
+        def content = htmlNormalContent(map.datas, map.labels, LANGUAGE_MAP["temperature"][state.language], "blue")
+        
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def getGraphHumidityHTML() {
+	httpGet(makeParams("relativeHumidity")) { resp ->
+    
+    	def map = parseResponseNormalData(resp)
+        def content = htmlNormalContent(map.datas, map.labels, LANGUAGE_MAP["humidity"][state.language], "red")
+        
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def getGraphTotalTemperatureHTML(){
+	
+	httpGet(makeTotalParams("temperature")) { resp ->
+    
+    	def map = paraseResponseTotalData(resp)
+        def content = htmlTotalContent(map.labels, map.mins, map.maxs, map.avgs, LANGUAGE_MAP["totalTemperature"][state.language])
+        
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def getGraphTotalHumidityHTML(){
+
+	httpGet(makeTotalParams("relativeHumidity")) { resp ->
+    
+    	def map = paraseResponseTotalData(resp)
+        def content = htmlTotalContent(map.labels, map.mins, map.maxs, map.avgs, LANGUAGE_MAP["totalHumidity"][state.language])
+        
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def getGraphTotalPM25HTML(){
+
+	httpGet(makeTotalParams("pm2.5")) { resp ->
+    
+    	def map = paraseResponseTotalData(resp)
+        def content = htmlTotalContent(map.labels, map.mins, map.maxs, map.avgs, "PM2.5")
+        
+		render contentType: "text/html", data: content, status: 200
+    }
+}
+
+def makeParams(type){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      
+   //   sDate = (now - 1.days).format( 'yyyy-MM-dd 00:00:00', location.timeZone )
+      sDate = now.format( 'yyyy-MM-dd 00:00:00', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd 23:59:59', location.timeZone )
+    }
+    log.debug sDate + "," + eDate
+
+    def params = [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id }/${type}/${sDate}/${eDate}"
+    ]
+    return params
+}
+
+def makeTotalParams(type){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      //TimeZone.getTimeZone("Asia/Seoul")
+      sDate = (now - 7.days).format( 'yyyy-MM-dd 00:00:00', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd 23:59:59', location.timeZone )
+    }
+
+    def params = [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total"
+    ]
+    return params
+}
+
+def parseResponseNormalData(resp){
+	def returnMap = [:]
+
+	def jsonObj = new JsonSlurper().parseText(resp.getData().toString())
+    def dataList = jsonObj.data
+    def labels = []
+    def datas = []
+
+    dataList.reverseEach {
+        labels.push("\"" + it.date + "\"")
+        datas.push(it.value)
+    }
+    
+    returnMap['labels'] = labels
+    returnMap['datas'] = datas
+    
+    return returnMap
+}
+
+def paraseResponseTotalData(resp){
+	def returnMap = [:]
+
+	def jsonObj = new JsonSlurper().parseText(resp.getData().toString())
+    def dataList = jsonObj.data
+
+    def labels = []
+    def minDatas = []
+    def maxDatas = []
+    def avgDatas = []
+
+    dataList.each {
+        labels.push("\"" + it.date2.substring(5,10) + "\"")
+        minDatas.push(it.min)
+        maxDatas.push(it.max)
+        avgDatas.push(it.avg)
+    }
+    
+    returnMap['labels'] = labels
+    returnMap['mins'] = minDatas
+    returnMap['maxs'] = maxDatas
+    returnMap['avgs'] = avgDatas
+    
+    return returnMap
+}
+
+def htmlNormalContent(datas, labels, name, color){
+	def html = """
+		<!DOCTYPE html>
+			<html>
+				<head>
+                	<meta http-equiv="refresh" content="8">
+                    <meta http-equiv="cache-control" content="max-age=0"/>
+                    <meta http-equiv="cache-control" content="no-cache"/>
+                    <meta http-equiv="expires" content="0"/>
+                    <meta http-equiv="pragma" content="no-cache"/>
+                    <meta name="viewport" content="width = device-width, user-scalable=no, initial-scale=1.0"> 
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+					<script type="text/javascript">
+                    
+                    	jQuery( document ).ready(function() {
+							initChart();
+                        });
+                        
+                        function initChart(){
+                        	
+                            var datas = ${datas};
+                            var labels = ${labels};
+                            
+                            var datasets = [{
+                                label: '${name}',
+                                backgroundColor: '${color}',
+                                borderColor: '${color}',
+                                data: datas,
+                                fill: false,
+                            }]
+                            
+                            var config = {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: datasets
+                                },
+                                options: {
+                                    maintainAspectRatio: false,
+                                    responsive: true,
+                                    legend: {
+                                        display: true,
+                                        position: "bottom",
+                                        labels: {
+                                            boxWidth: 10,
+                                        }
+                                    },
+                                    title:{
+                                        display:true,
+                                        text:''
+                                    },
+                                    tooltips: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    hover: {
+                                        mode: 'nearest',
+                                        intersect: false
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            display: false,
+                                            scaleLabel: {
+                                                display: true,
+                                                labelString: 'Date'
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            display: true,
+                                            scaleLabel: {
+                                                display: false,
+                                                labelString: 'Value'
+                                            }
+                                        }]
+                                    }
+                                }
+                            };
+                            
+    						new Chart(document.getElementById("chart"), config);
+                        }
+                        
+					</script>
+				</head>
+				<body>
+					<canvas id="chart" width="200" height="150"></canvas>
+				</body>
+			</html>
+		"""
+	return html
+}
+
+def htmlTotalContent(labels, mins, maxs, avgs, titleStr){
+	def minStr = LANGUAGE_MAP["min"][state.language]
+	def maxStr = LANGUAGE_MAP["max"][state.language]
+	def avgStr = LANGUAGE_MAP["avg"][state.language]
+    
+	def html = """
+		<!DOCTYPE html>
+			<html>
+				<head>
+                	<meta http-equiv="refresh" content="8">
+                    <meta http-equiv="cache-control" content="max-age=0"/>
+                    <meta http-equiv="cache-control" content="no-cache"/>
+                    <meta http-equiv="expires" content="0"/>
+                    <meta http-equiv="pragma" content="no-cache"/>
+                    <meta name="viewport" content="width = device-width, user-scalable=no, initial-scale=1.0"> 
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+					<script type="text/javascript">
+                    
+                    	jQuery( document ).ready(function() {
+							initChart();
+                        });
+                        
+                        function initChart(){
+                        	
+                            var chartData = {
+                                labels: ${labels},
+                                datasets: [{
+                                    type: 'bar',
+                                    label: '${minStr}',
+                                    backgroundColor: 'blue',
+                                    fill: false,
+                                    data: ${mins},
+                                    borderColor: 'white',
+                                    borderWidth: 2
+                                }, {
+                                    type: 'bar',
+                                    label: '${maxStr}',
+                                    backgroundColor: 'red',
+                                    data: ${maxs},
+                                    borderColor: 'white',
+                                    borderWidth: 2
+                                }, {
+                                    type: 'bar',
+                                    label: '${avgStr}',
+                                    backgroundColor: 'green',
+                                    data: ${avgs},
+                                    borderColor: 'white',
+                                    borderWidth: 2
+                                }]
+                            };
+                            
+                            var config = {
+                                type: 'bar',
+                                data: chartData,
+                                options: {
+                                    responsive: true,
+                                    title: {
+                                        display: true,
+                                        text: '${titleStr}'
+                                    },
+                                    tooltips: {
+                                        mode: 'index',
+                                        intersect: true
+                                    }
+                                }
+                            }
+                            
+    						new Chart(document.getElementById("chart"), config);
+                        }
+                        
+					</script>
+				</head>
+				<body>
+					<canvas id="chart" width="200" height="120"></canvas>
+				</body>
+			</html>
+		"""
+	return html
+}
+
+
+
+def makeTotalURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyTotalDayCount == null ? 7 : settings.historyTotalDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd', location.timeZone )
+      eDate = (now + 1.days).format( 'yyyy-MM-dd', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total/image",
+        query: [
+        	"name": name,
+            "chartType": (settings.totalChartType == null ? 'line' : settings.totalChartType) 
+        ]
+    ]
+}
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def chartPower() {
+	def url = makeURL("power", "Power")
+    if(settings.powerHistoryDataMaxCount > 0){
+    	url.query.limit = settings.powerHistoryDataMaxCount
+    }
+    httpGet(url) { response ->
+    	processImage(response, "power")
+    }
+}
+
+def chartTemperature() {
+	def url = makeURL("temperature", "Temperature")
+    if(settings.temperatureHistoryDataMaxCount > 0){
+    	url.query.limit = settings.temperatureHistoryDataMaxCount
+    }
+    httpGet(url) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartHumidity() {
+	def url = makeURL("relativeHumidity", "Humidity")
+    if(settings.humidityHistoryDataMaxCount > 0){
+    	url.query.limit = settings.humidityHistoryDataMaxCount
+    }
+    httpGet(url) { response ->
+    	processImage(response, "humidity")
+    }
+}
+
+def chartPM25(){
+	def url = makeURL("pm2.5", "PM2.5")
+    if(settings.pm25HistoryDataMaxCount > 0){
+    	url.query.limit = settings.pm25HistoryDataMaxCount
+    }
+    httpGet(url) { response ->
+    	processImage(response, "pm2.5")
+    }
+}
+
+def chartTotalTemperature(){	
+	def url = makeTotalURL("temperature", "Temperature")
+    httpGet(url) { response ->
+    	processImage(response, "pm2.5")
+    }
+}
+
+def chartTotalHumidity() {
+	def url = makeTotalURL("relativeHumidity", "Humidity")
+    httpGet(url) { response ->
+    	processImage(response, "humidity")
+    }
+}
+
+def chartTotalPM25(){
+	def url = makeTotalURL("pm2.5", "PM2.5")
+    httpGet(url) { response ->
+    	processImage(response, "pm2.5")
+    }
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+private getPictureName(type) {
+  def pictureUuid = java.util.UUID.randomUUID().toString().replaceAll('-', '')
+  return "image" + "_$pictureUuid" + "_" + type + ".png"
 }
