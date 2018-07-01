@@ -122,11 +122,26 @@ metadata {
 			state "off", label: "Off", action: "setSmartNightLightOn", backgroundColor:"#bcbcbc", nextState:"on"
 		}
         
-        standardTile("scene", "device.scene") {
-			state "1", label: "1", action: "setScene1", backgroundColor:"#ff9eb2", nextState:"2"
-			state "2", label: "2", action: "setScene2", backgroundColor:"#bcbcbc", nextState:"3"
-			state "3", label: "3", action: "setScene3", backgroundColor:"#ff9eb2", nextState:"4"
-			state "4", label: "4", action: "setScene4", backgroundColor:"#bcbcbc", nextState:"1"
+        valueTile("smartNightLabel", "", decoration: "flat", width: 1, height: 1) {
+            state "default", label:'Smart Night'
+        }
+        valueTile("autoColorLabel", "", decoration: "flat", width: 1, height: 1) {
+            state "default", label:'Auto Color'
+        }
+        valueTile("sceneLabel", "", decoration: "flat", width: 4, height: 1) {
+            state "default", label:'Scene Mode'
+        }
+        standardTile("scene1", "device.scene") {
+			state "default", label: "Scene1", action: "setScene1", backgroundColor:"#f2aebc"
+		}
+        standardTile("scene2", "device.scene") {
+			state "default", label: "Scene2", action: "setScene2", backgroundColor:"#f77993"
+		}
+        standardTile("scene3", "device.scene") {
+			state "default", label: "Scene3", action: "setScene3", backgroundColor:"#f75475"
+		}
+        standardTile("scene4", "device.scene") {
+			state "default", label: "Scene4", action: "setScene4", backgroundColor:"#f72751"
 		}
         
         controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
@@ -138,7 +153,7 @@ metadata {
 		}
         
    	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "autoColor", "smartNightLight", "scene", "time", "tiemr0" ])       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "smartNightLabel", "autoColorLabel", "sceneLabel", "autoColor", "smartNightLight", "scene1", "scene2", "scene3", "scene4", "time", "tiemr0" ])       
 	}
 }
 
