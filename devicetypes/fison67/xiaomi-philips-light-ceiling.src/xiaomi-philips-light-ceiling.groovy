@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Light Ceiling(v.0.0.1)
+ *  Xiaomi Philips Light Ceiling(v.0.0.2)
  *
  * MIT License
  *
@@ -45,6 +45,15 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
+        command "setAutoColorOn"
+        command "setAutoColorOff"
+        command "setSmartNightLightOn"
+        command "setSmartNightLightOff"
+        
+        command "setScene1"
+        command "setScene2"
+        command "setScene3"
+        command "setScene4"
 	}
 
 
@@ -54,11 +63,11 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -100,8 +109,25 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
+        standardTile("autoColor", "device.autoColor") {
+			state "on", label: "On", action: "setAutoColorOff", backgroundColor:"#ff9eb2", nextState:"off"
+			state "off", label: "Off", action: "setAutoColorOn", backgroundColor:"#bcbcbc", nextState:"on"
+		}
+        
+        standardTile("smartNightLight", "device.smartNightLight") {
+			state "on", label: "On", action: "setSmartNightLightOff", backgroundColor:"#ff9eb2", nextState:"off"
+			state "off", label: "Off", action: "setSmartNightLightOn", backgroundColor:"#bcbcbc", nextState:"on"
+		}
+        
+        standardTile("scene", "device.scene") {
+			state "1", label: "1", action: "setScene1", backgroundColor:"#ff9eb2", nextState:"2"
+			state "2", label: "2", action: "setScene2", backgroundColor:"#bcbcbc", nextState:"3"
+			state "3", label: "3", action: "setScene3", backgroundColor:"#ff9eb2", nextState:"4"
+			state "4", label: "4", action: "setScene4", backgroundColor:"#bcbcbc", nextState:"1"
+		}
+        
    	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp" ])       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "autoColor", "smartNightLight", "scene" ])       
 	}
 }
 
@@ -136,6 +162,12 @@ def setStatus(params){
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
+    	break;
+    case "smartNightLight":
+    	sendEvent(name:"smartNightLight", value: params.data == "true" ? "on" : "off")
+    	break;
+    case "autoColorTemperature":
+    	sendEvent(name:"autoColor", value: params.data == "true" ? "on" : "off")
     	break;
     }
     
@@ -200,6 +232,102 @@ def off(){
     sendCommand(options, null)
 }
 
+def setAutoColorOn(){
+	log.debug "setAutoColorOn >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "autoColor",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setAutoColorOff(){
+	log.debug "setAutoColorOff >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "autoColor",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setSmartNightLightOn(){
+	log.debug "setSmartNightLightOn >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "smartNightLight",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setSmartNightLightOff(){
+	log.debug "setSmartNightLightOff >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "smartNightLight",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setScene1(){
+	log.debug "setScene1 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 1
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setScene2(){
+	log.debug "setScene2 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 2
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setScene3(){
+	log.debug "setScene3 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 3
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setScene4(){
+	log.debug "setScene4 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 4
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 
 def updated() {}
 
@@ -208,7 +336,6 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        log.debug jsonObj
         def colors = jsonObj.properties.color.values
         String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
     	sendEvent(name:"color", value: hex )
