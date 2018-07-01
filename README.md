@@ -250,4 +250,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <br/><br/>
 
 ## Thanks
-- Many thanks to[ShinJjang](https://github.com/shin4299) for testing, updating DTH.
+- Many thanks to [ShinJjang](https://github.com/shin4299) for testing, updating DTH.
