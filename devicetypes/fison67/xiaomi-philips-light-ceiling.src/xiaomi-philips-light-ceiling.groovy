@@ -54,6 +54,9 @@ metadata {
         command "setScene2"
         command "setScene3"
         command "setScene4"
+        
+        command "setTimeRemaining"
+        command "stop"
 	}
 
 
@@ -126,8 +129,16 @@ metadata {
 			state "4", label: "4", action: "setScene4", backgroundColor:"#bcbcbc", nextState:"1"
 		}
         
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
+        
    	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "autoColor", "smartNightLight", "scene" ])       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "autoColor", "smartNightLight", "scene", "time", "tiemr0" ])       
 	}
 }
 
@@ -366,4 +377,76 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+//	log.debug "Left Time >> ${state.timerCount}"
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+//    log.debug "Left Time >> ${state.timerCount} seconds"
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
 }
