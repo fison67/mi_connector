@@ -71,7 +71,8 @@ metadata {
         attribute "mode", "enum", ["auto", "silent", "medium", "high"]
         attribute "buzzer", "enum", ["on", "off"]
         attribute "ledBrightness", "enum", ["off", "dim", "bright"]
-        attribute "water", "string"
+        attribute "water2", "string"
+        attribute "water", "number"
         attribute "use_time", "string"
         attribute "dry", "enum", ["on", "off"]
         
@@ -125,11 +126,11 @@ metadata {
 			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
         		attributeState("humidity", label:'${currentValue}', unit:"%", defaultState: true)
     		}            
-			tileAttribute("device.temperature", key: "SECONDARY_CONTROL") {
-				attributeState("temperature", label:'         ${currentValue}°', unit:"°", defaultState: true)
+			tileAttribute("device.temperature2", key: "SECONDARY_CONTROL") {
+				attributeState("temperature2", label:'         ${currentValue}°', unit:"°", defaultState: true)
     		}            
-			tileAttribute("device.water", key: "SECONDARY_CONTROL") {
-        		attributeState("water", label:'                                ${currentValue}%', unit:"%", defaultState: true)
+			tileAttribute("device.water2", key: "SECONDARY_CONTROL") {
+        		attributeState("water2", label:'                                ${currentValue}%', unit:"%", defaultState: true)
     		}            
 			tileAttribute("device.target", key: "SECONDARY_CONTROL") {
         		attributeState("target", label:'                                                              ${currentValue}:', defaultState: true)
@@ -269,7 +270,7 @@ def setStatus(params){
  
  	switch(params.key){
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data + "%")
+    	sendEvent(name:"humidity", value: params.data )
     	break;
     case "mode":
     	if(model == "Humidifier1") {
@@ -299,7 +300,8 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-        sendEvent(name:"temperature", value: state.temp + ": " + tem )
+        sendEvent(name:"temperature", value: tem )
+        sendEvent(name:"temperature2", value: state.temp + ": " + tem )
     	break;
     case "useTime":
 		def para = "${params.data}"
@@ -325,7 +327,8 @@ def setStatus(params){
 		String data = para
 		def stf = Float.parseFloat(data)
 		def water = Math.round(stf/12*10)    
-        sendEvent(name:"water", value: state.wdep + ": " + water )
+        sendEvent(name:"water", value: water )
+        sendEvent(name:"water2", value: state.wdep + ": " + water )
     	break;
     case "buzzer":
     	sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off") )
@@ -543,7 +546,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 			sendEvent(name:"mode", value: "off1" )
 			sendEvent(name:"switch", value: "off" )
 		}		
-       		sendEvent(name:"water", value: "N/A" )
+       		sendEvent(name:"water2", value: "N/A" )
 		sendEvent(name:"dry", value: "dummy" )
         	sendEvent(name:"ledBrightness", value: jsonObj.state.ledBrightness)
         } else {
@@ -556,9 +559,11 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		}
         	sendEvent(name:"ledBrightness", value: jsonObj.state.ledBrightness + "2")
 	    	sendEvent(name:"dry", value: jsonObj.state.dry )
-	        sendEvent(name:"water", value: state.wdep + ": " + Math.round(jsonObj.properties.depth/12*10))
+	        sendEvent(name:"water", value: Math.round(jsonObj.properties.depth/12*10))
+	        sendEvent(name:"water2", value: state.wdep + ": " + Math.round(jsonObj.properties.depth/12*10))
         }    
-        sendEvent(name:"temperature", value: state.temp + ": " + jsonObj.properties.temperature.value)
+        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value)
+        sendEvent(name:"temperature2", value: state.temp + ": " + jsonObj.properties.temperature.value)
         sendEvent(name:"relativeHumidity", value: jsonObj.properties.relativeHumidity)
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
         sendEvent(name:"level", value: jsonObj.properties.targetHumidity)
