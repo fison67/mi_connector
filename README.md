@@ -195,6 +195,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | yeelink.light.color2  |   O |
 |   | yeelink.light.strip1  |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |
+|  Philips Ceiling | philips.light.ceiling  |   O |
 
 
 #### Zigbee Version
@@ -235,6 +236,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/yeelight-mono-e27.png?raw=true" title="Yeelight Mono E27" width="200px">
 <img src="./imgs/product/ceiling.jpg?raw=true" title="Ceiling" width="200px">
 <img src="./imgs/product/power-strip.png?raw=true" title="Power Strip" width="200px">
+<img src="./imgs/product/philips-ceiling.jpg?raw=true" title="Philips Ceiling Light" width="200px">
 
 
 <br/><br/>
