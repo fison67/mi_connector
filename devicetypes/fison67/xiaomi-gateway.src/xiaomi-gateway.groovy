@@ -267,7 +267,7 @@ def setStatus(params){
     	sendEvent(name:"level", value: params.data )
     	break;
     case "illuminance":
-    	sendEvent(name:"illuminance", value: params.data.replace(" lx","") )
+    	sendEvent(name:"illuminance", value: params.data.replace(" lx","").replace(",","") )
     	break;
     }
     
