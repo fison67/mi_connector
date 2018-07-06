@@ -73,7 +73,7 @@ metadata {
 		}
         
         valueTile("illuminance", "device.illuminance", width: 2, height: 2) {
-            state "val", label:'${currentValue}', defaultState: true,
+            state "val", label:'${currentValue}lx', defaultState: true,
                 backgroundColors:[
                     [value: 100, color: "#153591"],
                     [value: 200, color: "#1e9cbb"],
@@ -138,7 +138,7 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data)
     	break;
     case "illuminance":
-    	sendEvent(name:"illuminance", value: params.data )
+    	sendEvent(name:"illuminance", value: params.data.replace("lx","") )
     	break;
     }
     
@@ -156,7 +156,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         sendEvent(name:"motion", value: jsonObj.properties.motion == true ? "active" : "inactive")
         
         if(jsonObj.properties.illuminance != null && jsonObj.properties.illuminance != ""){
-        	sendEvent(name:"illuminance", value: jsonObj.properties.illuminance.value + jsonObj.properties.illuminance.unit)
+        	sendEvent(name:"illuminance", value: jsonObj.properties.illuminance.value )
         }
       
         updateLastTime()
