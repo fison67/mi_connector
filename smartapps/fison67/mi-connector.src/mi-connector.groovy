@@ -238,7 +238,7 @@ def addDevice(){
         }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
-        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.s5"){
+        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.s5" || params.type == "roborock.vacuum.c1"){
         	dth = "Xiaomi Vacuums";
             name = "Xiaomi Vacuums";
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
@@ -283,6 +283,9 @@ def addDevice(){
 		}else if(params.type == "miband"){
 			dth = "Xiaomi Mi band";
             name = "Xiaomi Miband";
+		}else if(params.type == "ble.flora"){
+			dth = "Xiaomi Mi Flora";
+            name = "Xiaomi Mi Flora";
 		}
         
         if(dth == null){
