@@ -217,7 +217,7 @@ def addDevice(){
         }else if(params.type == "lumi.86sw2"){
         	dth = "Xiaomi Button SW";
             name = "Xiaomi Button SW";
-        }else if(params.type == "lumi.cube"){
+        }else if(params.type == "lumi.cube" || params.type == "lumi.cube.aq2"){
         	dth = "Xiaomi Cube";
             name = "Xiaomi Cube";
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
