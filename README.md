@@ -125,7 +125,7 @@ Update Click
 #### Raspberry pi<br/>
 > You must install docker first.
 ```
-docker pull docker pull jsurf/rpi-mariadb
+docker pull jsurf/rpi-mariadb
 docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=password1234 -e TZ=Asia/Seoul -p 33006:3306 -d jsurf/rpi-mariadb
 ```
 ###### Synology nas<br/>
