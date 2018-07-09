@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.3)
+ *  Mi Connector (v.0.0.3) 
  *
  * MIT License
  *
