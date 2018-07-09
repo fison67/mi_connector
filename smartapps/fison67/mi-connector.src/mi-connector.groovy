@@ -284,8 +284,11 @@ def addDevice(){
 			dth = "Xiaomi Mi band";
             name = "Xiaomi Miband";
 		}else if(params.type == "ble.flora"){
-			dth = "Xiaomi Mi Flora";
-            name = "Xiaomi Mi Flora";
+			dth = "Xiaomi Flora";
+            name = "Xiaomi Flora";
+		}else if(params.type == "ble.floraPot"){
+			dth = "Xiaomi Flora Pot";
+            name = "Xiaomi Flora Pot";
 		}
         
         if(dth == null){
