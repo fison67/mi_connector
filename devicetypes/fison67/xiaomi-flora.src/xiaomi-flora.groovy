@@ -51,7 +51,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Mi Flora", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Flora", namespace: "fison67", author: "fison67") {
         capability "Sensor"
         capability "Presence Sensor"			//"present", "not present"
         capability "Battery"
