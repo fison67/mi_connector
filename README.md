@@ -91,6 +91,17 @@ Run Docker
 -> Network tab -> Check 'use same network as Docker Host'
 -> Complete
 ```
+
+###### Linux x86 x64<br/>
+> You must install docker first.
+```
+sudo mkdir /docker
+sudo mkdir /docker/mi-connector
+sudo chown -R pi:pi /docker
+docker pull fison67/mi-connector-arm:latest
+docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector --net=host fison67/mi-connector:latest
+```
+
 <br/><br/>
  
 ## Install DTH<br/>
@@ -137,6 +148,13 @@ Run Docker
 -> Port setup tab -> local port 33006, container post 3306
 -> Enviroment tab -> MYSQL_ROOT_PASSWORD (password1234),  TZ (Asia/Seoul)
 -> Complete
+
+#### Linux x86 x64<br/>
+> You must install docker first.
+```
+docker pull mariadb
+docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=password1234 -e TZ=Asia/Seoul -p 33006:3306 -d mariadb
+```
 
 <br/>
 Fill the blank [db_url, db_port, db_password] on the Mi-connector web menu setup
