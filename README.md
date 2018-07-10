@@ -97,7 +97,7 @@ Run Docker
 ```
 sudo mkdir /docker
 sudo mkdir /docker/mi-connector
-docker pull fison67/mi-connector-arm:latest
+docker pull fison67/mi-connector:latest
 docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector --net=host fison67/mi-connector:latest
 ```
 
