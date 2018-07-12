@@ -35,6 +35,7 @@ metadata {
          
         attribute "switch", "string"
         
+        attribute "mode", "string"
         attribute "status", "string"
         attribute "battery", "number"
         attribute "clean_time", "string"
