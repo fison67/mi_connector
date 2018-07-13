@@ -596,7 +596,7 @@ def generalOn(){
     def body = [
         "id": state.id,
         "cmd": "fanSpeed",
-        "data": state.fanSpeed
+        "data": state.fanSpeed == null ? 25 : state.fanSpeed
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -607,7 +607,7 @@ def naturalOn(){
     def body = [
         "id": state.id,
         "cmd": "fanNatural",
-        "data": state.fanSpeed
+        "data": state.fanSpeed == null ? 25 : state.fanSpeed
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
