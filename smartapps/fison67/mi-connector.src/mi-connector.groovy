@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.3) 
+ *  Mi Connector (v.0.0.3)
  *
  * MIT License
  *
@@ -223,7 +223,7 @@ def addDevice(){
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
-       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1"){	
+       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2"){
