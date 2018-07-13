@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Fan(v.0.0.1)
+ *  Xiaomi Fan(v.0.0.2)
  *
  * MIT License
  *
@@ -129,7 +129,10 @@ metadata {
 	simulator {
 	}
 	preferences {
-	        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+        
+		input name: "historyDayCount", type:"number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
+		input name: "historyTotalDayCount", type:"number", title: "Total Day for History Graph", description: "0 is max", defaultValue:7, range: "2..7", displayDuringSetup: true
 	}
 
 	tiles {
@@ -266,13 +269,23 @@ metadata {
             state "dc", label:'DC'
             state "battery", label:'Battery'
         }
-		
-   	main (["switch2"])
-	details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
-    "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "time", 
-    "head_label", "angle_label", "refresh",
-     "headl", "headr", "angle1", "angle2", "angle3", "angle4"
-    ])
+        
+    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
+			state "temperature", label:'Temperature', nextState: "humidity", action: 'chartTemperature'
+			state "humidity", label:'Humidity', nextState: "totalTemperature", action: 'chartHumidity'
+			state "totalTemperature", label:'T-Temperature', nextState: "totalHumidity", action: 'chartTotalTemperature'
+			state "totalHumidity", label:'T-Humidity', nextState: "temperature", action: 'chartTotalHumidity'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
+	
+        main (["switch2"])
+        details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
+        "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "time", 
+        "head_label", "angle_label", "refresh",
+         "headl", "headr", "angle1", "angle2", "angle3", "angle4",
+         "chartMode", "history"
+        ])
 
 	}
 }
@@ -303,12 +316,12 @@ def setStatus(params){
 	multiatt()
     	break;
     case "relativeHumidity":
-	state.currenthumi = params.data
-	multiatt()
+        state.currenthumi = params.data
+        multiatt()
     	break;
     case "angleLevel":
-	state.currentangle = params.data
-	multiatt()
+        state.currentangle = params.data
+        multiatt()
     	break;        
     case "speedLevel":
         sendEvent(name:"level", value: params.data)
@@ -436,6 +449,7 @@ def setTimeRemaining(time) {
 
 def setLevel(level){
 	log.debug "setFanSpeed >> ${state.id}"
+    state.fanSpeed = level
 	def currentState = device.currentValue("fanmode")    
     if(currentState =="natural"){
     	def body = [
@@ -481,37 +495,37 @@ def tempDown(){
 def setFanSpeed1(){
 	log.debug "setFanstep1 >> ${state.id}"
 	def currentState = device.currentValue("fanmode")
-        sendEvent(name:"speedlevel", value: 1)
-    if(currentState =="natural"){
+    sendEvent(name:"speedlevel", value: 1)
+    state.fanSpeed = 25
+    if(currentState == "natural"){
     	def body = [
         	"id": state.id,
         	"cmd": "fanNatural",
-        	"data": 25
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
-	}
-    else {
+	} else {
     	def body = [
         	"id": state.id,
         	"cmd": "fanSpeed",
-        	"data": 25
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
-        
 	}
 }
 
 def setFanSpeed2(){
 	log.debug "setFanstep2 >> ${state.id}"
-        sendEvent(name:"speedlevel", value: 2)
+    sendEvent(name:"speedlevel", value: 2)
+    state.fanSpeed = 50
 	def currentState = device.currentValue("fanmode")    
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
         	"cmd": "fanNatural",
-        	"data": 50
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -520,7 +534,7 @@ def setFanSpeed2(){
     	def body = [
         	"id": state.id,
         	"cmd": "fanSpeed",
-        	"data": 50
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -530,12 +544,13 @@ def setFanSpeed2(){
 def setFanSpeed3(){
 	log.debug "setFanstep3 >> ${state.id}"
 	def currentState = device.currentValue("fanmode")    
-        sendEvent(name:"speedlevel", value: 3)
+    sendEvent(name:"speedlevel", value: 3)
+    state.fanSpeed = 75
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
         	"cmd": "fanNatural",
-        	"data": 75
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -544,7 +559,7 @@ def setFanSpeed3(){
     	def body = [
         	"id": state.id,
         	"cmd": "fanSpeed",
-        	"data": 75
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -554,12 +569,13 @@ def setFanSpeed3(){
 def setFanSpeed4(){
 	log.debug "setFanstep4 >> ${state.id}"
 	def currentState = device.currentValue("fanmode")    
-        sendEvent(name:"speedlevel", value: 4)
+    sendEvent(name:"speedlevel", value: 4)
+    state.fanSpeed = 100
     if(currentState =="natural"){
     	def body = [
         	"id": state.id,
         	"cmd": "fanNatural",
-        	"data": 100
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -568,7 +584,7 @@ def setFanSpeed4(){
     	def body = [
         	"id": state.id,
         	"cmd": "fanSpeed",
-        	"data": 100
+        	"data": state.fanSpeed
     	]
     	def options = makeCommand(body)
     	sendCommand(options, null)
@@ -576,24 +592,22 @@ def setFanSpeed4(){
 }
 
 def generalOn(){
-	def ab = device.currentValue("fanSpeed")
 	log.debug "generalOn >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "fanSpeed",
-        "data": ab
+        "data": state.fanSpeed
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
 }
 
 def naturalOn(){
-	def ab = device.currentValue("fanSpeed")
 	log.debug "naturalOn >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "fanNatural",
-        "data": ab
+        "data": state.fanSpeed
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -793,12 +807,12 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
-	state.currenthumi = jsonObj.properties.relativeHumidity
-	int temp = jsonObj.properties.temperature.value
-	state.currenttemp = temp
-	state.currentangle = jsonObj.properties.angleLevel
-	state.acPower = (jsonObj.properties.acPower == "on" ? "☈: " : "✕: ") 
-	state.batteryLe = jsonObj.state.batteryLevel
+        state.currenthumi = jsonObj.properties.relativeHumidity == null ? "" : jsonObj.properties.relativeHumidity
+        int temp = jsonObj.properties.temperature.value
+        state.currenttemp = temp
+        state.currentangle = jsonObj.properties.angleLevel
+        state.acPower = (jsonObj.properties.acPower == "on" ? "☈: " : "✕: ") 
+        state.batteryLe = jsonObj.state.batteryLevel == null ? "" : jsonObj.state.batteryLevel
         sendEvent(name:"setangle", value: jsonObj.properties.angleEnable)
         sendEvent(name:"setdirection", value: jsonObj.properties.angleEnable)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
@@ -810,15 +824,15 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		String data = jsonObj.properties.naturalLevel
 		def stf = Float.parseFloat(data)
 		def tem = Math.round((stf+12)/25)        
-        	sendEvent(name:"speedlevel", value: tem)        
-        	sendEvent(name:"level", value: jsonObj.properties.naturalLevel)
+        sendEvent(name:"speedlevel", value: tem)        
+        sendEvent(name:"level", value: jsonObj.properties.naturalLevel)
 	} else {
 		sendEvent(name:"fanmode", value: "general")
 		String data = jsonObj.properties.speedLevel
 		def stf = Float.parseFloat(data)
 		def tem = Math.round((stf+12)/25)        
-        	sendEvent(name:"speedlevel", value: tem)        
-        	sendEvent(name:"level", value: jsonObj.properties.speedLevel)
+        sendEvent(name:"speedlevel", value: tem)        
+        sendEvent(name:"level", value: jsonObj.properties.speedLevel)
 	}
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
         sendEvent(name: "lastCheckin", value: now)
@@ -829,11 +843,11 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 }
 
 def multiatt(){
-    	sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°" + " AC" + state.acPower + state.batteryLe + "%")
+    sendEvent(name:"lastCheckin", value: state.temp +": " + state.currenttemp + "° " + state.hum + ": " + state.currenthumi + "% " + state.angle + ": " + state.currentangle + "°" + " AC" + state.acPower + state.batteryLe + "%")
 //	for new smartthings app	
 	sendEvent(name:"temperature", value: state.currenttemp, unit: "C")
-	sendEvent(name:"humidity", value: state.currenthumi)
-	sendEvent(name:"battery", value:state.batteryLe)
+	sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity == null ? "" : jsonObj.properties.relativeHumidity)
+	sendEvent(name:"battery", value:state.batteryLe == null ? "" : state.batteryLe)
 	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
 }
 def sendCommand(options, _callback){
@@ -853,3 +867,85 @@ def makeCommand(body){
     ]
     return options
 }
+
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def makeTotalURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = (settings.historyTotalDayCount == null ? 7 : settings.historyTotalDayCount) - 1
+      sDate = (now - day.days).format( 'yyyy-MM-dd', location.timeZone )
+      eDate = (now + 1.days).format( 'yyyy-MM-dd', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+private getPictureName(type) {
+  def pictureUuid = java.util.UUID.randomUUID().toString().replaceAll('-', '')
+  return "image" + "_$pictureUuid" + "_" + type + ".png"
+}
+
+def chartTotalTemperature() {
+    httpGet(makeTotalURL("temperature", "Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartTotalHumidity() {
+    httpGet(makeTotalURL("relativeHumidity", "Humidity")) { response ->
+    	processImage(response, "humidity")
+    }
+}
+
+def chartTemperature() {
+    httpGet(makeURL("temperature", "Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartHumidity() {
+    httpGet(makeURL("relativeHumidity", "Humidity")) { response ->
+    	processImage(response, "humidity")
+    }
+}
+
