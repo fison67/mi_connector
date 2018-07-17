@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.3)
+ *  Mi Connector (v.0.0.4)
  *
  * MIT License
  *
@@ -289,7 +289,16 @@ def addDevice(){
 		}else if(params.type == "ble.floraPot"){
 			dth = "Xiaomi Flora Pot";
             name = "Xiaomi Flora Pot";
-		}
+		}else if(params.type == "chuangmi.ir.v2"){
+			dth = "Xiaomi Remote";
+            name = "Xiaomi Remote";
+		}else if(params.type == "virtual.remote.tv"){
+        	dth = "Xiaomi Remote TV";
+            name = "Xiaomi Remote TV";
+        }else if(params.type == "virtual.remote.custom"){
+        	dth = "Xiaomi Remote Custom";
+            name = "Xiaomi Remote Custom";
+        }
         
         if(dth == null){
         	log.warn("Failed >> Non exist DTH!!! Type >> " + type);
@@ -338,6 +347,18 @@ def addDevice(){
                 def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
                 render contentType: "application/javascript", data: resultString
             }
+        }else if(params.type == "virtual.remote.tv" || params.type == "virtual.remote.custom"){
+     		dni = "mi-connector-" + id.toLowerCase() + "-" + new Date().getTime()
+        	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+                "label": name
+            ])    
+            childDevice.setInfo(settings.address, id)
+            childDevice.setData(data)
+            try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+            try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
+            
+            def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
+            render contentType: "application/javascript", data: resultString
         }else{
             try{
                 def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
