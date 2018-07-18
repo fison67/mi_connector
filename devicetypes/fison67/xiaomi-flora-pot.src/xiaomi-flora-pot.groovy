@@ -53,34 +53,59 @@ LANGUAGE_MAP = [
 metadata {
 	definition (name: "Xiaomi Flora Pot", namespace: "fison67", author: "fison67") {
         capability "Sensor"
-        capability "Presence Sensor"			//"present", "not present"
         capability "Battery"
         capability "Temperature Measurement"
+        capability "Relative Humidity Measurement"
         capability "Illuminance Measurement"
         
 		capability "Refresh"
                
         attribute "lastCheckin", "Date"
         
+        command "chartTemperature"
+        command "chartMoisture"
+        command "chartLux"
+        command "chartFertility"
+        command "chartTotalTemperature"
+        command "chartTotalMoisture"
+        command "chartTotalLux"
+        command "chartTotalFertility"
 	}
 
 	simulator {
 	}
     
-    preferences {
+        preferences {
     	input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
         
-		input "historyDayCount", "number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
-		input "historyDataMaxCount", "number", title: "Contact Graph Data Max Count", description: "0 is max", defaultValue:100, displayDuringSetup: true
-		input "vibrateCount", "number", title: "Miband Vibrate count", description: "", defaultValue:15, displayDuringSetup: true
+        input name: "totalChartType", title:"Total-Chart Type" , type: "enum", required: true, options: ["line", "bar"], defaultValue: "line", description:"Total Chart Type [ line, bar ]" 
+        input name: "historyDayCount", type:"number", title: "Maximum days for single graph", required: true, description: "", defaultValue:1, displayDuringSetup: true
+        input name: "historyTotalDayCount", type:"number", title: "Maximum days for total graph", required: true, description: "", defaultValue:7, range: "2..31", displayDuringSetup: true
+
 	}
 
 	tiles {
-		multiAttributeTile(name:"contact", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.contact", key: "PRIMARY_CONTROL") {
-               	attributeState "present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/mi-flora-pot.png?raw=true", backgroundColor:"#e86d13"
-            	attributeState "not present", label:'${name}', icon:"httpshttps://github.com/fison67/mi_connector/blob/master/icons/mi-flora-pot.png?raw=true", backgroundColor:"#00a0dc"
-			}
+		multiAttributeTile(name:"humidity", type: "generic", width: 6, height: 4){
+        
+            tileAttribute("device.humidity", key: "PRIMARY_CONTROL") {
+            	attributeState "val", label:'${currentValue}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/mi-flora-pot.png?raw=true",
+                backgroundColors:[
+                     [value: 0, color: "#153591"],
+                     [value: 5, color: "#1e9cbb"],
+                     [value: 10, color: "#90d2a7"],
+                     [value: 15, color: "#44b621"],
+                     [value: 20, color: "#f1d801"],
+                     [value: 25, color: "#d04e00"],
+                     [value: 30, color: "#bc2323"],
+                     [value: 44, color: "#1e9cbb"],
+                     [value: 59, color: "#90d2a7"],
+                     [value: 74, color: "#44b621"],
+                     [value: 84, color: "#f1d801"],
+                     [value: 95, color: "#d04e00"],
+                     [value: 96, color: "#bc2323"]
+                 ]
+            }
+            
             tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Battery: ${currentValue}%\n')
             }
@@ -97,7 +122,7 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
-        valueTile("label_moisture", "device.label_moisture", decoration: "flat", width: 2, height: 1) {
+        valueTile("label_fertility", "device.label_fertility", decoration: "flat", width: 2, height: 1) {
             state "default", label:'${currentValue}'
         }
         
@@ -131,32 +156,9 @@ metadata {
                     [value: 1200, color: "#d04e00"],
                     [value: 1500, color: "#bc2323"]
                 ]
-        }      
+        }    
         
-        valueTile("moisture", "device.moisture", width: 2, height: 2) {
-            state "val", label:'${currentValue}', defaultState: true,
-                backgroundColors:[
-                     [value: 0, color: "#153591"],
-                     [value: 5, color: "#1e9cbb"],
-                     [value: 10, color: "#90d2a7"],
-                     [value: 15, color: "#44b621"],
-                     [value: 20, color: "#f1d801"],
-                     [value: 25, color: "#d04e00"],
-                     [value: 30, color: "#bc2323"],
-                     [value: 44, color: "#1e9cbb"],
-                     [value: 59, color: "#90d2a7"],
-                     [value: 74, color: "#44b621"],
-                     [value: 84, color: "#f1d801"],
-                     [value: 95, color: "#d04e00"],
-                     [value: 96, color: "#bc2323"]
-                ]
-        }
-        
-        valueTile("label_fertility", "device.label_fertility", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("versions", "device.versions", decoration: "flat", width: 4, height: 1) {
+        valueTile("versions", "device.versions", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
         
@@ -173,6 +175,18 @@ metadata {
                 ]
         }
         
+    	standardTile("chartMode", "device.chartMode", width: 3, height: 1, decoration: "flat") {
+			state "temperature", label:'Temperature', nextState: "moisture", action: 'chartTemperature'
+			state "moisture", label:'Moisture', nextState: "lux", action: 'chartMoisture'
+			state "lux", label:'Lux', nextState: "fertility", action: 'chartLux'
+			state "fertility", label:'Fertility', nextState: "totalTemperature", action: 'chartFertility'
+			state "totalTemperature", label:'Total Temperature', nextState: "totalMoisture", action: 'chartTotalTemperature'
+			state "totalMoisture", label:'Total Moisture', nextState: "totalLux", action: 'chartTotalMoisture'
+			state "totalLux", label:'Total Lux', nextState: "totalFertility", action: 'chartTotalLux'
+			state "totalFertility", label:'Total Fertility', nextState: "temperature", action: 'chartTotalFertility'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
 	}
 }
 
@@ -193,7 +207,6 @@ def setLanguage(language){
     
     sendEvent(name:"label_temperature", value: LANGUAGE_MAP["temp"][language] )
     sendEvent(name:"label_illuminance", value: LANGUAGE_MAP["illuminance"][language] )
-    sendEvent(name:"label_moisture", value: LANGUAGE_MAP["moisture"][language] )
 	sendEvent(name:"label_fertility", value: LANGUAGE_MAP["fertility"][language] )
 }
 
@@ -213,7 +226,7 @@ def setStatus(params){
     
     sendEvent(name:"temperature", value: data.sensor.temperature)
     sendEvent(name:"illuminance", value: data.sensor.lux)
-    sendEvent(name:"moisture", value: data.sensor.moisture)
+    sendEvent(name:"humidity", value: data.sensor.moisture)
     sendEvent(name:"fertility", value: data.sensor.fertility)
     
     updateLastTime()
@@ -231,6 +244,107 @@ def updateLastTime(){
 def getMac(){
 	def mac = state.id
     return mac.substring(0,2) + ":" + mac.substring(2,4) + ":" + mac.substring(4,6) + ":" + mac.substring(6,8) + ":" + mac.substring(8,10) + ":" + mac.substring(10,12)
+}
+
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def makeTotalURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = (settings.historyTotalDayCount == null ? 7 : settings.historyTotalDayCount) - 1
+      sDate = (now - day.days).format( 'yyyy-MM-dd', location.timeZone )
+      eDate = (now + 1.days).format( 'yyyy-MM-dd', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total/image",
+        query: [
+        	"name": name,
+            "chartType": (settings.totalChartType == null ? 'line' : settings.totalChartType) 
+        ]
+    ]
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+def chartMoisture() {
+    httpGet(makeURL("moisture", "Moisture")) { response ->
+    	processImage(response, "moisture")
+    }
+}
+
+def chartTemperature(){
+    httpGet(makeURL("temperature", "Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartLux(){
+    httpGet(makeURL("lux", "Lux")) { response ->
+    	processImage(response, "lux")
+    }
+}
+
+def chartFertility(){
+    httpGet(makeURL("fertility", "Fertility")) { response ->
+    	processImage(response, "fertility")
+    }
+}
+
+def chartTotalTemperature(){
+    httpGet(makeTotalURL("temperature", "T-Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartTotalLux(){
+    httpGet(makeTotalURL("lux", "T-Lux")) { response ->
+    	processImage(response, "lux")
+    }
+}
+
+def chartTotalFertility(){
+    httpGet(makeTotalURL("fertility", "T-Fertility")) { response ->
+    	processImage(response, "fertility")
+    }
+}
+
+def chartTotalMoisture(){
+    httpGet(makeTotalURL("moisture", "T-Moisture")) { response ->
+    	processImage(response, "moisture")
+    }
 }
 
 private getPictureName(type) {
