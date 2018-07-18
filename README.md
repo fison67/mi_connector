@@ -198,13 +198,14 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | roborock.vacuum.s5  |   X |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
 |   | chuangmi.plug.v2  |   X |
-|   | chuangmi.plug.m1  |   o |
+|   | chuangmi.plug.m1  |   O |
 | Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |
 |   | zimi.powerstrip.v2  |   O |
 | Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |
 | Xiaomi Gateway  | lumi.gateway.v2  |   X |
 |   | lumi.gateway.v3  |   O |
-| Xiaomi Fan  | zhimi.fan.v3  |   O |
+| Xiaomi Fan  | zhimi.fan.v2  |   O |
+|   | zhimi.fan.v3  |   O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |
 |   | yeelink.light.mono1  |   O |
 |   | yeelink.light.ct2  |   O |
@@ -243,7 +244,9 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/gateway.jpg" title="Gateway" width="200px"><img src="./imgs/product/humidifier.jpg" title="Humidifier #1" width="200px"><img src="./imgs/product/humidifier2.png" title="Humidifier #2" width="200px">
 <img src="./imgs/product/motion.jpg" title="Motion Sensor" width="200px"><img src="./imgs/product/motion_aq.png" title="Motion Aqara Sensor" width="200px"><img src="./imgs/product/smoke.jpg" title="Smoke Sensor" width="200px">
 <img src="./imgs/product/socket.png" title="Power Socket" width="200px"><img src="./imgs/product/wall_socket_1.png" title="Wall Socket #1" width="200px"><img src="./imgs/product/wall_socket_2.png" title="Wall Socket #2" width="200px">
-<img src="./imgs/product/weather.jpeg" title="Weather Sensor" width="200px"><img src="./imgs/product/weather_aq.png" title="Weather Aqara Sensor" width="200px"><img src="./imgs/product/xiaomi_fan.jpg" title="Fan" width="200px">
+<img src="./imgs/product/weather.jpeg" title="Weather Sensor" width="200px"><img src="./imgs/product/weather_aq.png" title="Weather Aqara Sensor" width="200px"><img src="./imgs/product/xiaomi_
+
+.jpg" title="Fan" width="200px">
 <img src="./imgs/product/wireless_1.png" title="Button" width="200px"><img src="./imgs/product/wireless_2.png" title="Button" width="200px"><img src="./imgs/product/yeelight_color.jpg" title="Yeelight Color" width="200px">
 <img src="./imgs/product/yeelight_mono.jpg" title="Yeelight Mono" width="200px"><img src="./imgs/product/air_purifier.jpg" title="Air Purifier" width="200px">
 <img src="./imgs/product/air-monitor.jpg?raw=true" title="Air Monitor" width="200px">
