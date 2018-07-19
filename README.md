@@ -162,6 +162,11 @@ Restart a Mi-connector container.
 <br/><br/>
 
 ## Problem solving
+#### Suddenly Mi connector can't connect to xiaomi devices
+> If ip address and token are correct but not connected, remove the device on MiHome<br/>
+And add the device again on MiHome. Then token is regenerated. Add a device on Mi-Connector again.
+<br/><br/>
+
 #### Some of xiaomi product is not registered
 > Some of product is not getting token automatically like Xiaomi Vacuum. You have to get token yourself.<br/>
 And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out the blank. (IP & Token) > Click OK Button
