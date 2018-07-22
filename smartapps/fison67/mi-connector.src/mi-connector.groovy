@@ -60,7 +60,7 @@ def mainPage() {
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
             input "externalAddress", "string", title: "External network address", required: false
          //   input "timezone", "enum", title:"Time Zone", required: true, options: [ "Asia/Seoul","Ame" ]
-        	href url:"http://${settings.address}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
+        	href url:"http://${settings.externalAddress}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
         }
         
        	section() {
@@ -298,6 +298,9 @@ def addDevice(){
         }else if(params.type == "virtual.remote.custom"){
         	dth = "Xiaomi Remote Custom";
             name = "Xiaomi Remote Custom";
+        }else if(params.type == "virtual.remote.air"){
+        	dth = "Xiaomi Remote Air Conditioner";
+            name = "Xiaomi Remote Air Conditioner";
         }
         
         if(dth == null){
@@ -347,7 +350,7 @@ def addDevice(){
                 def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
                 render contentType: "application/javascript", data: resultString
             }
-        }else if(params.type == "virtual.remote.tv" || params.type == "virtual.remote.custom"){
+        }else if(params.type == "virtual.remote.tv" || params.type == "virtual.remote.custom" || params.type == "virtual.remote.air"){
      		dni = "mi-connector-" + id.toLowerCase() + "-" + new Date().getTime()
         	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
                 "label": name
