@@ -65,8 +65,8 @@ metadata {
 		
         multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"remoteCustom2", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"remoteCustom1", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"on"
+                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"off"
+                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"on"
 			}
 		}
         
@@ -143,6 +143,14 @@ def setData(dataList){
 }
 
 def setStatus(params){
+}
+
+def on(){
+	remoteCustom1()
+}
+
+def off(){
+	remoteCustom2()
 }
 
 def remoteCustom1(){
