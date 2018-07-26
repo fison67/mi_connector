@@ -89,8 +89,8 @@ metadata {
             }
 		}
         
-        valueTile("powerMeter", "device.powerMeter", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "powerMeter", label: 'Meter\n${currentValue} w', defaultState: true
+        valueTile("power", "device.power", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
+        	state "power", label: 'Meter\n${currentValue} w', defaultState: true
 		}
         
         valueTile("current", "device.current", width:2, height:2, inactiveLabel: false, decoration: "flat") {
@@ -169,7 +169,7 @@ def setStatus(params){
         sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
     case "powerConsumeRate":
-    	sendEvent(name:"powerMeter", value: params.data )
+    	sendEvent(name:"power", value: params.data )
     	break;
     case "temperature":
     	sendEvent(name:"temperature", value: params.data.replace(" C","").toFloat()/2)
