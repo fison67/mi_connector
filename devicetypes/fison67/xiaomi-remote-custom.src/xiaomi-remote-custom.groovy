@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote Custom (v.0.0.1)
+ *  Xiaomi Remote Custom (v.0.0.2)
  *
  * MIT License
  *
@@ -34,6 +34,7 @@ metadata {
         capability "Switch"
         capability "Configuration"
         
+        command "setStatus"
         command "playIRCmdByID", ["string"]
         command "playIR", ["string"]
         command "remoteCustom1"
@@ -52,21 +53,23 @@ metadata {
         command "remoteCustom14"
         command "remoteCustom15"
         
+        command "setTimeRemaining"
+        command "stop"
 	}
 
 
 	simulator {
 	}
     
-	preferences {
+    preferences {
 	}
 
 	tiles(scale: 2) {
 		
         multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"on"
+                attributeState "on", label:'${name}', action:"off",  icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
+                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
 			}
 		}
         
@@ -116,7 +119,93 @@ metadata {
             state "default", label:'${currentValue}', action:"remoteCustom15"
         }
         
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
+        }
+        
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
 	}
+}
+
+
+def isIRRemoteDevice(){
+	return true
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	log.debug "stop"
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
 }
 
 // parse events into attributes
@@ -142,15 +231,18 @@ def setData(dataList){
     }
 }
 
-def setStatus(params){
+def setStatus(data){
+	sendEvent(name:"switch", value: data )
 }
 
 def on(){
 	remoteCustom1()
+    sendEvent(name:"switch", value: "on" )
 }
 
 def off(){
 	remoteCustom2()
+    sendEvent(name:"switch", value: "off" )
 }
 
 def remoteCustom1(){
@@ -212,7 +304,6 @@ def remoteCustom14(){
 def remoteCustom15(){
 	playIRCmd(state['custom-15'])
 }
-
 
 def playIRCmdByID(id){
 	playIRCmd(state[id])
