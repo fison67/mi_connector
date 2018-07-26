@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote Air Conditioner (v.0.0.1)
+ *  Xiaomi Remote Air Conditioner (v.0.0.2)
  *
  * MIT License
  *
@@ -35,6 +35,7 @@ metadata {
         capability "Configuration"
         capability "Switch Level"
         
+        command "setStatus"
         command "playIRCmdByID", ["string"]
         command "playIR", ["string"]
         command "remoteAir1"
@@ -53,6 +54,8 @@ metadata {
         command "remoteAir14"
         command "remoteAir15"
         
+        command "setTimeRemaining"
+        command "stop"
 	}
 
 
@@ -121,7 +124,93 @@ metadata {
             state "default", label:'${currentValue}', action:"remoteAir15"
         }
         
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
+        }
+        
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
+        
 	}
+}
+
+def isIRRemoteDevice(){
+	return true
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	log.debug "stop"
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
 }
 
 // parse events into attributes
@@ -153,15 +242,18 @@ def setData(dataList){
     }
 }
 
-def setStatus(params){
+def setStatus(data){
+	sendEvent(name:"switch", value: data )
 }
 
 def on(){
 	playIRCmd(state['air-on'])
+	sendEvent(name:"switch", value: "on" )
 }
 
 def off(){
 	playIRCmd(state['air-off'])
+	sendEvent(name:"switch", value: "off" )
 }
 
 def setLevel(level){
