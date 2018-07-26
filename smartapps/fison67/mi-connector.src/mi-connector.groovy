@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.4)
+ *  Mi Connector (v.0.0.5)
  *
  * MIT License
  *
@@ -29,9 +29,6 @@
  
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
-import groovy.transform.Field
-
-
 
 definition(
     name: "Mi Connector",
@@ -49,19 +46,24 @@ preferences {
    page(name: "mainPage")
    page(name: "monitorPage")
    page(name: "langPage")
+   page(name: "remoteDevicePage")
+   page(name: "remoteDeviceNextPage")
 }
 
 
 def mainPage() {
 	def languageList = ["English", "Korean"]
-    dynamicPage(name: "mainPage", title: "Home Assistant Manage", nextPage: null, uninstall: true, install: true) {
+    dynamicPage(name: "mainPage", title: "Mi Connector", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
         	input "address", "string", title: "Server address", required: true
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
             input "externalAddress", "string", title: "External network address", required: false
-         //   input "timezone", "enum", title:"Time Zone", required: true, options: [ "Asia/Seoul","Ame" ]
         	href url:"http://${settings.externalAddress}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
         }
+        
+        section() {
+          	href "remoteDevicePage", title: "Remote Device Mapping", description:""
+       	}
         
        	section() {
             paragraph "View this SmartApp's configuration to use it in other places."
@@ -78,6 +80,88 @@ def langPage(){
     }
 }
 
+def remoteDevicePage(){
+    def resultList = [];
+    getChildDevices().each { child ->
+        try{
+        	def irDevice = child.isIRRemoteDevice()
+            if(irDevice){
+            	def networkID = child.deviceNetworkId
+            	resultList.push(child.label + " [" + networkID.substring(13, networkID.length()) + "]")
+            }
+        }catch(err){
+        }
+    }
+    
+	dynamicPage(name: "remoteDevicePage", title:"", nextPage:"remoteDeviceNextPage") {
+        
+    	section ("Remote Device Settings") {
+        	input(name: "selectedDevice", type: "enum", title: "Select a device", required: false, options: resultList ,submitOnChange: true)
+        }
+        
+        if(selectedDevice){
+        	try{
+        		state.selectedDeviceNetworkID = selectedDevice.split(" \\[")[1].split("]")[0]
+            }catch(err){}
+            
+            section {
+                input(name: "selectedMonitorType", type: "enum", title: "Type", options: ["Contact", "Power Meter"], description: null, multiple: false, required: false, submitOnChange: true)
+            }
+            
+            if (selectedMonitorType) {
+                state.selectedMonitorType = selectedMonitorType
+                if(selectedMonitorType == "Contact"){
+                    section {
+                        input(name: "selectedContactDevice", type: "capability.contactSensor", title: "Select a device", required: true, submitOnChange: true)
+                        input(name: "selectedContactDefault", type: "enum", options: ["open", "closed"], title: "What is the ON status?", required: true, submitOnChange: true)
+                    }
+
+                    if(selectedContactDevice){
+                        state.selectedContactDevice = selectedContactDevice.deviceNetworkId
+                    }
+                }else{
+                    section {
+                        input(name: "selectedPowerMeterDevice", type: "capability.powerMeter", title: "Select a device", required: true, submitOnChange: true)
+                        input(name: "selectedPowerMeterLevelMin", type: "decimal", title: "Minumun", required: true, submitOnChange: true)
+                        input(name: "selectedPowerMeterLevelMax", type: "decimal", title: "Maximum", required: true, submitOnChange: true)
+                    }
+                    if(selectedPowerMeterDevice){
+                        state.selectedPowerMeterDevice = selectedPowerMeterDevice.deviceNetworkId
+                    }
+                }
+            }
+            
+            
+        }
+    }
+}
+
+def remoteDeviceNextPage(){
+	dynamicPage(name: "remoteDeviceNextPage", title:"") {
+        section {
+            paragraph "Complete"
+        }
+        
+		if(selectedContactDevice && selectedContactDefault){
+            def item = [:]
+            item['default'] = selectedContactDefault
+            addMonitorDevice(selectedContactDevice, state.selectedDeviceNetworkID, "contact", item)
+        }
+        if(selectedPowerMeterDevice && selectedPowerMeterLevelMax && selectedPowerMeterLevelMin){
+            def item = [:]
+            item['max'] = selectedPowerMeterLevelMax
+            item['min'] = selectedPowerMeterLevelMin
+            addMonitorDevice(selectedPowerMeterDevice, state.selectedDeviceNetworkID, "power", item)
+        }
+        
+    	app.updateSetting("selectedDevice", "")
+    	app.updateSetting("selectedMonitorType", "")
+        app.updateSetting("selectedContactDevice", "")
+   	 	app.updateSetting("selectedPowerMeterDevice", "")
+   	 	app.updateSetting("selectedPowerMeterLevelMax", "")
+   	 	app.updateSetting("selectedPowerMeterLevelMin", "")
+    }
+}
 
 def installed() {
     log.debug "Installed with settings: ${settings}"
@@ -93,9 +177,62 @@ def updated() {
     log.debug "Updated with settings: ${settings}"
 
     // Unsubscribe from all events
-    unsubscribe()
+//    unsubscribe()
     // Subscribe to stuff
     initialize()
+}
+
+def addMonitorDevice(target, remoteDevice, attr, data){
+	log.debug "IR Mapping >> " + target.deviceNetworkId + " >> Target(" + state.selectedDeviceNetworkID + ") Attr >> " + attr
+	// Init
+	if(state.monitorMap == null){
+    	state.monitorMap = [:]
+    }
+    // Add
+    def item = [:]
+    item['id'] = target.deviceNetworkId
+    item['data'] = data
+    state.monitorMap[remoteDevice] = item
+    
+    log.debug state.monitorMap
+    
+    unsubscribe(target)
+    subscribe(target, attr, stateChangeHandler)
+}
+
+def stateChangeHandler(event){
+    def deviceNetworkID = event.getDevice().deviceNetworkId
+    setStateRemoteDevice(event.name, event.value, getDeviceToNotifyList(deviceNetworkID) )
+}
+
+def setStateRemoteDevice(eventName, eventValue, list){
+	log.debug "setStateRemoteDevice >> " + eventName + " [" + eventValue + "]"
+	for(item in list){
+        def targetRemoteDevice = getChildDevice(item.id)
+        if(targetRemoteDevice){
+            if(eventName == "contact"){
+                targetRemoteDevice.setStatus( eventValue == "open" ? (item.data.default == "open" ? "on" : "off") : (item.data.default == "open" ? "off" : "on") )
+            }else if(eventName == "power"){
+            	targetRemoteDevice.setStatus( (item.data.min <= Float.parseFloat(eventValue) && Float.parseFloat(eventValue) <= item.data.max) ? "on" : "off" )
+            }
+        }
+    }
+}
+
+/**
+* deviceNetworkID : Reference Device. Not Remote Device
+*/
+def getDeviceToNotifyList(deviceNetworkID){
+	def list = []
+	state.monitorMap.each{ targetNetworkID, _data -> 
+        if(deviceNetworkID == _data.id){
+        	def item = [:]
+            item['id'] = 'mi-connector-' + targetNetworkID
+            item['data'] = _data.data
+            list.push(item)
+        }
+    }
+    return list
 }
 
 def updateLanguage(){
