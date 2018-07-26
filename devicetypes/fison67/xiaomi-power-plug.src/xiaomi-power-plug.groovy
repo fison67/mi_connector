@@ -69,7 +69,7 @@ metadata {
                 attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNTUg/MDAxNTIyNjcwODg1MTU2.KfRiLw6Uei1mX7djpXxo0jtKlsAWLOyz04yVtEU9yZsg.3A6PUr6aM1nn2mIaD4Rt7ws_bDZi9dKlzVJJLUoiLSAg.PNG.shin4299/plug_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
-            tileAttribute("device.powerMeter", key: "SECONDARY_CONTROL") {
+            tileAttribute("device.power", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Meter: ${currentValue} w\n ',icon: "st.Health & Wellness.health9")
             }
             tileAttribute("device.energyMeter", key: "SECONDARY_CONTROL") {
@@ -79,8 +79,8 @@ metadata {
     			attributeState("default", label:'\nUpdated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
 		}
-        valueTile("powerMeter", "device.powerMeter", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "powerMeter", label: 'Meter\n${currentValue} w', action: "power", defaultState: true
+        valueTile("power", "device.power", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
+        	state "power", label: 'Meter\n${currentValue} w', action: "power", defaultState: true
 		}
 //        valueTile("powerVolt", "device.powerVolt", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
 //        	state "volt", label: '현재전압\n${currentValue}', action: "volt", defaultState: true
@@ -102,7 +102,7 @@ metadata {
         carouselTile("history", "device.image", width: 6, height: 4) { }
         
         main (["switch"])
-        details(["switch", "powerMeter", "energyMeter", "refresh", "chartMode", "history"])
+        details(["switch", "power", "energyMeter", "refresh", "chartMode", "history"])
         
 	}
 }
@@ -131,7 +131,7 @@ def setStatus(params){
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
     case "powerLoad":
-    	sendEvent(name:"powerMeter", value: params.data.replace(" w", ""))
+    	sendEvent(name:"power", value: params.data.replace(" w", ""))
     	break;
     case "loadVoltage":
     	sendEvent(name:"powerVolt", value: params.data)
@@ -196,7 +196,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
 		log.debug jsonObj
         
-		try{ sendEvent(name:"powerMeter", value: jsonObj.properties.powerLoad.value) }catch(err){}
+		try{ sendEvent(name:"power", value: jsonObj.properties.powerLoad.value) }catch(err){}
     //    try{ sendEvent(name:"battery", value: jsonObj.properties.batteryLevel) }catch(err){}
         try{ sendEvent(name:"energyMeter", value: jsonObj.properties.powerConsumed.value/1000)  }catch(err){}
         
