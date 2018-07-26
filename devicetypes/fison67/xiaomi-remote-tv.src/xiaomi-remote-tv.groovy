@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote TV (v.0.0.1)
+ *  Xiaomi Remote TV (v.0.0.2)
  *
  * MIT License
  *
@@ -34,6 +34,7 @@ metadata {
         capability "Switch"
         capability "Configuration"
         
+        command "setStatus"
         command "remoteCHUp"
         command "remoteExit"
         command "remoteCHDown"
@@ -65,8 +66,9 @@ metadata {
         command "remoteCustom8"
         command "remoteCustom9"
         
+        command "setTimeRemaining"
+        command "stop"
 	}
-
 
 	simulator {
 	}
@@ -78,8 +80,8 @@ metadata {
 		
         multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"st.switches.light.on", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"on"
+                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-tv.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
+                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-tv.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
 			}
 		}
         
@@ -107,82 +109,169 @@ metadata {
             state "default", action:"remoteVOLDown", label: "VOL DOWN"
         }
         
-        standardTile("remoteNum1", "device.remoteNum1", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum1", "device.remoteNum1", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum1", label: "1"
         }
 
-		standardTile("remoteNum2", "device.remoteNum2", decoration: "flat", width: 2, height: 2) {
+		standardTile("remoteNum2", "device.remoteNum2", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum2", label: "2"
         }
         
-        standardTile("remoteNum3", "device.remoteNum3", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum3", "device.remoteNum3", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum3", label: "3"
         }
         
-        standardTile("remoteNum4", "device.remoteNum4", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum4", "device.remoteNum4", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum4", label: "4"
         }
 
-		standardTile("remoteNum5", "device.remoteNum5", decoration: "flat", width: 2, height: 2) {
+		standardTile("remoteNum5", "device.remoteNum5", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum5", label: "5"
         }
         
-        standardTile("remoteNum6", "device.remoteNum6", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum6", "device.remoteNum6", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum6", label: "6"
         }   
         
-        standardTile("remoteNum7", "device.remoteNum7", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum7", "device.remoteNum7", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum4", label: "7"
         }
 
-		standardTile("remoteNum8", "device.remoteNum8", decoration: "flat", width: 2, height: 2) {
+		standardTile("remoteNum8", "device.remoteNum8", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum5", label: "8"
         }
         
-        standardTile("remoteNum9", "device.remoteNum9", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteNum9", "device.remoteNum9", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum9", label: "9"
         }
         
-        standardTile("remoteHyphen", "device.remoteHyphen", decoration: "flat", width: 2, height: 2) {
+        standardTile("remoteHyphen", "device.remoteHyphen", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteHyphen", label: "-"
         }
 
-		standardTile("remoteNum0", "device.remoteNum0", decoration: "flat", width: 2, height: 2) {
+		standardTile("remoteNum0", "device.remoteNum0", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remoteNum0", label: "0"
         }
         
-        standardTile("remotePrv", "device.remotePrv", decoration: "flat", width: 2, height: 2) {
+        standardTile("remotePrv", "device.remotePrv", decoration: "flat", width: 2, height: 1) {
             state "default", action:"remotePrv", label: "PRV"
         }        
         
-        standardTile("remoteCustom1", "device.remoteCustom1", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom1", label: "1"
+        standardTile("remoteCustom1", "device.remoteCustom1", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom1", label: "#1"
         }
-        standardTile("remoteCustom2", "device.remoteCustom2", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom2", label: "2"
+        standardTile("remoteCustom2", "device.remoteCustom2", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom2", label: "#2"
         }
-        standardTile("remoteCustom3", "device.remoteCustom3", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom3", label: "3"
+        standardTile("remoteCustom3", "device.remoteCustom3", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom3", label: "#3"
         }
-        standardTile("remoteCustom4", "device.remoteCustom4", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom4", label: "4"
+        standardTile("remoteCustom4", "device.remoteCustom4", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom4", label: "#4"
         }
-        standardTile("remoteCustom5", "device.remoteCustom5", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom5", label: "5"
+        standardTile("remoteCustom5", "device.remoteCustom5", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom5", label: "#5"
         }
-        standardTile("remoteCustom6", "device.remoteCustom6", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom6", label: "6"
+        standardTile("remoteCustom6", "device.remoteCustom6", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom6", label: "#6"
         }
-        standardTile("remoteCustom7", "device.remoteCustom7", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom7", label: "7"
+        standardTile("remoteCustom7", "device.remoteCustom7", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom7", label: "#7"
         }
-        standardTile("remoteCustom8", "device.remoteCustom8", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom1", label: "8"
+        standardTile("remoteCustom8", "device.remoteCustom8", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom1", label: "#8"
         }
-        standardTile("remoteCustom9", "device.remoteCustom9", decoration: "flat", width: 1, height: 1) {
-            state "default", action:"remoteCustom9", label: "9"
+        standardTile("remoteCustom9", "device.remoteCustom9", decoration: "flat", width: 2, height: 1) {
+            state "default", action:"remoteCustom9", label: "#9"
         }
+        
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
+        }
+        
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
 	}
+}
+
+
+def isIRRemoteDevice(){
+	return true
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	log.debug "stop"
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
 }
 
 // parse events into attributes
@@ -207,7 +296,8 @@ def setData(dataList){
     }
 }
 
-def setStatus(params){
+def setStatus(data){
+	sendEvent(name:"switch", value: data )
 }
 
 def playIR(code){
@@ -215,10 +305,12 @@ def playIR(code){
 
 def on(){
 	playIRCmd(state['tv-on'])
+	sendEvent(name:"switch", value: "on" )
 }
 
 def off(){
 	playIRCmd(state['tv-off'])
+	sendEvent(name:"switch", value: "off" )
 }
 
 def remoteCHUp(){
