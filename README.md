@@ -237,7 +237,7 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |  | lumi.86sw2  |  O  |
 | Xiaomi Cube | lumi.cube  |  O  |
 | Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |
-| Xiaomi Wall Switch | lumi.ctrl_neutral2  |  O  |
+|  | lumi.ctrl_neutral2  |  O  |
 | Xiaomi Smoke Sensor | lumi.smoke  |  O  |
 | Xiaomi Gas Sensor | lumi.gas  |  O  |
 | Xiaomi Water Sensor | lumi.water  |  O  |
