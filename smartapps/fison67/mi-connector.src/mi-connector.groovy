@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.5)
+ *  Mi Connector (v.0.0.6)
  *
  * MIT License
  *
@@ -105,7 +105,7 @@ def remoteDevicePage(){
             }catch(err){}
             
             section {
-                input(name: "selectedMonitorType", type: "enum", title: "Type", options: ["Contact", "Power Meter"], description: null, multiple: false, required: false, submitOnChange: true)
+                input(name: "selectedMonitorType", type: "enum", title: "Type", options: ["Contact", "Power Meter", "Presence"], description: null, multiple: false, required: false, submitOnChange: true)
             }
             
             if (selectedMonitorType) {
@@ -119,7 +119,7 @@ def remoteDevicePage(){
                     if(selectedContactDevice){
                         state.selectedContactDevice = selectedContactDevice.deviceNetworkId
                     }
-                }else{
+                }else if(selectedMonitorType == "Power Meter"){
                     section {
                         input(name: "selectedPowerMeterDevice", type: "capability.powerMeter", title: "Select a device", required: true, submitOnChange: true)
                         input(name: "selectedPowerMeterLevelMin", type: "decimal", title: "Minumun", required: true, submitOnChange: true)
@@ -127,6 +127,13 @@ def remoteDevicePage(){
                     }
                     if(selectedPowerMeterDevice){
                         state.selectedPowerMeterDevice = selectedPowerMeterDevice.deviceNetworkId
+                    }
+                }else if(selectedMonitorType == "Presence"){
+                	section {
+                        input(name: "selectedPresenceDevice", type: "capability.presenceSensor", title: "Select a device", required: true, submitOnChange: true)
+                    }
+                    if(selectedPresenceDevice){
+                        state.selectedPresenceDevice = selectedPresenceDevice.deviceNetworkId
                     }
                 }
             }
@@ -153,6 +160,10 @@ def remoteDeviceNextPage(){
             item['min'] = selectedPowerMeterLevelMin
             addMonitorDevice(selectedPowerMeterDevice, state.selectedDeviceNetworkID, "power", item)
         }
+        if(selectedPresenceDevice){
+        	def item = [:]
+            addMonitorDevice(selectedPresenceDevice, state.selectedDeviceNetworkID, "presence", item)
+        }
         
     	app.updateSetting("selectedDevice", "")
     	app.updateSetting("selectedMonitorType", "")
@@ -160,6 +171,8 @@ def remoteDeviceNextPage(){
    	 	app.updateSetting("selectedPowerMeterDevice", "")
    	 	app.updateSetting("selectedPowerMeterLevelMax", "")
    	 	app.updateSetting("selectedPowerMeterLevelMin", "")
+   	 	app.updateSetting("selectedPresenceDevice", "")
+        
     }
 }
 
@@ -214,6 +227,8 @@ def setStateRemoteDevice(eventName, eventValue, list){
                 targetRemoteDevice.setStatus( eventValue == "open" ? (item.data.default == "open" ? "on" : "off") : (item.data.default == "open" ? "off" : "on") )
             }else if(eventName == "power"){
             	targetRemoteDevice.setStatus( (item.data.min <= Float.parseFloat(eventValue) && Float.parseFloat(eventValue) <= item.data.max) ? "on" : "off" )
+            }else if(eventName == "presence"){
+            	targetRemoteDevice.setStatus( eventValue == "present" ? "on" : "off" )
             }
         }
     }
@@ -438,6 +453,9 @@ def addDevice(){
         }else if(params.type == "virtual.remote.air"){
         	dth = "Xiaomi Remote Air Conditioner";
             name = "Xiaomi Remote Air Conditioner";
+        }else if(params.type == "virtual.ping"){
+        	dth = "Xiaomi Virtual Device";
+            name = "Xiaomi Virtual Device";
         }
         
         if(dth == null){
