@@ -237,12 +237,12 @@ def setStatus(data){
 
 def on(){
 	remoteCustom1()
-    sendEvent(name:"switch", value: "on" )
+//    sendEvent(name:"switch", value: "on" )
 }
 
 def off(){
 	remoteCustom2()
-    sendEvent(name:"switch", value: "off" )
+//    sendEvent(name:"switch", value: "off" )
 }
 
 def remoteCustom1(){
