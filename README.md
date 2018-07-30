@@ -15,6 +15,9 @@ If this project help you, you can give me a cup of coffee<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
 <br/><br/>
+### Latest Version: fison67/mi-connector:latest, fison67/mi-connector-arm:latest
+### Beta Version: fison67/mi-connector:test, fison67/mi-connector-arm:test
+<br/><br/>
 
 ## History
 
