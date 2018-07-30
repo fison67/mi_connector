@@ -270,6 +270,9 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 <img src="./imgs/product/ceiling.jpg?raw=true" title="Ceiling" width="200px">
 <img src="./imgs/product/power-strip.png?raw=true" title="Power Strip" width="200px">
 <img src="./imgs/product/philips-ceiling.jpg?raw=true" title="Philips Ceiling Light" width="200px">
+<img src="./imgs/product/ir-remote.jpg?raw=true" title="IR Remote" width="200px">
+<img src="./imgs/product/mi-flora.png?raw=true" title="Flora" width="200px">
+<img src="./imgs/product/flora-pot.jpg?raw=true" title="Flora Pot" width="200px">
 
 
 <br/><br/>
