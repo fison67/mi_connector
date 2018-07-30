@@ -189,59 +189,67 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 
 ## Support devices<br/>
 #### Wi-Fi Version
-| Type  | Model | Tested |
-| ------------- | ------------- | ------------- |
-| Xiaomi Air Purifier  | zhimi.airpurifier.m1  |   O |
-|   | zhimi.airpurifier.v1  |   X |
-|   | zhimi.airpurifier.v2  |   X |
-|   | zhimi.airpurifier.v3  |   X |
-|   | zhimi.airpurifier.v6  |   X |
-|   | zhimi.airpurifier.ma2  |   X |
-| Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |
-|   | zhimi.humidifier.ca1  |   O |
-| Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |
-|   | roborock.vacuum.s5  |   X |
-| Xiaomi Power Socket  | chuangmi.plug.v1  |   X |
-|   | chuangmi.plug.v2  |   X |
-|   | chuangmi.plug.m1  |   O |
-| Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |
-|   | zimi.powerstrip.v2  |   O |
-| Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |
-| Xiaomi Gateway  | lumi.gateway.v2  |   X |
-|   | lumi.gateway.v3  |   O |
-| Xiaomi Fan  | zhimi.fan.v2  |   O |
-|   | zhimi.fan.v3  |   O |
-| Yeelight Mono  | yeelink.light.lamp1  |   X |
-|   | yeelink.light.mono1  |   O |
-|   | yeelink.light.ct2  |   O |
-| Yeelight Color  | yeelink.light.color1  |   O |
-|   | yeelink.light.color2  |   O |
-|   | yeelink.light.strip1  |   O |
-|  Yeelight Ceiling | yeelink.light.ceiling1  |   O |
-|  Philips Ceiling | philips.light.ceiling  |   O |
+| Type  | Model | Tested | Beta |
+| ------------- | ------------- | ------------- | ------------- |
+| Xiaomi Air Purifier  | zhimi.airpurifier.m1  |   O |    |
+|   | zhimi.airpurifier.v1  |   X |    |
+|   | zhimi.airpurifier.v2  |   X |    |
+|   | zhimi.airpurifier.v3  |   X |    |
+|   | zhimi.airpurifier.v6  |   X |    |
+|   | zhimi.airpurifier.ma2  |   X |    |
+| Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
+|   | zhimi.humidifier.ca1  |   O |    |
+| Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
+|   | roborock.vacuum.s5  |   X |    |
+| Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
+|   | chuangmi.plug.v2  |   X |    |
+|   | chuangmi.plug.m1  |   O |    |
+| Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |    |
+|   | zimi.powerstrip.v2  |   O |    |
+| Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |    |
+| Xiaomi Gateway  | lumi.gateway.v2  |   X |    |
+|   | lumi.gateway.v3  |   O |    |
+| Xiaomi Fan  | zhimi.fan.v2  |   O |    |
+|   | zhimi.fan.v3  |   O |    |
+|   | zhimi.fan.sa1  |   X |  O |
+|   | zhimi.fan.za1  |   O |  O |
+| Yeelight Mono  | yeelink.light.lamp1  |   X |    |
+|   | yeelink.light.mono1  |   O |    |
+|   | yeelink.light.ct2  |   O |    |
+| Yeelight Color  | yeelink.light.color1  |   O |    |
+|   | yeelink.light.color2  |   O |    |
+|   | yeelink.light.strip1  |   O |    |
+|  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
+|  Philips Ceiling | philips.light.ceiling  |   O |    |
 
 
 #### Zigbee Version
-| Type  | Model | Tested |
-| ------------- | ------------- | ------------- |
-| Xiaomi Motion Sensor | lumi.motion  |  X  |
-|  | lumi.motion.aq2  |  O  |
-| Xiaomi Door/Window Sensor | lumi.magnet  |  X  |
-|  | lumi.magnet.aq2  |  O  |
-| Xiaomi Weather Sensor | lumi.weather  |  O  |
-|  | lumi.sensor_ht  |  O  |
-| Xiaomi Power Socket | lumi.plug  |  O  |
-| Xiaomi Button | lumi.switch  |  O  |
-|  | lumi.switch.v2  |  O  |
-|  | lumi.86sw1  |  O  |
-|  | lumi.86sw2  |  O  |
-| Xiaomi Cube | lumi.cube  |  O  |
-| Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |
-|  | lumi.ctrl_neutral2  |  O  |
-| Xiaomi Smoke Sensor | lumi.smoke  |  O  |
-| Xiaomi Gas Sensor | lumi.gas  |  O  |
-| Xiaomi Water Sensor | lumi.water  |  O  |
-| Xiaomi Curtain Motor | lumi.curtain  |  O  |
+| Type  | Model | Tested | Beta |
+| ------------- | ------------- | ------------- | ------------- |
+| Xiaomi Motion Sensor | lumi.motion  |  X  |    |
+|  | lumi.motion.aq2  |  O  |    |
+| Xiaomi Door/Window Sensor | lumi.magnet  |  X  |    |
+|  | lumi.magnet.aq2  |  O  |    |
+| Xiaomi Weather Sensor | lumi.weather  |  O  |    |
+|  | lumi.sensor_ht  |  O  |    |
+| Xiaomi Power Socket | lumi.plug  |  O  |    |
+| Xiaomi Button | lumi.switch  |  O  |    |
+|  | lumi.switch.v2  |  O  |    |
+|  | lumi.86sw1  |  O  |    |
+|  | lumi.86sw2  |  O  |    |
+| Xiaomi Cube | lumi.cube  |  O  |    |
+| Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |    |
+|  | lumi.ctrl_neutral2  |  O  |    |
+| Xiaomi Smoke Sensor | lumi.smoke  |  O  |    |
+| Xiaomi Gas Sensor | lumi.gas  |  O  |    |
+| Xiaomi Water Sensor | lumi.water  |  O  |    |
+| Xiaomi Curtain Motor | lumi.curtain  |  O  |    |
+
+#### Bluetooth Version
+| Type  | Model | Tested | Beta |
+| ------------- | ------------- | ------------- | ------------- |
+| Xiaomi Flora | ble.flora  |  △  |  O  |
+| Xiaomi Flora Pot | ble.floraPot  |  △  |  O  |
 
 
 <img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button Aqara" width="200px"><img src="./imgs/product/cube.png" title="Cube" width="200px">
