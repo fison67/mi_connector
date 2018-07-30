@@ -221,6 +221,8 @@ And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out
 |   | yeelink.light.strip1  |   O |    |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
+|  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
+
 
 
 #### Zigbee Version
