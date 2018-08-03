@@ -80,13 +80,13 @@ metadata {
 		
         multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-tv.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-tv.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
+                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/tv-100.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
+                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/tv-100.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
 			}
 		}
         
         standardTile("remoteCHUp", "device.remoteCHUp", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCHUp", label: "CH UP"
+            state "default", action:"remoteCHUp", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/ch-up.png?raw=true"
         }
 
 		standardTile("remoteExit", "device.remoteExit", decoration: "flat", width: 2, height: 1) {
@@ -94,11 +94,11 @@ metadata {
         }
         
         standardTile("remoteVOLUp", "device.remoteVOLUp", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteVOLUp", label: "VOL UP"
+            state "default", action:"remoteVOLUp", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/vol-up.png?raw=true"
         }
         
 		standardTile("remoteCHDown", "device.remoteCHDown", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCHDown", label: "CH DOWN"
+            state "default", action:"remoteCHDown", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/ch-down.png?raw=true"
         }
         
         standardTile("remoteVOLMute", "device.remoteVOLMute", decoration: "flat", width: 2, height: 1) {
@@ -106,7 +106,7 @@ metadata {
         }
 
 		standardTile("remoteVOLDown", "device.remoteVOLDown", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteVOLDown", label: "VOL DOWN"
+            state "default", action:"remoteVOLDown", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/vol-down.png?raw=true"
         }
         
         standardTile("remoteNum1", "device.remoteNum1", decoration: "flat", width: 2, height: 1) {
@@ -134,11 +134,11 @@ metadata {
         }   
         
         standardTile("remoteNum7", "device.remoteNum7", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum4", label: "7"
+            state "default", action:"remoteNum7", label: "7"
         }
 
 		standardTile("remoteNum8", "device.remoteNum8", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum5", label: "8"
+            state "default", action:"remoteNum8", label: "8"
         }
         
         standardTile("remoteNum9", "device.remoteNum9", decoration: "flat", width: 2, height: 1) {
@@ -305,12 +305,12 @@ def playIR(code){
 
 def on(){
 	playIRCmd(state['tv-on'])
-	sendEvent(name:"switch", value: "on" )
+//	sendEvent(name:"switch", value: "on" )
 }
 
 def off(){
 	playIRCmd(state['tv-off'])
-	sendEvent(name:"switch", value: "off" )
+//	sendEvent(name:"switch", value: "off" )
 }
 
 def remoteCHUp(){
