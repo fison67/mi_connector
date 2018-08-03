@@ -179,6 +179,19 @@ And add the device again on MiHome. Then token is regenerated. Add a device on M
 And go to the 'Manage Device' > 'Device List' >  Click the add button > Fill out the blank. (IP & Token) > Click OK Button
 <br/><br/>
 
+#### When Zigbee devices is not working(No response)
+> a. Open up the MiHome App<br/>
+b. From the Profile > Settings screen set to the Location field to “Mainland China”<br/>
+c. Open up the device detail screen for the Gateway device<br/>
+d. Click the triple dots button in the top-right corner of the screen to open the More screen<br/>
+e. Open the About screen<br/>
+f. At the bottom of the screen keep tapping the version number until a notice appears<br/>
+g. From the same screen open the Local Area Network Communication Protocol screen<br/>
+h. Slide the toggle element for “Local Area Network Communication Protocol” to enabled<br/>
+<img src="https://www.domoticz.com/wiki/images/4/41/Mihome_lan.png"><br/>
+i. Restart Mi-Connector and then register gateway.<br/>
+
+
 #### How to get token
 > https://www.home-assistant.io/components/vacuum.xiaomi_miio/#retrieving-the-access-token
 
