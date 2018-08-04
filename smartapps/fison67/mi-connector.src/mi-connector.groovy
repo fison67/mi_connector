@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.6)
+ *  Mi Connector (v.0.0.7)
  *
  * MIT License
  *
@@ -456,6 +456,9 @@ def addDevice(){
         }else if(params.type == "virtual.ping"){
         	dth = "Xiaomi Virtual Device";
             name = "Xiaomi Virtual Device";
+        }else if(params.type == "lumi.acpartner.v3"){
+        	dth = "Xiaomi Gateway2";
+            name = "Xiaomi Gateway2";
         }
         
         if(dth == null){
