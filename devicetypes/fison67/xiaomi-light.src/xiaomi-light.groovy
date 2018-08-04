@@ -183,7 +183,7 @@ def setLevel(brightness){
             "id": state.id,
             "cmd": "brightness",
             "data": brightness,
-            "subData": settings.duration == null ? 500 : settings.duration
+        	"subData": getDuration()
         ]
         def options = makeCommand(body)
         sendCommand(options, null)
@@ -195,18 +195,12 @@ def setLevel(brightness){
 
 def setColor(color){
 	log.debug "setColor >> ${state.id} >> ${color.hex}"
-    def smoothOn = settings.smooth == "" ? "On" : settings.smooth
-    def duration = 500
-    if(smoothOn == "On"){
-        if(settings.duration != null){
-            duration = settings.duration
-        }
-    }
+    
     def body = [
         "id": state.id,
         "cmd": "color",
         "data": color.hex,
-        "subData": duration
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -346,4 +340,15 @@ def setPowerByStatus(turnOn){
         	off()
         }
     }
+}
+
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
 }
