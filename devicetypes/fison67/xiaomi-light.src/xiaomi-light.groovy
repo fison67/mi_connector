@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light (v.0.0.2)
+ *  Xiaomi Light (v.0.0.3)
  *
  * MIT License
  *
@@ -51,7 +51,11 @@ metadata {
         command "setTimeRemaining"
         command "stop"
 	}
-
+    
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+	}
 
 	simulator {
 	}
@@ -178,7 +182,8 @@ def setLevel(brightness){
         def body = [
             "id": state.id,
             "cmd": "brightness",
-            "data": brightness
+            "data": brightness,
+            "subData": settings.duration == null ? 500 : settings.duration
         ]
         def options = makeCommand(body)
         sendCommand(options, null)
@@ -190,10 +195,18 @@ def setLevel(brightness){
 
 def setColor(color){
 	log.debug "setColor >> ${state.id} >> ${color.hex}"
+    def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": color.hex,
+        "subData": duration
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
