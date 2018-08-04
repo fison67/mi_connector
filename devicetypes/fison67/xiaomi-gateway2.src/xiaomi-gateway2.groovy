@@ -106,7 +106,6 @@ def setStatus(params){
  	switch(params.key){
     case "power":
     	if(getMode() == "Air Conditioner"){
-        	log.debug "power on"
     		sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off") )
         }
     	break;    
@@ -216,5 +215,5 @@ def getCommand(){
 }
 
 def getMode(){
-	return settings.mode == null ? "power" : settings.mode
+	return settings.mode == null ? "Air Conditioner" : settings.mode
 }
