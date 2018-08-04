@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light (v.0.0.2)
+ *  Xiaomi Light (v.0.0.3)
  *
  * MIT License
  *
@@ -45,6 +45,10 @@ metadata {
          
 	}
 
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+	}
 
 	simulator {
 	}
@@ -156,7 +160,8 @@ def setLevel(brightness){
     def body = [
         "id": state.id,
         "cmd": "brightness",
-        "data": brightness
+        "data": brightness,
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -167,7 +172,8 @@ def setColor(color){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": color.hex,
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -285,4 +291,15 @@ def rgbToColorTemperature(red, blue){
         }
     }
     return Math.round(temperature);
+}
+
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
 }
