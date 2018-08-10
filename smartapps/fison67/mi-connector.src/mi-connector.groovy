@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.7)
+ *  Mi Connector (v.0.0.8)
  *
  * MIT License
  *
@@ -459,7 +459,11 @@ def addDevice(){
         }else if(params.type == "lumi.acpartner.v3"){
         	dth = "Xiaomi Gateway2";
             name = "Xiaomi Gateway2";
+        }else if(params.type == "ble.mitemperature"){
+        	dth = "Xiaomi Bluetooth Weather";
+            name = "Xiaomi Bluetooth Weather";
         }
+        
         
         if(dth == null){
         	log.warn("Failed >> Non exist DTH!!! Type >> " + type);
