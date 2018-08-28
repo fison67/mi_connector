@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote TV (v.0.0.2)
+ *  Xiaomi Remote TV (v.0.0.3)
  *
  * MIT License
  *
@@ -74,6 +74,7 @@ metadata {
 	}
     
 	preferences {
+        input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
 	tiles(scale: 2) {
@@ -305,12 +306,16 @@ def playIR(code){
 
 def on(){
 	playIRCmd(state['tv-on'])
-//	sendEvent(name:"switch", value: "on" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "on" )
+    }
 }
 
 def off(){
 	playIRCmd(state['tv-off'])
-//	sendEvent(name:"switch", value: "off" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "off" )
+	}
 }
 
 def remoteCHUp(){
