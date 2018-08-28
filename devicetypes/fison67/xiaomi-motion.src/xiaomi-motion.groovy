@@ -138,7 +138,7 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data)
     	break;
     case "illuminance":
-    	sendEvent(name:"illuminance", value: params.data.replace("lx","").replace(",","") )
+    	sendEvent(name:"illuminance", value: params.data.replace("lx","").replace(",","") as int )
     	break;
     }
     
