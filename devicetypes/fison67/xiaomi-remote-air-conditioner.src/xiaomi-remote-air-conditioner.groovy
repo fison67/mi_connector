@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote Air Conditioner (v.0.0.2)
+ *  Xiaomi Remote Air Conditioner (v.0.0.3)
  *
  * MIT License
  *
@@ -34,10 +34,10 @@ metadata {
         capability "Switch"
         capability "Configuration"
         capability "Switch Level"
+        capability "Air Conditioner Mode"
         
         command "setStatus"
         command "playIRCmdByID", ["string"]
-        command "playIR", ["string"]
         command "remoteAir1"
         command "remoteAir2"
         command "remoteAir3"
@@ -63,6 +63,7 @@ metadata {
 	}
     
 	preferences {
+        input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
 	tiles(scale: 2) {
@@ -248,12 +249,23 @@ def setStatus(data){
 
 def on(){
 	playIRCmd(state['air-on'])
-	sendEvent(name:"switch", value: "on" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "on" )
+    }
 }
 
 def off(){
 	playIRCmd(state['air-off'])
-	sendEvent(name:"switch", value: "off" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "off" )
+	}
+}
+
+/**
+*  mode >> auto, cool, dry, coolClean, dryClean, fanOnly, heat, heatClean, notSupported
+*/
+def setAirConditionerMode(mode){
+
 }
 
 def setLevel(level){
