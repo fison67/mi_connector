@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote Custom (v.0.0.2)
+ *  Xiaomi Remote Custom (v.0.0.3)
  *
  * MIT License
  *
@@ -62,6 +62,7 @@ metadata {
 	}
     
     preferences {
+        input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
 	tiles(scale: 2) {
@@ -226,7 +227,7 @@ def setInfo(String app_url, String id) {
 
 def setData(dataList){
 	for(data in dataList){
-        state[data.id] = data.code
+        state[data.id] = data.code + ":" + data.delay
         sendEvent(name:"remoteCustom" + data.id.substring(7, data.id.length()), value: data.title )
     }
 }
@@ -237,12 +238,16 @@ def setStatus(data){
 
 def on(){
 	remoteCustom1()
-//    sendEvent(name:"switch", value: "on" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "on" )
+    }
 }
 
 def off(){
 	remoteCustom2()
-//    sendEvent(name:"switch", value: "off" )
+    if(!syncByDevice){
+		sendEvent(name:"switch", value: "off" )
+	}
 }
 
 def remoteCustom1(){
@@ -309,8 +314,8 @@ def playIRCmdByID(id){
 	playIRCmd(state[id])
 }
 
-def playIRCmd(code){
-	if(code == null || code == ""){
+def playIRCmd(data){
+	if(data == null || data == ""){
     	log.error("Non exist code")
     	return;
     }
@@ -318,7 +323,7 @@ def playIRCmd(code){
     def body = [
         "id": state.id,
         "cmd": "playIRByCode",
-        "data": code
+        "data": data
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
