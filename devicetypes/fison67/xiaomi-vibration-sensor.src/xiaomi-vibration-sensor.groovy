@@ -37,6 +37,9 @@ metadata {
         capability "Refresh"
          
         attribute "battery", "string"
+        attribute "final_tilt_angle", "string"
+        attribute "coordination", "string"
+        attribute "bed_activity", "string"
         
         attribute "lastCheckin", "Date"
         
