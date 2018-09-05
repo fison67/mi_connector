@@ -91,13 +91,13 @@ def setStatus(params){
        	 	buttonEvent(2, "pushed")
         } else if(params.data == "final_tilt_angle"){
        	 	buttonEvent(3, "pushed")
-            sendEvent(name: "final_tilt_angle", value: params.subData)
+            sendEvent(name: "final_tilt_angle", value: params.subData as int)
         } else if(params.data == "coordination"){
        	 	buttonEvent(4, "pushed")
             sendEvent(name: "coordination", value: params.subData)
         } else if(params.data == "bed_activity"){
        	 	buttonEvent(5, "pushed")
-            sendEvent(name: "bed_activity", value: params.subData)
+            sendEvent(name: "bed_activity", value: params.subData as int)
         }
     	break;
     case "batteryLevel":
