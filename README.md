@@ -266,6 +266,7 @@ i. Restart Mi-Connector and then register gateway.<br/>
 | Xiaomi Gas Sensor | lumi.gas  |  O  |    |
 | Xiaomi Water Sensor | lumi.water  |  O  |    |
 | Xiaomi Curtain Motor | lumi.curtain  |  O  |    |
+| Xiaomi Vibration Sensor | lumi.vibration  |  O  |  O  |
 
 #### Bluetooth Version
 | Type  | Model | Tested | Beta |
@@ -293,6 +294,7 @@ i. Restart Mi-Connector and then register gateway.<br/>
 <img src="./imgs/product/ir-remote.jpg?raw=true" title="IR Remote" width="200px">
 <img src="./imgs/product/mi-flora.png?raw=true" title="Flora" width="200px">
 <img src="./imgs/product/flora-pot.jpg?raw=true" title="Flora Pot" width="200px">
+<img src="./imgs/product/vibration.jpeg?raw=true" title="Vibration" width="200px">
 
 
 <br/><br/>
