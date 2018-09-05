@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.8)
+ *  Mi Connector (v.0.0.9)
  *
  * MIT License
  *
@@ -462,6 +462,9 @@ def addDevice(){
         }else if(params.type == "ble.mitemperature"){
         	dth = "Xiaomi Bluetooth Weather";
             name = "Xiaomi Bluetooth Weather";
+        }else if(params.type == "lumi.vibration"){
+        	dth = "Xiaomi Vibration Sensor"
+            name = "Xiaomi Vibration Sensor"
         }
         
         
