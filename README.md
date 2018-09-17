@@ -198,7 +198,7 @@ Even if you change the address, the server address of each device is not updated
 And put the right server address.(ex. 192.168.1.22:30000), restart docker.<br/>
 When you control device on ST, if you can see the following the log it means that communication is working well with ST.<br/>
 2018-09-17 03:14:14 [info]: Requested to control by ST >> [zhimi.airpurifier.m1] >> {"id":"54532856","cmd":"power","data":"off"}<br/>
-If you can see anything, it's not working well..
+If you can't see anything, it's not working well..
 
 #### How to get token
 > https://www.home-assistant.io/components/vacuum.xiaomi_miio/#retrieving-the-access-token
