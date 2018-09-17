@@ -191,6 +191,14 @@ h. Slide the toggle element for “Local Area Network Communication Protocol” 
 <img src="https://www.domoticz.com/wiki/images/4/41/Mihome_lan.png"><br/>
 i. Restart Mi-Connector and then register gateway.<br/>
 
+#### When you can't control device on ST
+> Maybe you put the server address on Smart app(Mi-Connector)<br/>
+If it's wrong server address and device is added already, just stop docker and remove all devices which was added by mi-connector.<br/>
+Even if you change the address, the server address of each device is not updated. So you must remove devices.<br/>
+And put the right server address.(ex. 192.168.1.22:30000), restart docker.<br/>
+When you control device on ST, if you can see the following the log it means that communication is working well with ST.<br/>
+2018-09-17 03:14:14 [info]: Requested to control by ST >> [zhimi.airpurifier.m1] >> {"id":"54532856","cmd":"power","data":"off"}<br/>
+If you can see anything, it's not working well..
 
 #### How to get token
 > https://www.home-assistant.io/components/vacuum.xiaomi_miio/#retrieving-the-access-token
