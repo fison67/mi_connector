@@ -281,6 +281,7 @@ If you can't see anything, it's not working well..
 | ------------- | ------------- | ------------- | ------------- |
 | Xiaomi Flora | ble.flora  |  △  |  O  |
 | Xiaomi Flora Pot | ble.floraPot  |  △  |  O  |
+| Xiaomi Temp-Humid Sensor | ble.mitemperature  |  △  |  O  |
 
 
 <img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button Aqara" width="200px"><img src="./imgs/product/cube.png" title="Cube" width="200px">
@@ -303,7 +304,7 @@ If you can't see anything, it's not working well..
 <img src="./imgs/product/mi-flora.png?raw=true" title="Flora" width="200px">
 <img src="./imgs/product/flora-pot.jpg?raw=true" title="Flora Pot" width="200px">
 <img src="./imgs/product/vibration.jpeg?raw=true" title="Vibration" width="200px">
-
+<img src="./imgs/product/ble-temp-humid.jpg?raw=true" title="Bluetooth Temperature Humidity Sensor" width="200px">
 
 <br/><br/>
 ## Library
