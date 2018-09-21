@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.2)
+ *  Xiaomi Air Purifier (v.0.0.3)
  *
  * MIT License
  *
@@ -412,7 +412,8 @@ def setStatus(params){
     	if(params.data == "idle") {
         }
     	else {
-        sendEvent(name:"mode", value: params.data )
+        	state.lastMode = params.data
+        	sendEvent(name:"mode", value: params.data )
         }
     	break;
     case "pm2.5":
@@ -426,11 +427,12 @@ def setStatus(params){
     	break;
     case "power":
     	if(params.data == "true") {
-    	sendEvent(name:"switch", value:"on")
+    		sendEvent(name:"switch", value:"on")
+            sendEvent(name:"mode", value: state.lastMode)
         }
         else if(params.data == "false") {
-    	sendEvent(name:"mode", value: "off")
-    	sendEvent(name:"switch", value:"off")
+            sendEvent(name:"mode", value: "off")
+            sendEvent(name:"switch", value:"off")
         }
     	break;
     case "temperature":
