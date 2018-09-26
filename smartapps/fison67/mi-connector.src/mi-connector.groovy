@@ -381,7 +381,7 @@ def addDevice(){
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
-        }else if(params.type == "yeelink.light.strip1"){
+        }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2"){
         	dth = "Xiaomi Light Strip";
             name = "Xiaomi Light Strip";
         }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
@@ -420,7 +420,7 @@ def addDevice(){
 		}else if(params.type == "lumi.smoke"){
         	dth = "Xiaomi Smoke Dectector";
             name = "Xiaomi Smoke Dectector";
-        }else if(params.type == "yeelink.light.ceiling1"){
+        }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"){
         	dth = "Xiaomi Light Ceiling";
             name = "Xiaomi Light Ceiling";
         }else if(params.type == "philips.light.ceiling"){
