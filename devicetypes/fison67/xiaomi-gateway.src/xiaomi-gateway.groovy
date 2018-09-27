@@ -36,6 +36,7 @@ metadata {
         capability "Actuator"
         capability "Configuration"
         capability "Refresh"
+        capability "Alarm"
         
 		capability "Color Control"
         capability "Switch Level"
@@ -47,37 +48,7 @@ metadata {
         command "chartPower"
         command "chartIlluminance"
         
-        command "playMusic"
-        command "stopMusic"
-        
-        command "alarmPoliceCar1"
-        command "alarmPoliceCar2"
-        command "alarmAccident"
-        command "alarmCountdown"
-        command "alarmGhost"
-        command "alarmSniperRifle"
-        command "alarmBattle"
-        command "alarmAirRaid"
-        command "alarmBark"
-        
-        command "bellDoor"
-        command "bellKnock"
-        command "bellAmuse"
-        command "bellAlarmClock"
-       
-        command "alarmClockMiMix"
-        command "alarmClockEnthusiastic"
-        command "alarmClockGuitarClassic"
-        command "alarmClockIceWorldPiano"
-        command "alarmClockLeisureTime"
-        command "alarmClockChildHood"
-        command "alarmClockMorningStreamLiet"
-        command "alarmClockMusicBox"
-        command "alarmClockOrange"
-        command "alarmClockThinker"
-        
-        command "alarmCustom"
-        
+     	command "sirenByID"
 	}
 
 
@@ -85,7 +56,13 @@ metadata {
 	}
 
 	preferences {
-		input name:"volume", type:"number", title:"Volume", range: "0..100", defaultValue:10, description:"Gateway Alarm Volume"
+		input name:"mode", type:"enum", title:"Alarm Setthing?", options:["Both", "Siren", "Strobe"], description:"What will you do when you turn on?"
+		input name:"selectedColor", type:"string", title:"Strobe Color", description:"Type a color (Hex Value)"
+		input name:"selectedBrightness", type:"number", title:"Strobe Brightness", range: "0..100", defaultValue:100, description:""
+		input name:"volume", type:"number", title:"Siren Volume", range: "0..100", defaultValue:10, description:"Gateway Siren Volume(0 ~ 100)"
+		input name:"alarm", type:"enum", title:"Siren Type", required: false, options: ["Police Car#1", "Police Car#2", "Accident", "Count Down", "Ghost", "Sniper Rifle", "Battle", 
+        "Air Raid", "Bark", "Door", "Knock", "Amuse", "Alarm Clock", "Clock MiMix", "Clock Enthusiastic", "Guitar Classic", "Ice World Piano",
+        "Leisure Time", "ChildHood", "Morning StreamLiet", "MusicBox", "Orange", "Thinker"]
         input "historyDayCount", "number", title: "Maximum days for single graph", description: "", defaultValue:1, displayDuringSetup: true
 		input "powerHistoryDataMaxCount", "number", title: "Maximum Power data count", description: "0 is max", defaultValue:100, displayDuringSetup: true
 		input "illuminanceHistoryDataMaxCount", "number", title: "Maximum Illuminance data count", description: "0 is max", defaultValue:0, displayDuringSetup: true
@@ -146,92 +123,9 @@ metadata {
         }
         
        	standardTile("alarm1", "device.alarm1", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmPoliceCar1", icon:"st.Entertainment.entertainment3"
+            state "default", label:"", action:"siren", icon:"st.Entertainment.entertainment3"
         }
         
-        standardTile("alarm2", "device.alarm2", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmPoliceCar2", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm3", "device.alarm3", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmAccident", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm4", "device.alarm4", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmAccident", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm5", "device.alarm5", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmCountdown", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm6", "device.alarm6", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmGhost", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm7", "device.alarm7", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmSniperRifle", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm8", "device.alarm8", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmBattle", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm9", "device.alarm9", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmAirRaid", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm10", "device.alarm10", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmBark", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm11", "device.alarm11", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"bellDoor", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm12", "device.alarm12", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"bellKnock", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm13", "device.alarm13", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"bellAmuse", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm14", "device.alarm14", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"bellAlarmClock", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm15", "device.alarm15", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockMiMix", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm16", "device.alarm16", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockEnthusiastic", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm17", "device.alarm17", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockGuitarClassic", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm18", "device.alarm18", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockIceWorldPiano", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm19", "device.alarm19", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockLeisureTime", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm20", "device.alarm20", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockChildHood", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm21", "device.alarm21", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockMorningStreamLiet", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm22", "device.alarm22", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockMusicBox", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm23", "device.alarm23", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockOrange", icon:"st.Entertainment.entertainment3"
-        }
-        standardTile("alarm24", "device.alarm24", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmClockThinker", icon:"st.Entertainment.entertainment3"
-        }
-        
-        standardTile("alarm25", "device.alarm25", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"alarmCustom", icon:"st.Entertainment.entertainment3"
-        }
         
 	}
 }
@@ -267,11 +161,106 @@ def setStatus(params){
     	sendEvent(name:"level", value: params.data )
     	break;
     case "illuminance":
-    	sendEvent(name:"illuminance", value: params.data.replace(" lx","").replace(",","") )
+    	sendEvent(name:"illuminance", value: params.data.replace(" lx","").replace(",","") as int)
     	break;
     }
     
     updateLastTime()
+}
+
+def siren(){
+    def sirenIndex = 0
+    def sirenType = settings.alarm
+    if(sirenType != null){
+    	switch(sirenType){
+        case "Police Car#1":
+        	sirenIndex = 0
+        	break;
+        case "Police Car#2":
+        	sirenIndex = 1
+        	break;
+        case "Accident":
+        	sirenIndex = 2
+        	break;
+        case "Count Down":
+        	sirenIndex = 3
+        	break;
+        case "Ghost":
+        	sirenIndex = 4
+        	break;
+        case "Sniper Rifle":
+        	sirenIndex = 5
+        	break;
+        case "Battle":
+        	sirenIndex = 6
+        	break;
+        case "Air Raid":
+        	sirenIndex = 7
+        	break;
+        case "Bark":
+        	sirenIndex = 8
+        	break;
+        case "Door":
+        	sirenIndex = 10
+        	break;
+        case "Knock":
+        	sirenIndex = 11
+        	break;
+        case "Amuse":
+        	sirenIndex = 12
+        	break;
+        case "Alarm Clock":
+        	sirenIndex = 13
+        	break;
+        case "Clock MiMix":
+        	sirenIndex = 20
+        	break;
+        case "Clock Enthusiastic":
+        	sirenIndex = 21
+        	break;
+        case "Guitar Classic":
+        	sirenIndex = 22
+        	break;
+        case "Ice World Piano":
+        	sirenIndex = 23
+        	break;
+        case "Leisure Time":
+        	sirenIndex = 24
+        	break;
+        case "ChildHood":
+        	sirenIndex = 25
+        	break;
+        case "Morning StreamLiet":
+        	sirenIndex = 26
+        	break;
+        case "MusicBox":
+        	sirenIndex = 27
+        	break;
+        case "Orange":
+        	sirenIndex = 28
+        	break;
+        case "Thinker":
+        	sirenIndex = 29
+        	break;
+        }
+    }
+	log.debug "Request a siren >> ${sirenType}(${sirenIndex})" 
+    sendCommand( makeCommand( makeAlarmContent(sirenIndex) ) , null)
+    sendEvent(name:"switch", value: "on")
+}
+
+def strobe(){
+	def color = state.selectedColor
+    if(color == null){
+    	color = "#f44259"
+    }
+	setColorByHex(color)
+    setLevel(settings.selectedBrightness as int)
+}
+
+def both(){
+	strobe()
+    siren()
 }
 
 def playMusic(id, volume){
@@ -286,8 +275,7 @@ def playMusic(id, volume){
     sendCommand(options, null)
 }
 
-def stopMusic(){
-	log.debug "stopMusic >> ${state.id}"
+def offSiren(){
     def body = [
         "id": state.id,
         "cmd": "stopMusic"
@@ -308,19 +296,48 @@ def setLevel(brightness){
 }
 
 def setColor(color){
-	log.debug "setColor >> ${state.id}"
-    log.debug "${color.hex}"
+	log.debug "setColor >> ${state.id} >> ${color.hex}"
+    setColorByHex(color.hex)
+}
+
+def setColorByHex(color){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": color
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
 }
 
 def on(){
-	log.debug "Off >> ${state.id}"
+	def mode = settings.mode
+    if(mode == null){
+    	mode = "Strobe"
+    }
+    
+    log.debug "Truning On. Mode >> ${mode}"
+    
+    if(mode == "Strobe"){
+   	 	ledOn()
+    	strobe()
+    }else if(mode == "Siren"){
+    	siren()
+    }else if(mode == "Both"){
+    	ledOn()
+    	strobe()
+    	siren()
+    }
+}
+
+def off(){
+	ledOff()
+    offSiren()
+    sendEvent(name:"switch", value: "off")
+}
+
+def ledOn(){
+	log.debug "LED On >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "power",
@@ -330,8 +347,8 @@ def on(){
     sendCommand(options, null)
 }
 
-def off(){
-	log.debug "Off >> ${state.id}"
+def ledOff(){
+    log.debug "LED Off >> ${state.id}"
 	def body = [
         "id": state.id,
         "cmd": "power",
@@ -396,11 +413,12 @@ def makeCommand(body){
         ],
         "body":body
     ]
+    log.debug options
     return options
 }
 
-def playAlarmByID(id){
-	log.debug("playAlarmByID >> " + id)
+def sirenByID(id){
+    sendCommand( makeCommand( makeAlarmContent(id) ) , null)
 }
 
 def makeAlarmContent(id){
@@ -414,126 +432,6 @@ def makeAlarmContent(id){
         "subData": settings.volume.toInteger()
     ]
     return body
-}
-
-def alarmPoliceCar1(){
-	log.debug "alarmPoliceCar1 >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(0) ) , null)
-}
-
-def alarmPoliceCar2(){
-	log.debug "alarmPoliceCar2 >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(1) ) , null)
-}
-
-def alarmAccident(){
-	log.debug "alarmAccident >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(2) ) , null)
-}
-
-def alarmCountdown(){
-	log.debug "alarmCountdown >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(3) ) , null)
-}
-
-def alarmGhost(){
-	log.debug "alarmGhost >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(4) ) , null)
-}
-
-def alarmSniperRifle(){
-	log.debug "alarmSniperRifle >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(5) ) , null)
-}
-
-def alarmBattle(){
-	log.debug "alarmBattle >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(6) ) , null)
-}
-
-def alarmAirRaid(){
-	log.debug "alarmAirRaid >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(7) ) , null)
-}
-
-def alarmBark(){
-	log.debug "alarmBark >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(8) ) , null)
-}
-
-def bellDoor(){
-	log.debug "bellDoor >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(10) ) , null)
-}
-
-def bellKnock(){
-	log.debug "bellKnock >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(11) ) , null)
-}
-
-def bellAmuse(){
-	log.debug "bellAmuse >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(12) ) , null)
-}
-
-def bellAlarmClock(){
-	log.debug "bellAlarmClock >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(13) ) , null)
-}
-
-def alarmClockMiMix(){
-	log.debug "alarmClockMiMix >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(20) ) , null)
-}
-
-def alarmClockEnthusiastic(){
-	log.debug "alarmClockEnthusiastic >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(21) ) , null)
-}
-
-def alarmClockGuitarClassic(){
-	log.debug "alarmClockGuitarClassic >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(22) ) , null)
-}
-
-def alarmClockIceWorldPiano(){
-	log.debug "alarmClockIceWorldPiano >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(23) ) , null)
-}
-
-def alarmClockLeisureTime(){
-	log.debug "alarmClockLeisureTime >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(24) ) , null)
-}
-
-def alarmClockChildHood(){
-	log.debug "alarmClockChildHood >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(25) ) , null)
-}
-
-def alarmClockMorningStreamLiet(){
-	log.debug "alarmClockMorningStreamLiet >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(26) ) , null)
-}
-
-def alarmClockMusicBox(){
-	log.debug "alarmClockMusicBox >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(27) ) , null)
-}
-
-def alarmClockOrange(){
-	log.debug "alarmClockOrange >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(28) ) , null)
-}
-
-def alarmClockThinker(){
-	log.debug "alarmClockThinker >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(29) ) , null)
-}
-
-def alarmCustom(){
-	log.debug "alarmCustom >> ${state.id}"
-    sendCommand( makeCommand( makeAlarmContent(10001) ) , null)
 }
 
 def makeURL(type, name){
