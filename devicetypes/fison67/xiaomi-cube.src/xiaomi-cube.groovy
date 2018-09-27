@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Cube (v.0.0.1)
+ *  Xiaomi Cube (v.0.0.2)
  *
  * MIT License
  *
@@ -31,16 +31,22 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Cube", namespace: "fison67", author: "fison67") {
-        capability "Sensor"						//"on", "off"
+        capability "Sensor"						
         capability "Button"
+        capability "Battery"
         capability "Configuration"
+		capability "Refresh"
          
-        attribute "rotate", "string"
-        attribute "battery", "string"
-        
         attribute "lastCheckin", "Date"
         
-        command "refresh"
+        command "alert"
+        command "flip90"
+        command "flip180"
+        command "move"
+        command "tap_twice"
+        command "shake_air"
+        command "free_fall"
+        command "rotate"
 	}
 
 
@@ -48,26 +54,41 @@ metadata {
 	}
 
 	tiles(scale: 2) {
-		multiAttributeTile(name:"button", type: "generic", width: 6, height: 4, icon:"st.Home.home30", canChangeIcon: true){
+		multiAttributeTile(name:"button", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
-                attributeState "alert", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
-            	attributeState "flip90", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
-                attributeState "flip180", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
-            	attributeState "move", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
-                attributeState "tap_twice", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
-            	attributeState "shake_air", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
-                attributeState "free_fall", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
-            	attributeState "rotate", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
+                attributeState "alert", label:'\nButton', icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-cube.png?raw=true", backgroundColor:"#8CB8C9"                
 			}
+            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Battery: ${currentValue}%\n')
+            }		
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
+    			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
+        valueTile("alert", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:'Button#1_Core \n alert', action:"alert"
         }
-        
+        valueTile("flip90", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#2_Core \n flip90", action:"flip90"
+        }
+        valueTile("flip180", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#3_Core \n flip180", action:"flip180"
+        }   
+        valueTile("move", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#4_Core \n move", action:"move"
+        }    
+        valueTile("tap_twice", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#5_Core \n tap_twice", action:"tap_twice"
+        }    
+        valueTile("shake_air", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#6_Core \n shake_air", action:"shake_air"
+        }    
+        valueTile("free_fall", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#7_Core \n free_fall", action:"free_fall"
+        }    
+        valueTile("rotate", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#7_Core \n rotate", action:"rotate"
+        }   
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
@@ -90,10 +111,24 @@ def setStatus(params){
     
  	switch(params.key){
     case "action":
-    	if(params.data == "rotate"){
-    		sendEvent(name:"rotate", value: params.subData )
+        if(params.data == "alert") {
+        	buttonEvent(1, "pushed", "Alert")
+        } else if(params.data == "flip90") {
+        	buttonEvent(2, "pushed", "Flip 90")
+        } else if(params.data == "flip180") {
+        	buttonEvent(3, "pushed", "Flip 180")
+        } else if(params.data == "move") {
+        	buttonEvent(4, "pushed", "Move")
+        } else if(params.data == "tap_twice") {
+        	buttonEvent(5, "pushed", "Tap Twice")
+        } else if(params.data == "shake_air") {
+        	buttonEvent(6, "pushed", "Shake Air")
+        } else if(params.data == "free_fall") {
+        	buttonEvent(7, "pushed", "Free Fall")
+        }  else if(params.data == "rotate") {
+        	buttonEvent(8, "pushed", "Rotate")
+            sendEvent(name:"rotate", value: params.subData as int, descriptionText: "Cube is rotated " + params.subData + " degrees." )
         }
-    	sendEvent(name:"button", value: params.data )
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data)
@@ -155,3 +190,16 @@ def makeCommand(body){
     ]
     return options
 }
+
+def buttonEvent(Integer button, String action, String realAction) {
+    sendEvent(name: "button", value: action, data: [buttonNumber: button], descriptionText: "$device.displayName button $button was $action ($realAction)", isStateChange: true)
+}
+
+def alert() {buttonEvent(1, "pushed", "Alert By Click")}
+def flip90() {buttonEvent(2, "pushed", "Flip 90 By Click")}
+def flip180() {buttonEvent(3, "pushed", "Flip 180 By Click")}
+def move() {buttonEvent(4, "pushed", "Move By Click")}
+def tap_twice() {buttonEvent(5, "pushed", "Tap Twice By Click")}
+def shake_air() {buttonEvent(6, "pushed", "Shake Air By Click")}
+def free_fall() {buttonEvent(7, "pushed", "Free Fall By Click")}
+def rotate() {buttonEvent(8, "pushed", "Rotate By Click")}
