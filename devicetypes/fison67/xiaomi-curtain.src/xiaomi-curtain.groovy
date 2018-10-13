@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Curtain (v.0.0.1)
+ *  Xiaomi Curtain (v.0.0.2)
  *
  * MIT License
  *
@@ -31,7 +31,8 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Curtain", namespace: "fison67", author: "fison67") {
-        capability "Actuator"					
+        capability "Actuator"		
+        capability "Door Control"
         capability "Switch Level"
         capability "windowShade"
         capability "Switch"
@@ -66,8 +67,16 @@ metadata {
             }
 		}
         
+        standardTile("open", "device.Switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+            state("on", label: 'open', action: "open", icon: "st.doors.garage.garage-open")
+        }
+        
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
+        
+        standardTile("close", "device.Switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+            state("off", label: 'close', action: "close", icon: "st.doors.garage.garage-closed")
         }
        
 	}
@@ -106,6 +115,14 @@ def setLevel(level){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+}
+
+def on(){
+	open()
+}
+
+def off(){
+	close()
 }
 
 def close(){
@@ -160,7 +177,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed:false)
 }
 
 def updated() {
