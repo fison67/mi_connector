@@ -5,6 +5,8 @@ Simplify setup process for xiaomi devices to SmartThings.<br/>
 If Mi-Connector is installed, virtual devices is registered automatically by Mi Connector Smartapp.<br/>
 You don't have to do anything to add xiaomi device in Smartthings IDE.
 
+Hubitat -> https://github.com/fison67/Mi-Connector-Hubitat
+
 <br/><br/>
 ## Donation
 If this project help you, you can give me a cup of coffee<br/>
