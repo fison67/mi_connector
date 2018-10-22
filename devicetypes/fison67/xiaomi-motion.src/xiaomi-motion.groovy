@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Motion (v.0.0.2)
+ *  Xiaomi Motion (v.0.0.3)
  *
  * MIT License
  *
@@ -126,13 +126,14 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
+	log.debug params.data
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "motion":
         sendEvent(name:"motion", value: (params.data == "true" ? "active" : "inactive") )
         if (settings.motionReset == null || settings.motionReset == "" ) settings.motionReset = 120
-        if (params.data == "true") runIn(settings.motionReset, stopMotion)
-		if (params.data == "true") sendEvent(name: "lastMotion", value: now)
+        if (params.data == "true" && settings.motionReset > 0) runIn(settings.motionReset, stopMotion)
+		if (params.data == "true") sendEvent(name: "lastMotion", value: now, displayed:false)
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data)
@@ -171,7 +172,7 @@ def updated() {
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed:false)
 }
 
 def stopMotion() {
