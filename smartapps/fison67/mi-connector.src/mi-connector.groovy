@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.11)
+ *  Mi Connector (v.0.0.12)
  *
  * MIT License
  *
@@ -387,6 +387,9 @@ def addDevice(){
         }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
         	dth = "Xiaomi Light Mono";
             name = "Xiaomi Light Mono";
+        }else if(params.type == "philips.light.downlight"){
+        	dth = "Xiaomi Philips Downlight";
+            name = "Xiaomi Philips Downlight";
         }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
