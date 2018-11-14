@@ -21,8 +21,8 @@ If this project help you, you can give me a cup of coffee<br/>
 #### - fison67/mi-connector:latest
 #### - fison67/mi-connector-arm:latest
 ### Beta Version
-#### - fison67/mi-connector:test
-#### - fison67/mi-connector-arm:test
+#### - fison67/mi-connector:test2
+#### - fison67/mi-connector-arm:test2
 <br/><br/>
 
 ## History
@@ -251,6 +251,7 @@ If you can't see anything, it's not working well..
 |   | yeelink.light.strip1  |   O |    |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
+| Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 
 
@@ -307,6 +308,7 @@ If you can't see anything, it's not working well..
 <img src="./imgs/product/flora-pot.jpg?raw=true" title="Flora Pot" width="200px">
 <img src="./imgs/product/vibration.jpeg?raw=true" title="Vibration" width="200px">
 <img src="./imgs/product/ble-temp-humid.jpg?raw=true" title="Bluetooth Temperature Humidity Sensor" width="200px">
+<img src="./imgs/product/xiaomi-philips-downlight.jpeg?raw=true" title="Xiaomi Philips Downlight" width="200px">
 
 <br/><br/>
 ## Library
