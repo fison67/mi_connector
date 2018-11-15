@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.12)
+ *  Mi Connector (v.0.0.13)
  *
  * MIT License
  *
@@ -405,6 +405,9 @@ def addDevice(){
         }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.m1" || params.type == "lumi.plug"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
+	}else if(params.type == "chuangmi.plug.v3"){
+            dth = "Xiaomi Power Plug2";
+            name = "Xiaomi Power Plug2";
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
         	dth = "Xiaomi Wall Switch";
             name = "Xiaomi Wall Switch";
