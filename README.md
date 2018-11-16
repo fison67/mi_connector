@@ -21,8 +21,8 @@ If this project help you, you can give me a cup of coffee<br/>
 #### - fison67/mi-connector:latest
 #### - fison67/mi-connector-arm:latest
 ### Beta Version
-#### - fison67/mi-connector:test2
-#### - fison67/mi-connector-arm:test2
+#### - fison67/mi-connector:test3
+#### - fison67/mi-connector-arm:test3
 <br/><br/>
 
 ## History
@@ -233,6 +233,7 @@ If you can't see anything, it's not working well..
 |   | roborock.vacuum.s5  |   X |    |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
 |   | chuangmi.plug.v2  |   X |    |
+|   | chuangmi.plug.v3  |   O |  O  |
 |   | chuangmi.plug.m1  |   O |    |
 | Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |    |
 |   | zimi.powerstrip.v2  |   O |    |
@@ -309,6 +310,7 @@ If you can't see anything, it's not working well..
 <img src="./imgs/product/vibration.jpeg?raw=true" title="Vibration" width="200px">
 <img src="./imgs/product/ble-temp-humid.jpg?raw=true" title="Bluetooth Temperature Humidity Sensor" width="200px">
 <img src="./imgs/product/xiaomi-philips-downlight.jpeg?raw=true" title="Xiaomi Philips Downlight" width="200px">
+<img src="./imgs/product/xiaomi-plug-v3.jpg?raw=true" title="Xiaomi Plug V3" width="200px">
 
 <br/><br/>
 ## Library
