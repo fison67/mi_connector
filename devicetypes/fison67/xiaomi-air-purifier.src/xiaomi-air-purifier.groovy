@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.3)
+ *  Xiaomi Air Purifier (v.0.0.4)
  *
  * MIT License
  *
@@ -141,6 +141,8 @@ metadata {
         command "setBright"
         command "setBrightDim"
         command "setBrightOff"
+        
+        command "resetFilter"
         
         command "chartPower"
         command "chartTemperature"
@@ -378,6 +380,11 @@ metadata {
 			state "chartTotalPM25", label:'T-PM2.5', nextState: "chartPower", action: 'chartTotalPM25'
 		}
         
+        
+        standardTile("resetFilter", "device.resetFilter", width: 1, height: 1) {
+            state "default", label:"Reset", action:"resetFilter", icon:"st.secondary.refresh"
+        }    
+        
         carouselTile("history", "device.image", width: 6, height: 4) { }
 
         main (["modemain"])
@@ -386,7 +393,7 @@ metadata {
         "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
         "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
         "strong_label", "buzzer_label", "led_label", "usage_label", "f1_hour_used", 
-        "mode7", "buzzer", "ledBrightness", "refresh", "filter1_life", "chartMode", "history"
+        "mode7", "buzzer", "ledBrightness", "refresh", "filter1_life", "chartMode", "resetFilter", "history"
         ])
         
 	}
@@ -645,6 +652,17 @@ def ledOff(){
         "id": state.id,
         "cmd": "led",
         "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def resetFilter(){
+	log.debug "resetFilter >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "resetFilter",
+        "data": ""
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
