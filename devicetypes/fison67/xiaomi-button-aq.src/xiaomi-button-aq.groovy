@@ -1,5 +1,6 @@
+
 /**
- *  Xiaomi Switch (v.0.0.1)
+ *  Xiaomi Switch (v.0.0.2)
  *
  * MIT License
  *
@@ -35,15 +36,15 @@ metadata {
         capability "Button"
         capability "Configuration"
         capability "Battery"
-	capability "Refresh"
+        capability "Refresh"
                
-       
-        attribute "status", "string"
-        
         attribute "lastCheckin", "Date"
         
         command "click"
         command "double_click"
+        command "long_click"
+        command "long_release_press"
+        
 	}
 
 
@@ -67,18 +68,26 @@ metadata {
         }
         valueTile("double_click", "device.button", decoration: "flat", width: 2, height: 2) {
             state "default", label:"Button#2_Core \n double_click", action:"double_click"
-        }        
+        }     
+        valueTile("long_click", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:'Button#3_Core \n long_click', action:"long_click"
+        }
+        valueTile("long_release_press", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#4_Core \n long_release_press", action:"long_release_press"
+        } 
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
         
         main (["button"])
-        details(["button", "click", "double_click", "refresh"])        
+        details(["button", "click", "double_click", "long_click", "long_release_press", "refresh"])        
 	}
 }
 
 def click() {buttonEvent(1, "pushed")}
 def double_click() {buttonEvent(2, "pushed")}
+def long_click() {buttonEvent(3, "pushed")}
+def long_release_press() {buttonEvent(4, "pushed")}
 
 // parse events into attributes
 def parse(String description) {
@@ -97,11 +106,12 @@ def setStatus(params){
     case "action":
     	if(params.data == "click") {
         	buttonEvent(1, "pushed")
-        }
-        else if(params.data == "double_click") {
+        } else if(params.data == "double_click") {
         	buttonEvent(2, "pushed")
-        }
-        else {
+        } else if(params.data == "long_click_press") {
+        	buttonEvent(3, "pushed")
+        } else if(params.data == "long_release_press") {
+        	buttonEvent(4, "pushed")
         }
     	break;
     case "batteryLevel":
@@ -148,7 +158,7 @@ def updated() {
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed:false)
 }
 
 def sendCommand(options, _callback){
