@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.13)
+ *  Mi Connector (v.0.0.14)
  *
  * MIT License
  *
@@ -252,26 +252,32 @@ def getDeviceToNotifyList(deviceNetworkID){
 
 def updateLanguage(){
     log.debug "Languge >> ${settings.selectedLang}"
-    def list = getChildDevices()
-    list.each { child ->
-        try{
-        	child.setLanguage(settings.selectedLang)
-        }catch(e){
-        	log.error "DTH is not supported to select language"
+    if(state.prvSelectedLangs != settings.selectedLang){
+        def list = getChildDevices()
+        list.each { child ->
+            try{
+                child.setLanguage(settings.selectedLang)
+            }catch(e){
+                log.error "DTH is not supported to select language"
+            }
         }
     }
+    state.prvSelectedLangs = settings.selectedLang
 }
 
 def updateExternalNetwork(){
 	log.debug "External Network >> ${settings.externalAddress}"
-    def list = getChildDevices()
-    list.each { child ->
-        try{
-        	child.setExternalAddress(settings.externalAddress)
-        }catch(e){
-        	log.error "DTH is not supported to select external address"
+    if(state.prvExternalAddress != settings.externalAddress){
+        def list = getChildDevices()
+        list.each { child ->
+            try{
+                child.setExternalAddress(settings.externalAddress)
+            }catch(e){
+                log.error "DTH is not supported to select external address"
+            }
         }
     }
+    state.prvExternalAddress = settings.externalAddress
 }
 
 def initialize() {
@@ -290,7 +296,7 @@ def initialize() {
             "access_token":state.accessToken
         ]
     ]
-    log.debug options
+    
     def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: null])
     sendHubCommand(myhubAction)
     
@@ -342,7 +348,7 @@ def addDevice(){
         def dth = null
         def name = null
 
-        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1"){
+        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1"){
         	dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
         }else if(params.type == "lumi.gateway.v2"){
@@ -405,8 +411,8 @@ def addDevice(){
         }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.m1" || params.type == "lumi.plug"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
-	}else if(params.type == "chuangmi.plug.v3"){
-            dth = "Xiaomi Power Plug2";
+        }else if(params.type == "chuangmi.plug.v3"){
+        	dth = "Xiaomi Power Plug2";
             name = "Xiaomi Power Plug2";
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
         	dth = "Xiaomi Wall Switch";
