@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.14)
+ *  Mi Connector (v.0.0.15)
  *
  * MIT License
  *
@@ -438,7 +438,7 @@ def addDevice(){
         }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"){
         	dth = "Xiaomi Light Ceiling";
             name = "Xiaomi Light Ceiling";
-        }else if(params.type == "philips.light.ceiling"){
+        }else if(params.type == "philips.light.ceiling" || params.type == "philips.light.zyceiling"){
         	dth = "Xiaomi Philips Light Ceiling";
             name = "Xiaomi Philips Light Ceiling";
         }else if(params.type == "lumi.curtain"){
