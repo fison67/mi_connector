@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Switch (v.0.0.1)
+ *  Xiaomi Switch (v.0.0.2)
  *
  * MIT License
  *
@@ -35,14 +35,13 @@ metadata {
         capability "Button"
         capability "Configuration"
         capability "Battery"
-	capability "Refresh"
-
-        attribute "status", "string"
+		capability "Refresh"
         
         attribute "lastCheckin", "Date"
         
         command "click"
         command "double_click"
+        command "long_click_press"
         command "long_click_release"
 	}
 
@@ -68,10 +67,12 @@ metadata {
         valueTile("double_click", "device.button", decoration: "flat", width: 2, height: 2) {
             state "default", label:"Button#2_Core \n double_click", action:"double_click"
         }
-
         valueTile("long_click_press", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#3_Core \n long_click", action:"long_click_release"
-        }      
+            state "default", label:"Button#3_Core \n long_click_press", action:"long_click_press"
+        }   
+        valueTile("long_click_release", "device.button", decoration: "flat", width: 2, height: 2) {
+            state "default", label:"Button#4_Core \n long_click_release", action:"long_click_release"
+        }    
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
@@ -81,7 +82,8 @@ metadata {
 
 def click() {buttonEvent(1, "pushed")}
 def double_click() {buttonEvent(2, "pushed")}
-def long_click_release() {buttonEvent(3, "pushed")}
+def long_click_press() {buttonEvent(3, "pushed")}
+def long_click_release() {buttonEvent(4, "pushed")}
 
 // parse events into attributes
 def parse(String description) {
@@ -106,6 +108,7 @@ def setStatus(params){
         	buttonEvent(3, "pushed")
         }
         else if(params.data == "long_click_release") {
+        	buttonEvent(4, "pushed")
         } else { 
         }
     	break;
