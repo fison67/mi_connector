@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.15)
+ *  Mi Connector (v.0.0.16)
  *
  * MIT License
  *
@@ -480,6 +480,9 @@ def addDevice(){
         }else if(params.type == "lumi.vibration"){
         	dth = "Xiaomi Vibration Sensor"
             name = "Xiaomi Vibration Sensor"
+        }else if(params.type == "zhimi.heater.za1"){
+        	dth = "Xiaomi Heater"
+            name = "Xiaomi Heater"
         }
         
         
