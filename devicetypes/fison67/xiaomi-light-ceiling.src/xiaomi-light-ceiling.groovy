@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling(v.0.0.2)
+ *  Xiaomi Light Ceiling(v.0.0.3)
  *
  * MIT License
  *
@@ -33,7 +33,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgbw-color-bulb", ocfDeviceType: "oic.d.light") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
         capability "Configuration"
@@ -50,6 +50,9 @@ metadata {
          
         command "setTimeRemaining"
         command "stop"
+        
+        command "setScene1"
+        command "setScene2"
 	}
 
 	simulator {
@@ -62,7 +65,7 @@ metadata {
                 attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
                 attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -112,9 +115,15 @@ metadata {
         standardTile("tiemr0", "device.timeRemaining") {
 			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
+        standardTile("scene1", "device.scene", decoration: "flat") {
+			state "default", label: "", action: "setScene1", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-sun-1.png?raw=true"
+		}
+        standardTile("scene2", "device.scene", decoration: "flat") {
+			state "default", label: "", action: "setScene2", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-moon-1.png?raw=true"
+		}
         
         main (["switch2"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0", "scene1", "scene2" ])       
 	}
 }
 
@@ -152,7 +161,7 @@ def setStatus(params){
     	break;
     }
     
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 def refresh(){
 	log.debug "Refresh"
@@ -199,7 +208,7 @@ def setColor(color){
 }
 
 def on(){
-	log.debug "Off >> ${state.id}"
+	log.debug "On >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "power",
@@ -221,6 +230,30 @@ def off(){
 }
 
 
+def setScene1(){
+	log.debug "setScene1 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 1
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setScene2(){
+	log.debug "setScene2 >> ${state.id}"
+    
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": 5
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 def updated() {}
 
 def callback(physicalgraph.device.HubResponse hubResponse){
@@ -232,7 +265,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         
         def colorRGB = colorTemperatureToRGB(jsonObj.state.colorTemperature)
         String hex = String.format("#%02x%02x%02x", colorRGB[0], colorRGB[1], colorRGB[2]);  
-    	sendEvent(name:"color", value: colors )
+    	sendEvent(name:"color", value: hex )
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
