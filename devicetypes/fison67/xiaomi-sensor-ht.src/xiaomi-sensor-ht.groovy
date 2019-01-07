@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Sensor Temperature & Humidity (v.0.0.1)
+ *  Xiaomi Sensor Temperature & Humidity (v.0.0.2)
  *
  * MIT License
  *
@@ -35,6 +35,7 @@ metadata {
         capability "Relative Humidity Measurement"
         capability "Sensor"
         capability "Battery"
+        capability "Refresh"
          
         attribute "pressure", "string"
 		attribute "maxTemp", "number"
@@ -47,15 +48,22 @@ metadata {
         attribute "lastCheckin", "Date"
 		attribute "lastCheckinDate", "String"
 
-		command "refresh"
-        
+        command "chartTemperature"
+        command "chartHumidity"
+        command "chartTotalTemperature"
+        command "chartTotalHumidity"
 	}
 
 
 	simulator {}
 	preferences {
+		input name: "temperatureType", title:"Select a type" , type: "enum", required: true, options: ["C", "F"], defaultValue: "C"
+        
 		input name: "displayTempHighLow", type: "bool", title: "Display high/low temperature?"
 		input name: "displayHumidHighLow", type: "bool", title: "Display high/low humidity?"
+        
+		input name: "historyDayCount", type:"number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
+		input name: "historyTotalDayCount", type:"number", title: "Total Day for History Graph", description: "0 is max", defaultValue:7, range: "2..7", displayDuringSetup: true
 	}
 
 
@@ -83,12 +91,10 @@ metadata {
                     ]
                 )
             }
-//            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-//    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-//            }
+            
             tileAttribute("device.multiAttributesReport", key: "SECONDARY_CONTROL") {
                 attributeState("multiAttributesReport", label:'${currentValue}' //icon:"st.Weather.weather12",
-                ) }
+            ) }
         }        
         valueTile("temperature2", "device.temperature", inactiveLabel: false) {
             state "temperature", label:'${currentValue}°', icon:"st.Weather.weather2",
@@ -141,9 +147,18 @@ metadata {
 		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
+        
+    	standardTile("chartMode", "device.chartMode", width: 2, height: 2, decoration: "flat") {
+			state "temperature", label:'Temperature', nextState: "humidity", action: 'chartTemperature'
+			state "humidity", label:'Humidity', nextState: "pressure", action: 'chartHumidity'
+			state "totalTemperature", label:'T-Temperature', nextState: "totalHumidity", action: 'chartTotalTemperature'
+			state "totalHumidity", label:'T-Humidity', nextState: "totalPressure", action: 'chartTotalHumidity'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
 
         main("temperature2")
-        details(["temperature", "humi", "bat", "lastcheckin", "humidity",  "battery", "refresh"])
+        details(["temperature", "humi", "bat", "lastcheckin", "humidity",  "battery", "refresh", "chartMode", "history"])
     }
 }
 
@@ -156,6 +171,11 @@ def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
+}
+
+def setExternalAddress(address){
+	log.debug "External Address >> ${address}"
+	state.externalAddress = address
 }
 
 def setStatus(params){
@@ -176,17 +196,15 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-        sendEvent(name:"temperature", value: tem )
-        updateMinMaxTemps(tem)
-//        log.debug "${st}"
+        def temperature = makeTemperature(tem)
+        sendEvent(name:"temperature", value: temperature )
+        updateMinMaxTemps(temperature)
     	break;
     case "batteryLevel":
     	sendEvent(name:"battery", value: params.data )
     	break;		
     }
     
-//    def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-//    sendEvent(name: "lastCheckin", value: now)
     def now = formatDate()    
     def nowDate = new Date(now).getTime()
 
@@ -198,6 +216,15 @@ def setStatus(params){
 	// Check if the min/max temp and min/max humidity should be reset
     checkNewDay(now)
 }
+
+def makeTemperature(temperature){
+	if(temperatureType == "F"){
+    	return ((temperature * 9 / 5) + 32)
+    }else{
+    	return temperature
+    }
+}
+
 
 def refresh(){
 	log.debug "Refresh"
@@ -218,7 +245,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         
-     	sendEvent(name:"temperature", value: jsonObj.state.temperature)
+     	sendEvent(name:"temperature", value: makeTemperature(jsonObj.state.temperature))
      	sendEvent(name:"humidity", value: jsonObj.state.humidity)        
         sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
         
@@ -281,4 +308,85 @@ def refreshMultiAttributes() {
 	def temphiloAttributes = displayTempHighLow ? (displayHumidHighLow ? "Today's High/Low:  ${device.currentState('maxTemp')?.value}° / ${device.currentState('minTemp')?.value}°" : "Today's High: ${device.currentState('maxTemp')?.value}°  /  Low: ${device.currentState('minTemp')?.value}°") : ""
 	def humidhiloAttributes = displayHumidHighLow ? (displayTempHighLow ? "    ${device.currentState('maxHumidity')?.value}% / ${device.currentState('minHumidity')?.value}%" : "Today's High: ${device.currentState('maxHumidity')?.value}%  /  Low: ${device.currentState('minHumidity')?.value}%") : ""
 	sendEvent(name: "multiAttributesReport", value: "${temphiloAttributes}${humidhiloAttributes}", displayed: false)
+}
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def makeTotalURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = (settings.historyTotalDayCount == null ? 7 : settings.historyTotalDayCount) - 1
+      sDate = (now - day.days).format( 'yyyy-MM-dd', location.timeZone )
+      eDate = (now + 1.days).format( 'yyyy-MM-dd', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+private getPictureName(type) {
+  def pictureUuid = java.util.UUID.randomUUID().toString().replaceAll('-', '')
+  return "image" + "_$pictureUuid" + "_" + type + ".png"
+}
+
+
+def chartTotalTemperature() {
+    httpGet(makeTotalURL("temperature", "Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartTotalHumidity() {
+    httpGet(makeTotalURL("relativeHumidity", "Humidity")) { response ->
+    	processImage(response, "humidity")
+    }
+}
+
+def chartTemperature() {
+    httpGet(makeURL("temperature", "Temperature")) { response ->
+    	processImage(response, "temperature")
+    }
+}
+
+def chartHumidity() {
+    httpGet(makeURL("relativeHumidity", "Humidity")) { response ->
+    	processImage(response, "humidity")
+    }
 }
