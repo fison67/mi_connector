@@ -270,8 +270,9 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-        sendEvent(name:"temperature", value: makeTemperature(tem) )
-        updateMinMaxTemps(tem)
+        def temperatue = makeTemperature(tem)
+        sendEvent(name:"temperature", value: temperatue )
+        updateMinMaxTemps(temperatue)
     	break;
     case "atmosphericPressure":
     	sendEvent(name:"pressure", value: params.data.replace(" Pa","").replace(",","").toInteger()/1000 )
