@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Sensor Temperature & Humidity (v.0.0.1)
+ *  Xiaomi Sensor Temperature & Humidity (v.0.0.2)
  *
  * MIT License
  *
@@ -97,6 +97,7 @@ metadata {
     
 	preferences {
 		input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+		input name: "temperatureType", title:"Select a type" , type: "enum", required: true, options: ["C", "F"], defaultValue: "C"
         
 		input name: "displayTempHighLow", type: "bool", title: "Display high/low temperature?"
 		input name: "displayHumidHighLow", type: "bool", title: "Display high/low humidity?"
@@ -269,7 +270,7 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*10)/10
-        sendEvent(name:"temperature", value: tem )
+        sendEvent(name:"temperature", value: makeTemperature(tem) )
         updateMinMaxTemps(tem)
     	break;
     case "atmosphericPressure":
@@ -282,6 +283,13 @@ def setStatus(params){
     checkNewDay()
 }
 
+def makeTemperature(temperature){
+	if(temperatureType == "F"){
+    	return ((temperature * 9 / 5) + 32)
+    }else{
+    	return temperature
+    }
+}
 
 def updated() {
     setLanguage(settings.selectedLang)
@@ -450,7 +458,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         log.debug jsonObj
         
  		sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
-        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value)
+        sendEvent(name:"temperature", value: makeTemperature(jsonObj.properties.temperature.value))
         sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity)
         sendEvent(name:"pressure", value: jsonObj.properties.atmosphericPressure.value / 1000)
         
