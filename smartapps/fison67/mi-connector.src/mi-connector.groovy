@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.16)
+ *  Mi Connector (v.0.0.17)
  *
  * MIT License
  *
@@ -426,6 +426,9 @@ def addDevice(){
         }else if(params.type == "zhimi.airmonitor.v1"){
         	dth = "Xiaomi Air Monitor";
             name = "Xiaomi Air Monitor";
+        }else if(params.type == "cgllc.airmonitor.b1"){
+        	dth = "Xiaomi Air Monitor2";
+            name = "Xiaomi Air Monitor2";
         }else if(params.type == "lumi.weather"){
         	dth = "Xiaomi Weather";
             name = "Xiaomi Weather";
