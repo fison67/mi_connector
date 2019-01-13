@@ -124,6 +124,7 @@ Added support devices.
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
+|  Xiaomi Heater | zhimi.heater.za1  |   △ |  O |
 
 ### Zigbee Devices
 | Type  | Model | Tested | Beta |
@@ -178,6 +179,7 @@ Added support devices.
 <img src="./imgs/product/ble-temp-humid.jpg?raw=true" title="Bluetooth Temperature Humidity Sensor" width="200px">
 <img src="./imgs/product/xiaomi-philips-downlight.jpeg?raw=true" title="Xiaomi Philips Downlight" width="200px">
 <img src="./imgs/product/xiaomi-plug-v3.jpg?raw=true" title="Xiaomi Plug V3" width="200px">
+<img src="./imgs/product/xiaomi-heater.jpeg?raw=true" title="Xiaomi Heater" width="200px">
 
 # Installation
 
@@ -198,8 +200,8 @@ Added support devices.
 ### Beta Versions
 | Docker tag |
 | ------------- |
-|fison67/mi-connector:test3|
-|fison67/mi-connector-arm:test3|
+|fison67/mi-connector:test2|
+|fison67/mi-connector-arm:test2|
 
 ## Install Mi Connector API Server
 ### Raspberry Pi
