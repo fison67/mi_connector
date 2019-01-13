@@ -427,8 +427,8 @@ def addDevice(){
         	dth = "Xiaomi Air Monitor";
             name = "Xiaomi Air Monitor";
         }else if(params.type == "cgllc.airmonitor.b1"){
-        	dth = "Xiaomi Air Monitor2";
-            name = "Xiaomi Air Monitor2";
+        	dth = "Xiaomi Air Detector";
+            name = "Xiaomi Air Detector";
         }else if(params.type == "lumi.weather"){
         	dth = "Xiaomi Weather";
             name = "Xiaomi Weather";
