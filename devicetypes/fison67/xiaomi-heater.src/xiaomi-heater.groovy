@@ -45,9 +45,16 @@ LANGUAGE_MAP = [
 
 metadata {
 	definition (name: "Xiaomi Heater2", namespace: "fison67", author: "fison67") {
-
+        /*capability "Switch"						//"on", "off"
+        capability "Switch Level"
+        capability "Temperature Measurement"
+        capability "Relative Humidity Measurement"
+		capability "Refresh"
+		capability "Sensor"
+        */
 		capability "Actuator"
 		capability "Temperature Measurement"
+		capability "Relative Humidity Measurement"
 		capability "Thermostat"
 		capability "Thermostat Mode"
 		capability "Thermostat Fan Mode"
@@ -64,6 +71,8 @@ metadata {
         attribute "lastCheckin", "Date"
 
 		command "Xiaomiheater"
+        command "noTemp"
+        command "noHumi"
 		command "lowerHeatingSetpoint"
 		command "raiseHeatingSetpoint"
 		command "lowerCoolSetpoint"
@@ -80,6 +89,8 @@ metadata {
         command "stoptimer"
         command "setLevel"
         command "setTimer"
+        command "setHeatingSetpoint"
+        command "setThermostatMode"
          
 	}
 
@@ -229,7 +240,7 @@ def setStatus(params){
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*100)/10 as float
         sendEvent(name:"temperature", value: tem )
-        sendEvent(name:"thermostatOperatingState", value: (tem >= Settemp ? "idle" : "heating" ))
+        sendEvent(name:"thermostatOperatingState", value: (tem > Settemp ? "idle" : "heating" ))
     	break;    
     //case "targetTemperature":
       //  sendEvent(name:"level", value: params.data)
@@ -323,12 +334,25 @@ def alterSetpoint(raise, currentSettemp) {
     setLevel(value)
 }
 
-def setLevel(value){
-	log.debug "tarSetpoint >> ${value}"
+def setLevel(level){
+	log.debug "tarSetpoint >> ${level}"
+    def tartemp = level as int
     def body = [
         "id": state.id,
         "cmd": "targetTemperature",
-        "data": value
+        "data": tartemp
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setHeatingSetpoint(level){
+	log.debug "tarSetpoint >> ${level}"
+    def tartemp = level as int
+    def body = [
+        "id": state.id,
+        "cmd": "targetTemperature",
+        "data": tartemp
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -345,12 +369,25 @@ def stoptimer(){
 	setTimer(0)
 }
 
-def setTimer(level){
-	log.debug "setLevel >> ${state.id}, sec >> ${level}"
+def setTimer(timesec){
+	log.debug "setTimer >> ${state.id}, sec >> ${timesec}"
     def body = [
         "id": state.id,
         "cmd": "powerOffTime",
-        "data": level
+        "data": timesec
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setThermostatMode(value){
+	log.debug "google >> ${value}"
+    def mode = value == "off" ? "off" : "on"
+	log.debug "googlem >> ${mode}"
+    def body = [
+        "id": state.id,
+        "cmd": "power",
+        "data": mode
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
