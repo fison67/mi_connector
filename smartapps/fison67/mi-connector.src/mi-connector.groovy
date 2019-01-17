@@ -495,7 +495,7 @@ def addDevice(){
             render contentType: "application/javascript", data: resultString
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1"){
         	try{
-                def childDevice = addChildDevice("fison67", dth, (dni + "-1"), location.hubs[0].id, [
+                def childDevice = addChildDevice("fison67", dth, (dni + "-1"), getLocationID(), [
                     "label": name + "1"
                 ])    
                 childDevice.setInfo(settings.address, id, "1")
@@ -516,7 +516,7 @@ def addDevice(){
         	try{
             	def index = 1;
             	for (def i = 0; i <2; i++) {
-                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + index), location.hubs[0].id, [
+                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + index), getLocationID(), [
                         "label": name + index
                     ])    
                     childDevice.setInfo(settings.address, id, index.toString())
@@ -538,7 +538,7 @@ def addDevice(){
             }
         }else if(params.type == "virtual.remote.tv" || params.type == "virtual.remote.custom" || params.type == "virtual.remote.air"){
      		dni = "mi-connector-" + id.toLowerCase() + "-" + new Date().getTime()
-        	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+        	def childDevice = addChildDevice("fison67", dth, dni, getLocationID(), [
                 "label": name
             ])    
             childDevice.setInfo(settings.address, id)
@@ -550,7 +550,7 @@ def addDevice(){
             render contentType: "application/javascript", data: resultString
         }else{
             try{
-                def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+                def childDevice = addChildDevice("fison67", dth, dni, getLocationID(), [
                     "label": name
                 ])    
                 childDevice.setInfo(settings.address, id)
@@ -639,6 +639,12 @@ def renderConfig() {
 
     def configString = new groovy.json.JsonOutput().prettyPrint(configJson)
     render contentType: "text/plain", data: configString
+}
+
+def getLocationID(){
+	def locationID = null
+    try{ locationID = location.hubs[0].id }catch(err){}
+    return locationID
 }
 
 mappings {
