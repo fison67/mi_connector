@@ -124,7 +124,9 @@ Added support devices.
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
-|  Xiaomi Heater | zhimi.heater.za1  |   △ |  O |
+|  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
+|  Air Detector #1 | cgllc.airmonitor.b1  |   x |  x |
+|  Air Detector #2 | cgllc.airmonitor.s1  |   x |  x |
 
 ### Zigbee Devices
 | Type  | Model | Tested | Beta |
@@ -180,6 +182,8 @@ Added support devices.
 <img src="./imgs/product/xiaomi-philips-downlight.jpeg?raw=true" title="Xiaomi Philips Downlight" width="200px">
 <img src="./imgs/product/xiaomi-plug-v3.jpg?raw=true" title="Xiaomi Plug V3" width="200px">
 <img src="./imgs/product/xiaomi-heater.jpeg?raw=true" title="Xiaomi Heater" width="200px">
+<img src="./imgs/product/xiaomi-air-detector-1.jpg?raw=true" title="Xiaomi Air Detector #1" width="200px">
+<img src="./imgs/product/xiaomi-air-detector-2.jpg?raw=true" title="Xiaomi Air Detector #2" width="200px">
 
 # Installation
 
