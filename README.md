@@ -121,6 +121,8 @@ Added support devices.
 |   | yeelink.light.color2  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
+|  Yeelight Ceiling | yeelink.light.ceiling2  |   O |    |
+|  Yeelight Ceiling | yeelink.light.ceiling6  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
@@ -184,6 +186,8 @@ Added support devices.
 <img src="./imgs/product/xiaomi-heater.jpeg?raw=true" title="Xiaomi Heater" width="200px">
 <img src="./imgs/product/xiaomi-air-detector-1.jpg?raw=true" title="Xiaomi Air Detector #1" width="200px">
 <img src="./imgs/product/xiaomi-air-detector-2.jpg?raw=true" title="Xiaomi Air Detector #2" width="200px">
+<img src="./imgs/product/xiaomi-ceiling-light-pro.png?raw=true" title="Xiaomi Ceiling Light Pro" width="200px">
+
 
 # Installation
 
