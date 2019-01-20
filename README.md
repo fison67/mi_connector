@@ -108,6 +108,8 @@ Added support devices.
 | Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |    |
 |   | zimi.powerstrip.v2  |   O |    |
 | Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |    |
+|   | cgllc.airmonitor.b1  |   x |  x |
+|   | cgllc.airmonitor.s1  |   x |  x |
 | Xiaomi Gateway  | lumi.gateway.v2  |   X |    |
 |   | lumi.gateway.v3  |   O |    |
 | Xiaomi Fan  | zhimi.fan.v2  |   O |    |
@@ -121,14 +123,12 @@ Added support devices.
 |   | yeelink.light.color2  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
-|  Yeelight Ceiling | yeelink.light.ceiling2  |   O |    |
-|  Yeelight Ceiling | yeelink.light.ceiling6  |   O |    |
+|   | yeelink.light.ceiling2  |   O |    |
+|   | yeelink.light.ceiling6  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 |  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
-|  Air Detector #1 | cgllc.airmonitor.b1  |   x |  x |
-|  Air Detector #2 | cgllc.airmonitor.s1  |   x |  x |
 
 ### Zigbee Devices
 | Type  | Model | Tested | Beta |
