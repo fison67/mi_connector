@@ -92,14 +92,18 @@ Added support devices.
 | Type  | Model | Tested | Beta |
 | ------------- | ------------- | ------------- | ------------- |
 | Xiaomi Air Purifier  | zhimi.airpurifier.m1  |   O |    |
+|   | zhimi.airpurifier.m2  |   X |    |
 |   | zhimi.airpurifier.v1  |   X |    |
 |   | zhimi.airpurifier.v2  |   X |    |
 |   | zhimi.airpurifier.v3  |   X |    |
 |   | zhimi.airpurifier.v6  |   X |    |
+|   | zhimi.airpurifier.v7  |   X |    |
+|   | zhimi.airpurifier.mc1  |   X |    |
 |   | zhimi.airpurifier.ma2  |   X |    |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
 | Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
+|   | roborock.vacuum.c1  |   X |    |
 |   | roborock.vacuum.s5  |   X |    |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
 |   | chuangmi.plug.v2  |   X |    |
@@ -112,6 +116,7 @@ Added support devices.
 |   | cgllc.airmonitor.s1  |   x |  x |
 | Xiaomi Gateway  | lumi.gateway.v2  |   X |    |
 |   | lumi.gateway.v3  |   O |    |
+| Xiaomi AC Partner  | lumi.acpartner.v3  |   X |    |
 | Xiaomi Fan  | zhimi.fan.v2  |   O |    |
 |   | zhimi.fan.v3  |   O |    |
 |   | zhimi.fan.sa1  |   X |  O |
@@ -126,6 +131,7 @@ Added support devices.
 |   | yeelink.light.ceiling2  |   O |    |
 |   | yeelink.light.ceiling6  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
+|   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 |  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
