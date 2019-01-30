@@ -102,6 +102,7 @@ Added support devices.
 |   | zhimi.airpurifier.ma2  |   X |    |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
+|   | shuii.humidifier.jsq001  |   O |  O  |
 | Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
 |   | roborock.vacuum.c1  |   X |    |
 |   | roborock.vacuum.s5  |   X |    |
@@ -193,6 +194,8 @@ Added support devices.
 <img src="./imgs/product/xiaomi-air-detector-1.jpg?raw=true" title="Xiaomi Air Detector #1" width="200px">
 <img src="./imgs/product/xiaomi-air-detector-2.jpg?raw=true" title="Xiaomi Air Detector #2" width="200px">
 <img src="./imgs/product/xiaomi-ceiling-light-pro.png?raw=true" title="Xiaomi Ceiling Light Pro" width="200px">
+<img src="./imgs/product/xiaomi-humidifier-3.jpg?raw=true" title="Xiaomi Humidifier 3" width="200px">
+
 
 
 # Installation
