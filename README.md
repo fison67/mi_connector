@@ -128,6 +128,7 @@ Added support devices.
 | Yeelight Color  | yeelink.light.color1  |   O |    |
 |   | yeelink.light.color2  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
+| Bedside Lamp  | yeelink.light.bslamp1  |   O |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |   | yeelink.light.ceiling2  |   O |    |
 |   | yeelink.light.ceiling6  |   O |    |
@@ -195,6 +196,7 @@ Added support devices.
 <img src="./imgs/product/xiaomi-air-detector-2.jpg?raw=true" title="Xiaomi Air Detector #2" width="200px">
 <img src="./imgs/product/xiaomi-ceiling-light-pro.png?raw=true" title="Xiaomi Ceiling Light Pro" width="200px">
 <img src="./imgs/product/xiaomi-humidifier-3.jpg?raw=true" title="Xiaomi Humidifier 3" width="200px">
+<img src="./imgs/product/xiaomi-bedside-lamp.jpeg?raw=true" title="Xiaomi Bedside Lamp" width="200px">
 
 
 
