@@ -387,7 +387,7 @@ def addDevice(){
        	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
-        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" || params.type == "yeelink.light.bslamp1"){
+        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
         }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2"){
