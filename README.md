@@ -113,8 +113,8 @@ Added support devices.
 | Xiaomi Power Strip  | qmi.powerstrip.v1  |   X |    |
 |   | zimi.powerstrip.v2  |   O |    |
 | Xiaomi Air Monitor  | zhimi.airmonitor.v1  |   O |    |
-|   | cgllc.airmonitor.b1  |   x |  x |
-|   | cgllc.airmonitor.s1  |   x |  x |
+|   | cgllc.airmonitor.b1  |   O |  O |
+|   | cgllc.airmonitor.s1  |   O |  O |
 | Xiaomi Gateway  | lumi.gateway.v2  |   X |    |
 |   | lumi.gateway.v3  |   O |    |
 | Xiaomi AC Partner  | lumi.acpartner.v3  |   X |    |
