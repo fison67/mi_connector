@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.18)
+ *  Mi Connector (v.0.0.19)
  *
  * MIT License
  *
@@ -411,7 +411,7 @@ def addDevice(){
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
         	dth = "Xiaomi Power Strip";
             name = "Xiaomi Power Strip";
-        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.m1" || params.type == "lumi.plug"){
+        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.v3" || params.type == "chuangmi.plug.m1"|| params.type == "chuangmi.plug.m2" || params.type == "chuangmi.plug.m3" || params.type == "lumi.plug"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
         }else if(params.type == "chuangmi.plug.v3"){
