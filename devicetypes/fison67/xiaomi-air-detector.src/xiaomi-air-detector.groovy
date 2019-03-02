@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Monitor (v.0.0.1)
+ *  Xiaomi Air Detector (v.0.0.2)
  *
  * MIT License
  *
@@ -40,8 +40,7 @@ metadata {
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
 		capability "Tvoc Measurement"
-        capability "Carbon Dioxide Measurement"
-        capability "Refresh"
+        	capability "Carbon Dioxide Measurement"
 		capability "Refresh"
 		capability "Sensor"
 		capability "Power Source"
