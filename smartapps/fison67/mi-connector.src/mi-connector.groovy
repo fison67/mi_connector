@@ -462,7 +462,7 @@ def addDevice(){
 		}else if(params.type == "ble.floraPot"){
 			dth = "Xiaomi Flora Pot";
             name = "Xiaomi Flora Pot";
-		}else if(params.type == "chuangmi.ir.v2"){
+		}else if(params.type == "chuangmi.ir.v2" || params.type == "chuangmi.remote.h102a03"){
 			dth = "Xiaomi Remote";
             name = "Xiaomi Remote";
 		}else if(params.type == "virtual.remote.tv"){
