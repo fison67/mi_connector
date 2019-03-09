@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Smoke Dectector (v.0.0.1)
+ *  Xiaomi Smoke Detector (v.0.0.1)
  *
  * MIT License
  *
