@@ -442,8 +442,8 @@ def addDevice(){
 			dth = "Xiaomi Gas Detector";
             name = "Xiaomi Gas Dectector";
 		}else if(params.type == "lumi.smoke"){
-        	dth = "Xiaomi Smoke Dectector";
-            name = "Xiaomi Smoke Dectector";
+        	dth = "Xiaomi Smoke Detector";
+            name = "Xiaomi Smoke Detector";
         }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"|| params.type == "yeelink.light.ceiling3"|| params.type == "yeelink.light.ceiling4" || params.type == "yeelink.light.ceiling5"|| params.type == "yeelink.light.ceiling6"){
         	dth = "Xiaomi Light Ceiling";
             name = "Xiaomi Light Ceiling";
