@@ -43,11 +43,18 @@ metadata {
 
         attribute "lastOn", "string"
         attribute "lastOff", "string"
+        attribute "scene", "number"
         
         attribute "lastCheckin", "Date"
          
         command "setTimeRemaining"
         command "stop"
+        
+        command "setScene1"
+        command "setScene2"
+        command "setScene3"
+        command "setScene4"
+        command "setScene5"
 	}
     
 	preferences {
@@ -59,11 +66,11 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-philips-bedside-lamp-on-50.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-philips-bedside-lamp-off-50.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-philips-bedside-lamp-on-50.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-philips-bedside-lamp-off-50.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -93,6 +100,25 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
+        standardTile("scene1", "device.scene") {
+			state "default", label: "Scene1", action: "setScene1", backgroundColor:"#2FFF13"
+		}
+        standardTile("scene2", "device.scene") {
+			state "default", label: "Scene2", action: "setScene2", backgroundColor:"#CF10FF"
+		}
+        standardTile("scene3", "device.scene") {
+			state "default", label: "Scene3", action: "setScene3", backgroundColor:"#FF2619"
+		}
+        standardTile("scene4", "device.scene") {
+			state "default", label: "Scene4", action: "setScene4", backgroundColor:"#32F2FF"
+		}
+        standardTile("scene5", "device.scene") {
+			state "default", label: "Scene5", action: "setScene5", backgroundColor:"#1B86FF"
+		}
+        standardTile("scene6", "device.scene") {
+			state "default", label: "Scene6", action: "setScene6", backgroundColor:"#FFCF97"
+		}
+        
         valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
             state "default", label:'Set Timer\n${currentValue}'
         }
@@ -106,7 +132,7 @@ metadata {
 		}
         
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "timer_label", "time", "tiemr0" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "scene1", "scene2", "scene3", "scene4", "scene5", "scene6", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -132,10 +158,10 @@ def setStatus(params){
     case "power":
         if(params.data == "true"){
             sendEvent(name:"switch", value: "on")
-            sendEvent(name: "lastOn", value: now)
+            sendEvent(name: "lastOn", value: now, displayed: false)
         } else {
             sendEvent(name:"switch", value: "off")
-            sendEvent(name: "lastOff", value: now)
+            sendEvent(name: "lastOff", value: now, displayed: false)
         }
     	break;
     case "color":
@@ -146,10 +172,14 @@ def setStatus(params){
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
+    case "scene":
+    	sendEvent(name:"scene", value: params.data )
+    	break;
     }
     
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
+
 def refresh(){
 	log.debug "Refresh"
     def options = [
@@ -203,6 +233,48 @@ def setColor(color){
     
     setPowerByStatus(true)
 }
+
+def setScene1(){
+	log.debug "setScene1 >> ${state.id}"
+	processSetScene(1)
+}
+
+def setScene2(){
+	log.debug "setScene2 >> ${state.id}"
+	processSetScene(2)
+}
+
+def setScene3(){
+	log.debug "setScene3 >> ${state.id}"
+	processSetScene(3)
+}
+
+def setScene4(){
+	log.debug "setScene4 >> ${state.id}"
+	processSetScene(4)
+}
+
+def setScene5(){
+	log.debug "setScene5 >> ${state.id}"
+	processSetScene(5)
+}
+
+def setScene6(){
+	log.debug "setScene6 >> ${state.id}"
+	processSetScene(6)
+}
+
+
+def processSetScene(data){
+    def body = [
+        "id": state.id,
+        "cmd": "scene",
+        "data": data
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 
 public String hslToHex(float hue, float saturation, float brightness) {
     float h = Math.max( 0, Math.min( 360, hue ) )
