@@ -129,12 +129,14 @@ Added support devices.
 |   | yeelink.light.color2  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
 | Bedside Lamp  | yeelink.light.bslamp1  |   O |   O |
+|   | yeelink.light.bslamp2  |   X |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |   | yeelink.light.ceiling2  |   O |    |
 |   | yeelink.light.ceiling6  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
+| Philips Bedside Lamp  | philips.light.moonlight  |   O |   O |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 |  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
 
@@ -197,6 +199,7 @@ Added support devices.
 <img src="./imgs/product/xiaomi-ceiling-light-pro.png?raw=true" title="Xiaomi Ceiling Light Pro" width="200px">
 <img src="./imgs/product/xiaomi-humidifier-3.jpg?raw=true" title="Xiaomi Humidifier 3" width="200px">
 <img src="./imgs/product/xiaomi-bedside-lamp.jpeg?raw=true" title="Xiaomi Bedside Lamp" width="200px">
+<img src="./imgs/product/philips-bedside-lamp.jpg?raw=true" title="Xiaomi Philips Bedside Lamp" width="200px">
 
 
 
