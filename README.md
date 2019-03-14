@@ -199,6 +199,7 @@ Added support devices.
 <img src="./imgs/product/xiaomi-ceiling-light-pro.png?raw=true" title="Xiaomi Ceiling Light Pro" width="200px">
 <img src="./imgs/product/xiaomi-humidifier-3.jpg?raw=true" title="Xiaomi Humidifier 3" width="200px">
 <img src="./imgs/product/xiaomi-bedside-lamp.jpeg?raw=true" title="Xiaomi Bedside Lamp" width="200px">
+<img src="./imgs/product/xiaomi-bedside-lamp-2.jpg?raw=true" title="Xiaomi Bedside Lamp2" width="200px">
 <img src="./imgs/product/philips-bedside-lamp.jpg?raw=true" title="Xiaomi Philips Bedside Lamp" width="200px">
 
 
