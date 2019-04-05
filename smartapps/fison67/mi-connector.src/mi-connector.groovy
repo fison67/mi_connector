@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.20)
+ *  Mi Connector (v.0.0.21)
  *
  * MIT License
  *
@@ -465,7 +465,7 @@ def addDevice(){
 		}else if(params.type == "ble.floraPot"){
 			dth = "Xiaomi Flora Pot";
             name = "Xiaomi Flora Pot";
-		}else if(params.type == "chuangmi.ir.v2" || params.type == "chuangmi.remote.h102a03"){
+		}else if(params.type == "chuangmi.ir.v2" || params.type == "chuangmi.remote.h102a03" || params.type == "chuangmi.remote.v2"){
 			dth = "Xiaomi Remote";
             name = "Xiaomi Remote";
 		}else if(params.type == "virtual.remote.tv"){
