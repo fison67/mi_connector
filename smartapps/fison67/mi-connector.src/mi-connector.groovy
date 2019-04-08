@@ -58,7 +58,8 @@ def mainPage() {
         	input "address", "string", title: "Server address", required: true
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
             input "externalAddress", "string", title: "External network address", required: false
-        	href url:"http://${settings.externalAddress}", style:"embedded", required:false, title:"Management", description:"This makes you easy to setup"
+        	href url:"http://${settings.address}", style:"embedded", required:false, title:"Local Management", description:"This makes you easy to setup"
+        	href url:"http://${settings.externalAddress}", style:"embedded", required:false, title:"External Management", description:"This makes you easy to setup"
         }
         
         section() {
@@ -285,7 +286,7 @@ def initialize() {
     
     def options = [
      	"method": "POST",
-        "path": "/settings/smartthings",
+        "path": "/settings/api/smartthings",
         "headers": [
         	"HOST": settings.address,
             "Content-Type": "application/json"
