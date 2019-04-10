@@ -30,12 +30,12 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Water Detector", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Water Detector", namespace: "fison67", author: "fison67", vid: "generic-leak", ocfDeviceType: "x.com.st.d.sensor.moisture") {
         capability "Sensor"
         capability "Water Sensor"     //  ["dry", "wet"]
         capability "Refresh"
+        capability "Battery"
         
-        attribute "battery", "string"
         attribute "lastCheckin", "Date"
         
 	}
@@ -46,8 +46,8 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"water", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.water", key: "PRIMARY_CONTROL") {
-               	attributeState "dry", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTg0/MDAxNTIyNjcwOTc2ODE1.2rSncv314VWU8irUYinoIi9JLQ3muxYJOVv0zNi_hpsg.ti_b998of00LFlzxjoNnD6Y2zAhq-I2Np7KvWXRaEHMg.PNG.shin4299/gas_main_off.png?type=w3" , backgroundColor:"#ffffff"
-            	attributeState "wet", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI3/MDAxNTIyNjcwOTc2OTQ3.BhACHbETMGGIUQohpJx2USQ_QwLmvOtHMkTe5tTQBzgg.2BXHQDUXhu0f5GCsZ5IFwBvdDJY0DTXmPvs4YjVD6K4g.PNG.shin4299/gas_main_on.png?type=w3" , backgroundColor:"#e86d13"
+               	attributeState "dry", label:'${name}', icon:"https://raw.githubusercontent.com/fison67/mi_connector/master/icons/water_dry.png" , backgroundColor:"#ffffff"
+            	attributeState "wet", label:'${name}', icon:"https://raw.githubusercontent.com/fison67/mi_connector/master/icons/water_wet.png" , backgroundColor:"#ffffff"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
