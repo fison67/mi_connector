@@ -250,12 +250,16 @@ def siren(){
 }
 
 def strobe(){
-	def color = state.selectedColor
+	def color = settings.selectedColor
     if(color == null){
     	color = "#f44259"
     }
 	setColorByHex(color)
-    setLevel(settings.selectedBrightness as int)
+     def brightness = settings.selectedBrightness 
+	if(brightness == null){
+		brightness = 100
+	}
+    setLevel(brightness)
 }
 
 def both(){
