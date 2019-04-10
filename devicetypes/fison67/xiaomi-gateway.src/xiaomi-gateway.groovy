@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Gateway", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Gateway", namespace: "fison67", author: "fison67", vid: "generic-siren", ocfDeviceType: "x.com.st.d.siren") {
         capability "Switch"						//"on", "off"
         capability "Illuminance Measurement"
         capability "Actuator"
@@ -255,12 +255,13 @@ def strobe(){
     	color = "#f44259"
     }
 	setColorByHex(color)
-     def brightness = settings.selectedBrightness 
+    def brightness = settings.selectedBrightness 
 	if(brightness == null){
 		brightness = 100
 	}
     setLevel(brightness)
 }
+
 
 def both(){
 	strobe()
