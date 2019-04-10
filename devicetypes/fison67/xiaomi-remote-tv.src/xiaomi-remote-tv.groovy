@@ -30,9 +30,11 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Remote TV", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Remote TV", namespace: "fison67", author: "fison67", ocfDeviceType: "oic.d.tv") {
         capability "Switch"
         capability "Configuration"
+        capability "Tv Channel"
+        capability "Refresh"
         
         command "setStatus"
         command "remoteCHUp"
@@ -75,6 +77,31 @@ metadata {
     
 	preferences {
         input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
+        
+        input name: "number_1", title:"Number #1" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_2", title:"Number #2" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_3", title:"Number #3" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_4", title:"Number #4" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_5", title:"Number #5" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_6", title:"Number #6" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_7", title:"Number #7" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_8", title:"Number #8" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_9", title:"Number #9" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "number_0", title:"Number #0" , type: "string", required: false, defaultValue:"", description:""
+        input name: "ch_up", title:"Channel UP" , type: "string", required: false, defaultValue:"", description:""
+        input name: "ch_down", title:"Channel DOWN" , type: "string", required: false, defaultValue:"", description:""
+        input name: "vol_up", title:"Volume UP" , type: "string", required: false, defaultValue:"", description:""
+        input name: "vol_down", title:"Volume DOWN" , type: "string", required: false, defaultValue:"", description:""
+        input name: "vol_mute", title:"Volume Mute" , type: "string", required: false, defaultValue:"", description:""
+        input name: "custom_1", title:"Custom #1" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_2", title:"Custom #2" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_3", title:"Custom #3" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_4", title:"Custom #4" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_5", title:"Custom #5" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_6", title:"Custom #6" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_7", title:"Custom #7" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_8", title:"Custom #8" , type: "string", required: false, defaultValue:"", description:"" 
+        input name: "custom_9", title:"Custom #9" , type: "string", required: false, defaultValue:"", description:"" 
 	}
 
 	tiles(scale: 2) {
@@ -200,6 +227,17 @@ metadata {
 	}
 }
 
+def channelUp(){
+
+}
+
+def channelDown(){
+
+}
+
+def setTvChannel(channel){
+
+}
 
 def isIRRemoteDevice(){
 	return true
@@ -442,6 +480,79 @@ def playIRCmd(code){
 }
 
 def updated() {
+	if(settings.number_1 != ""){
+    	state['tv-1'] = settings.number_1
+    }
+    if(settings.number_2 != ""){
+    	state['tv-2'] = settings.number_2
+    }    
+    if(settings.number_3 != ""){
+    	state['tv-3'] = settings.number_3
+    }
+    if(settings.number_4 != ""){
+    	state['tv-4'] = settings.number_4
+    }
+    if(settings.number_5 != ""){
+    	state['tv-5'] = settings.number_5
+    }
+    if(settings.number_6 != ""){
+    	state['tv-6'] = settings.number_6
+    }
+    if(settings.number_7 != ""){
+    	state['tv-7'] = settings.number_7
+    }
+    if(settings.number_8 != ""){
+    	state['tv-8'] = settings.number_8
+    }
+    if(settings.number_9 != ""){
+    	state['tv-9'] = settings.number_9
+    }
+    if(settings.number_0 != ""){
+    	state['tv-0'] = settings.number_0
+    }
+    if(settings.ch_up != ""){
+    	state['tv-ch-up'] = settings.ch_up
+    }
+    if(settings.ch_down != ""){
+    	state['tv-ch-down'] = settings.ch_down
+    }
+    if(settings.vol_up != ""){
+    	state['tv-vol-up'] = settings.vol_up
+    }
+    if(settings.vol_down != ""){
+    	state['tv-vol-down'] = settings.vol_down
+    }
+    if(settings.vol_mute != ""){
+    	state['tv-vol-mute'] = settings.vol_mute
+    }
+    
+    if(settings.custom_1 != ""){
+        state['custom-1'] = settings.custom_1
+    }
+    if(settings.custom_2 != ""){
+        state['custom-2'] = settings.custom_2
+    }    
+    if(settings.custom_3 != ""){
+        state['custom-3'] = settings.custom_3
+    }
+    if(settings.custom_4 != ""){
+        state['custom-4'] = settings.custom_4
+    }
+    if(settings.custom_5 != ""){
+        state['custom-5'] = settings.custom_5
+    }
+    if(settings.custom_6 != ""){
+        state['custom-6'] = settings.custom_6
+    }
+    if(settings.custom_7 != ""){
+        state['custom-7'] = settings.custom_7
+    }
+    if(settings.custom_8 != ""){
+        state['custom-8'] = settings.custom_8
+    }
+    if(settings.custom_9 != ""){
+        state['custom-9'] = settings.custom_9
+    }
 }
 
 def sendCommand(options, _callback){
