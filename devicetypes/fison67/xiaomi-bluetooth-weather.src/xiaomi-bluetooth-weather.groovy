@@ -60,11 +60,12 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Bluetooth Weather", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Bluetooth Weather", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Xiaomi_Temperature_Humidity_Sensor", ocfDeviceType: "oic.d.thermostat") {
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
         capability "Sensor"
         capability "Battery"
+        capability "Refresh"
          
 		attribute "maxTemp", "number"
 		attribute "minTemp", "number"
@@ -89,6 +90,7 @@ metadata {
     
 	preferences {
 		input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+		input name: "temperatureType", title:"Select a type" , type: "enum", required: true, options: ["C", "F"], defaultValue: "C"
         
 		input name: "displayTempHighLow", type: "bool", title: "Display high/low temperature?"
 		input name: "displayHumidHighLow", type: "bool", title: "Display high/low humidity?"
@@ -214,16 +216,24 @@ def setStatus(params){
     log.debug data
     
     sendEvent(name:"battery", value: data.batteryLevel)
-    sendEvent(name:"temperature", value: data.sensor.temperature)
-    sendEvent(name:"temperature2", value: data.sensor.temperature)
+    sendEvent(name:"temperature", value: makeTemperature(data.sensor.temperature))
+    sendEvent(name:"temperature2", value: makeTemperature(data.sensor.temperature))
     
     sendEvent(name:"humidity", value: data.sensor.relativeHumidity)
     
-    updateMinMaxTemps( data.sensor.temperature )
+    updateMinMaxTemps( makeTemperature(data.sensor.temperature) )
     updateMinMaxHumidity( data.sensor.relativeHumidity )
     
     updateLastTime()
     checkNewDay()
+}
+
+def makeTemperature(temperature){
+	if(temperatureType == "F"){
+    	return ((temperature * 9 / 5) + 32)
+    }else{
+    	return temperature
+    }
 }
 
 def updated() {
