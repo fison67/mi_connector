@@ -30,17 +30,21 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67", ocfDeviceType: "x.com.st.d.sensor.motion" , vid: "generic-motion") {
         capability "Motion Sensor"
         capability "Illuminance Measurement"
-        capability "Configuration"
+    //    capability "Configuration"
         capability "Sensor"
         capability "Refresh"
+   //     capability "Momentary"
+    //    capability "Health Check"
          
         attribute "battery", "string"
         attribute "lastMotion", "Date"
 
         attribute "lastCheckin", "Date"
+        
+	//	attribute "status", "enum", ["active", "inactive"]
         
 		command "reset"	
         command "chartMotion"
@@ -85,7 +89,7 @@ metadata {
                 ]
         }
         
-                standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+        standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", action:"reset", label: "Reset Motion", icon:"st.motion.motion.active"
         }
 
@@ -112,7 +116,17 @@ metadata {
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
+    return null
 }
+
+def ping() {
+	refresh()
+}
+
+def configure() {
+	log.debug ("configure() called")
+}
+
 
 def setExternalAddress(address){
 	log.debug "External Address >> ${address}"
