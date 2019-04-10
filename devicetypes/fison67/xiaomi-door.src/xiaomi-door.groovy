@@ -30,20 +30,25 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Door", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Door", namespace: "fison67", author: "fison67", vid: "generic-contact") {
         capability "Sensor"
         capability "Contact Sensor"
         capability "Battery"
-	capability "Refresh"
+		capability "Refresh"
                
         attribute "lastCheckin", "Date"
         attribute "lastOpen", "Date"
         attribute "lastClosed", "Date"
         
+        command "chartStatus"
 	}
 
-
 	simulator {
+	}
+    
+    preferences {
+		input "historyDayCount", "number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
+		input "historyDataMaxCount", "number", title: "Contact Graph Data Max Count", description: "0 is max", defaultValue:100, displayDuringSetup: true
 	}
 
 	tiles {
@@ -76,6 +81,11 @@ metadata {
             state "default", label:'${currentValue}'
         }
 
+        standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
+			state "status", label:'Graph', action: 'chartStatus'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
 	}
 }
 
@@ -88,6 +98,11 @@ def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
+}
+
+def setExternalAddress(address){
+	log.debug "External Address >> ${address}"
+	state.externalAddress = address
 }
 
 def setStatus(params){
@@ -116,6 +131,8 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
+        log.debug jsonObj
+        
         sendEvent(name:"contact", value: (jsonObj.properties.contact == true ? "closed" : "open"))
         sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
     
@@ -162,4 +179,52 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def chartStatus() {
+	def url = makeURL("contact", "Contact")
+    if(settings.historyDataMaxCount > 0){
+    	url.query.limit = settings.historyDataMaxCount
+    }
+    httpGet(url) { response ->
+    	processImage(response, "contact")
+    }
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+private getPictureName(type) {
+  def pictureUuid = java.util.UUID.randomUUID().toString().replaceAll('-', '')
+  return "image" + "_$pictureUuid" + "_" + type + ".png"
 }
