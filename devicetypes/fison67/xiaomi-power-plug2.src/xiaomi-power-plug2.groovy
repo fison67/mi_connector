@@ -31,7 +31,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Power Plug2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch-power-energy", ocfDeviceType: "x.com.st.d.energymeter") {
+	definition (name: "Xiaomi Power Plug2", namespace: "fison67", author: "fison67", vid: "generic-switch-power", ocfDeviceType: "oic.d.smartplug") {
         capability "Switch"
         capability "Power Meter"
         capability "Temperature Measurement"
