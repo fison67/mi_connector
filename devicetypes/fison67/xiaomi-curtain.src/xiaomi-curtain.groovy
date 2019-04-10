@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Curtain (v.0.0.2)
+ *  Xiaomi Curtain (v.0.0.3)
  *
  * MIT License
  *
@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Curtain", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Curtain", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Springs_Window_Fashions_Shade", ocfDeviceType: "oic.d.blind") {
         capability "Actuator"		
         capability "Door Control"
         capability "Switch Level"
@@ -39,6 +39,8 @@ metadata {
         capability "Refresh"
          
         attribute "lastCheckin", "Date"
+        
+        command "stop"
 	}
 
 
@@ -49,13 +51,13 @@ metadata {
 	}
 
 	tiles {
-		multiAttributeTile(name:"switch", type: "windowShade", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "close", label: 'closed', action: "open", icon: "st.doors.garage.garage-closed", backgroundColor: "#A8A8C6", nextState: "opening"
+		multiAttributeTile(name:"windowShade", type: "windowShade", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.windowShade", key: "PRIMARY_CONTROL") {
+                attributeState "closed", label: 'closed', action: "open", icon: "st.doors.garage.garage-closed", backgroundColor: "#A8A8C6", nextState: "opening"
                 attributeState "open", label: 'open', action: "close", icon: "st.doors.garage.garage-open", backgroundColor: "#F7D73E", nextState: "closing"
                 attributeState "closing", label: '${name}', action: "open", icon: "st.contact.contact.closed", backgroundColor: "#B9C6A8"
                 attributeState "opening", label: '${name}', action: "close", icon: "st.contact.contact.open", backgroundColor: "#D4CF14"
-                attributeState "partly", label: 'partially\nopen', action: "close", icon: "st.doors.garage.garage-closing", backgroundColor: "#D4ACEE", nextState: "closing"              
+                attributeState "partially open", label: 'partially\nopen', action: "close", icon: "st.doors.garage.garage-closing", backgroundColor: "#D4ACEE", nextState: "closing"              
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -71,14 +73,17 @@ metadata {
             state("on", label: 'open', action: "open", icon: "st.doors.garage.garage-open")
         }
         
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        standardTile("stop", "device", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+            state("stop", label: 'stop', action: "stop", icon: "st.illuminance.illuminance.dark")
         }
-        
+       
         standardTile("close", "device.Switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
             state("off", label: 'close', action: "close", icon: "st.doors.garage.garage-closed")
         }
-       
+        
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
+        }
 	}
 }
 
@@ -99,7 +104,7 @@ def setStatus(params){
  	switch(params.key){
     case "curtainLevel":
     	sendEvent(name:"level", value: params.data )
-        sendEvent(name:"switch", value: (params.data == "0" ? "close" : ( params.data == "100" ? "open" : "partly" )) )
+        sendEvent(name:"windowShade", value: (params.data == "0" ? "closed" : ( params.data == "100" ? "open" : "partially open" )) )
     	break;
     }
     
@@ -125,6 +130,16 @@ def off(){
 	close()
 }
 
+def stop(){
+    def body = [
+        "id": state.id,
+        "cmd": "stop",
+        "data": ""
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 def close(){
 	log.debug "Off >> ${state.id}"
     def body = [
@@ -137,7 +152,7 @@ def close(){
 }
 
 def open(){
-	log.debug "Off >> ${state.id}"
+	log.debug "On >> ${state.id}"
 	def body = [
         "id": state.id,
         "cmd": "curtainLevel",
