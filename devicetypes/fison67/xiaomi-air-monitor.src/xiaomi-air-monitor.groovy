@@ -63,7 +63,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Monitor", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Air Monitor", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Xiaomi_Temperature_Humidity_Sensor", ocfDeviceType: "x.com.st.d.airqualitysensor") {
         capability "Switch"						//"on", "off"
         capability "Battery"
 		capability "Refresh"
@@ -77,6 +77,9 @@ metadata {
         attribute "setendap", "enum", ["am", "pm"]
         
         attribute "lastCheckin", "Date"
+
+		command "chartPM25"
+        command "chartTotalPM25"
      
         command "clockOn"
         command "clockOff"
@@ -98,7 +101,11 @@ metadata {
 	simulator {
 	}
 	preferences {
-	        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
+            
+		input name: "historyDayCount", type:"number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
+		input name: "historyTotalDayCount", type:"number", title: "Total Day for History Graph", description: "0 is max", defaultValue:7, range: "2..7", displayDuringSetup: true
+	
 	}
 
 	tiles {
@@ -218,11 +225,18 @@ metadata {
             state "default", label:"Set\nUp", action:"setupEnd", icon:"st.secondary.refresh"
         }
         
+    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
+			state "chartPM25", label:'PM2.5', nextState: "chartTotalPM25", action: 'chartPM25'
+			state "chartTotalPM25", label:'T-PM2.5', nextState: "chartPM25", action: 'chartTotalPM25'
+		}
+        
+        carouselTile("history", "device.image", width: 6, height: 4) { }
+	
         main (["pm25"])
 		details(["fineDustLevel", "switch", "display_label", "night_label", "power_label", "refresh_label", 
     		"clock", "night", "powerSource", "refresh",
             "setbe_label", "setbe_hour", "setbe_min", "setbeap", "timeset_label", 
-            "setend_label", "setend_hour", "setend_min", "setendap"])
+            "setend_label", "setend_hour", "setend_min", "setendap", "chartMode", "history"])
 		
 	}
 }
@@ -230,6 +244,11 @@ metadata {
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
+}
+
+def setExternalAddress(address){
+	log.debug "External Address >> ${address}"
+	state.externalAddress = address
 }
 
 def setInfo(String app_url, String id) {
@@ -600,4 +619,72 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def makeURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = settings.historyDayCount == null ? 1 : settings.historyDayCount
+      sDate = (now - day.days).format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+      eDate = now.format( 'yyyy-MM-dd HH:mm:ss', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def makeTotalURL(type, name){
+	def sDate
+    def eDate
+	use (groovy.time.TimeCategory) {
+      def now = new Date()
+      def day = (settings.historyTotalDayCount == null ? 7 : settings.historyTotalDayCount) - 1
+      sDate = (now - day.days).format( 'yyyy-MM-dd', location.timeZone )
+      eDate = (now + 1.days).format( 'yyyy-MM-dd', location.timeZone )
+    }
+	return [
+        uri: "http://${state.externalAddress}",
+        path: "/devices/history/${state.id}/${type}/${sDate}/${eDate}/total/image",
+        query: [
+        	"name": name
+        ]
+    ]
+}
+
+def processImage(response, type){
+	if (response.status == 200 && response.headers.'Content-Type'.contains("image/png")) {
+        def imageBytes = response.data
+        if (imageBytes) {
+            try {
+                storeImage(getPictureName(type), imageBytes)
+            } catch (e) {
+                log.error "Error storing image ${name}: ${e}"
+            }
+        }
+    } else {
+        log.error "Image response not successful or not a jpeg response"
+    }
+}
+
+private getPictureName(type) {
+  def pictureUuid = java.util.UUID.randomUUID().toString().replaceAll('-', '')
+  return "image" + "_$pictureUuid" + "_" + type + ".png"
+}
+
+def chartTotalPM25() {
+    httpGet(makeTotalURL("pm2.5", "PM2.5")) { response ->
+    	processImage(response, "pm2.5")
+    }
+}
+
+def chartPM25() {
+    httpGet(makeURL("pm2.5", "PM2.5")) { response ->
+    	processImage(response, "pm2.5")
+    }
 }
