@@ -63,7 +63,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Monitor", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Xiaomi_Temperature_Humidity_Sensor", ocfDeviceType: "x.com.st.d.airqualitysensor") {
+	definition (name: "Xiaomi Air Monitor", namespace: "fison67", author: "fison67", ocfDeviceType: "x.com.st.d.airqualitysensor") {
         capability "Switch"						//"on", "off"
         capability "Battery"
 		capability "Refresh"
