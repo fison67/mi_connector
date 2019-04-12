@@ -30,15 +30,14 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Smoke Detector", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Smoke Detector", namespace: "fison67", author: "fison67", vid : "SmartThings-smartthings-Xiaomi_Honeywell_Smoke_Detector", ocfDeviceType: "x.com.st.d.sensor.smoke") {
         capability "Sensor"
         capability "Smoke Detector"    //"detected", "clear", "tested"
+        capability "Battery"
+        capability "Refresh"
          
-        attribute "battery", "string"
         attribute "density", "string"        
         attribute "lastCheckin", "Date"
-        
-        command "refresh"
 	}
 
 
