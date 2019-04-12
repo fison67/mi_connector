@@ -35,13 +35,13 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67", mnmn: "SmartThings") {
+	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Xiaomi_Temperature_Humidity_Sensor", ocfDeviceType: "x.com.st.d.airqualitysensor") {
         capability "Air Quality Sensor"						//"on", "off"
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
 		capability "Tvoc Measurement"
-        	capability "Carbon Dioxide Measurement"
-		capability "Refresh"
+        capability "Carbon Dioxide Measurement"
+        capability "Refresh"
 		capability "Sensor"
 		capability "Power Source"
 		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
