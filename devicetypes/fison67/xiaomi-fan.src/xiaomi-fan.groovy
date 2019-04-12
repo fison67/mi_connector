@@ -63,7 +63,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Fan", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Fan", namespace: "fison67", author: "fison67", vid: "generic-switch", ocfDeviceType: "oic.d.fan") {
         capability "Switch"						//"on", "off"
 		capability "Fan Speed"
         capability "Switch Level"
