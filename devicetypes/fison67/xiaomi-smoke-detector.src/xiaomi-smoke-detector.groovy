@@ -122,6 +122,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     }
 }
 
+def installed() {
+	sendEvent(name:"smoke", value: "clear") 
+}
+
 def updated() {
 }
 
