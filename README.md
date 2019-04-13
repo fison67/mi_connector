@@ -7,7 +7,7 @@ You don't have to do anything to add Xiaomi devices in SmartThings IDE.
 
 Please see the [prerequisites](#prerequisites) needed for this connector to work properly.
 
-> Hubitat? Use the following repo: https://github.com/fison67/Mi-Connector-Hubitat
+> Hubitat? Use the following branch: https://github.com/fison67/mi_connector/tree/hubitat
 
 ### Example Video<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
