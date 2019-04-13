@@ -46,34 +46,6 @@ metadata {
 
 	simulator { }
 
-	tiles {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"http://postfiles11.naver.net/MjAxODA0MDJfNzEg/MDAxNTIyNjcwODgzNDMy.gQ9ebEInEePLIPq2X0CrHRORPktdXqKEgKYid5ziXRcg.zZ_5pLqlGdjOl8U4u6DqOTlw-FVlxwyPrzNMSNX5axQg.PNG.shin4299/ceilinglight_tile_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"on", icon:"http://postfiles4.naver.net/MjAxODA0MDJfMjg2/MDAxNTIyNjcwODgzMjc4.zVguk8EhV__yamYSG9j21VDxB0TdDyFMM3DJ_h_QVdAg.D7ZIhOABgQ9Mosi3VYq_NG4Tp3mkWzhTG1RW-DjWnm0g.PNG.shin4299/ceilinglight_tile_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"off", icon:"http://postfiles4.naver.net/MjAxODA0MDJfMjg2/MDAxNTIyNjcwODgzMjc4.zVguk8EhV__yamYSG9j21VDxB0TdDyFMM3DJ_h_QVdAg.D7ZIhOABgQ9Mosi3VYq_NG4Tp3mkWzhTG1RW-DjWnm0g.PNG.shin4299/ceilinglight_tile_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"on", icon:"http://postfiles11.naver.net/MjAxODA0MDJfNzEg/MDAxNTIyNjcwODgzNDMy.gQ9ebEInEePLIPq2X0CrHRORPktdXqKEgKYid5ziXRcg.zZ_5pLqlGdjOl8U4u6DqOTlw-FVlxwyPrzNMSNX5axQg.PNG.shin4299/ceilinglight_tile_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        standardTile("switch2", "device.switch", width: 2, height: 2) {
-                state "on", label:'${name}', action:"off", icon:"http://postfiles3.naver.net/MjAxODA0MDJfMTYg/MDAxNTIyNjcwODgzMTQw.lWo8f6HJS-sRwzAVlYadM1ZSLjbt2Ck7AxIzvMyejTwg.MujTFyozBZpuVfAWYv70fL6D5Nlsx-7CTcktMj303SMg.PNG.shin4299/ceilinglight_main_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                state "off", label:'${name}', action:"on", icon:"http://postfiles7.naver.net/MjAxODA0MDJfMjc0/MDAxNTIyNjcwODgyODc5.E6Q9geVbLPxJJ8EFopCzvWRgFVOSvQNZwf52ypZgJmMg.pDNVSHWK9WOwjVhXsrNLZc1RW3jfIT9yB21OgCUHAVIg.PNG.shin4299/ceilinglight_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                state "turningOn", label:'${name}', action:"off", icon:"http://postfiles7.naver.net/MjAxODA0MDJfMjc0/MDAxNTIyNjcwODgyODc5.E6Q9geVbLPxJJ8EFopCzvWRgFVOSvQNZwf52ypZgJmMg.pDNVSHWK9WOwjVhXsrNLZc1RW3jfIT9yB21OgCUHAVIg.PNG.shin4299/ceilinglight_main_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                state "turningOff", label:'${name}', action:"on", icon:"http://postfiles3.naver.net/MjAxODA0MDJfMTYg/MDAxNTIyNjcwODgzMTQw.lWo8f6HJS-sRwzAVlYadM1ZSLjbt2Ck7AxIzvMyejTwg.MujTFyozBZpuVfAWYv70fL6D5Nlsx-7CTcktMj303SMg.PNG.shin4299/ceilinglight_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-	}
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-   	main (["switch2"])
-	details(["switch", "refresh"])
-		
-	}
 }
 
 // parse events into attributes
@@ -143,7 +115,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -162,7 +134,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
