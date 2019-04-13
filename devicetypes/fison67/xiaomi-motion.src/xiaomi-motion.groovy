@@ -51,62 +51,13 @@ metadata {
 	simulator {
 	}
 	preferences {
-		input "motionReset", "number", title: "Motion Reset Time", description: "", defaultValue:120, displayDuringSetup: true
+		input "motionReset", "number", title: "Motion Reset Time", description: "", defaultValue:0, displayDuringSetup: true
 		input "historyDayCount", "number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
 		input "motionHistoryDataMaxCount", "number", title: "Motion Graph Data Max Count", description: "0 is max", defaultValue:100, displayDuringSetup: true
 		input "illuminanceHistoryDataMaxCount", "number", title: "Illuminance Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true
 	}
 
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
-				attributeState "active", label:'motion', icon:"http://postfiles1.naver.net/MjAxODA0MDNfMTAz/MDAxNTIyNzI0MDQ3OTU1.KlL6RhQNyk29a6B2xLdYi8f7mWkZ_hDJmvLTcUYxFUog.zOxJRz6RrrZsUTkFj8BefZycoyKxoL0Eeq7Ep6Pdxw0g.PNG.shin4299/motion_on1.png?type=w3", backgroundColor:"#00a0dc"
-				attributeState "inactive", label:'no motion', icon:"http://postfiles5.naver.net/MjAxODA0MDNfMTky/MDAxNTIyNzIzMDU3MTM4.mWDrfCVxx5OgUmoCZos7CkVgVY8jm3Ho4WgWeFnMbhMg.MB0MzqQCJM80xAFZ19imwE9AnHQ58Px2gHAOr9DSJLQg.PNG.shin4299/motion_off.png?type=w3", backgroundColor:"#ffffff"
-			}
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Battery: ${currentValue}%\n')
-            }		
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-        
-        valueTile("illuminance", "device.illuminance", width: 2, height: 2) {
-            state "val", label:'${currentValue}lx', defaultState: true,
-                backgroundColors:[
-                    [value: 100, color: "#153591"],
-                    [value: 200, color: "#1e9cbb"],
-                    [value: 300, color: "#90d2a7"],
-                    [value: 600, color: "#44b621"],
-                    [value: 900, color: "#f1d801"],
-                    [value: 1200, color: "#d04e00"],
-                    [value: 1500, color: "#bc2323"]
-                ]
-        }
-        
-                standardTile("reset", "device.reset", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", action:"reset", label: "Reset Motion", icon:"st.motion.motion.active"
-        }
-
-		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        valueTile("lastMotion_label", "", decoration: "flat") {
-            state "default", label:'Last\nMotion'
-        }
-        valueTile("lastMotion", "device.lastMotion", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }		
-        
-    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
-			state "motion", label:'Motion', nextState: "illuminance", action: 'chartMotion'
-			state "illuminance", label:'Illuminance', nextState: "motion", action: 'chartIlluminance'
-		}
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-	
-	}
 }
 
 // parse events into attributes
@@ -146,7 +97,7 @@ def setStatus(params){
     updateLastTime()
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -184,7 +135,7 @@ def reset() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
