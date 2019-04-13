@@ -32,9 +32,7 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Remote Air Conditioner", namespace: "fison67", author: "fison67") {
         capability "Switch"
-        capability "Configuration"
         capability "Switch Level"
-        capability "Air Conditioner Mode"
         
         command "setStatus"
         command "playIRCmdByID", ["string"]
@@ -66,78 +64,6 @@ metadata {
         input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off",  icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
-			}
-		}
-        
-        controlTile("level", "device.level", "slider", height: 1, width: 2, range:"(15..30)") {
-	    	state "temperature", action:"setLevel"
-		}
-        
-        valueTile("remoteAir1", "device.remoteAir1", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir1"
-        }
-        valueTile("remoteAir2", "device.remoteAir2", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir2"
-        }
-        valueTile("remoteAir3", "device.remoteAir3", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir3"
-        }
-        valueTile("remoteAir4", "device.remoteAir4", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir4"
-        }
-        valueTile("remoteAir5", "device.remoteAir5", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir5"
-        }
-        valueTile("remoteAir6", "device.remoteAir6", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir6"
-        }
-        valueTile("remoteAir7", "device.remoteAir7", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir7"
-        }
-        valueTile("remoteAir8", "device.remoteAir8", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir8"
-        }
-        valueTile("remoteAir9", "device.remoteAir9", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir9"
-        }
-        valueTile("remoteAir10", "device.remoteAir10", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir10"
-        }
-        valueTile("remoteAir11", "device.remoteAir11", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir11"
-        }
-        valueTile("remoteAir12", "device.remoteAir12", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir12"
-        }
-        valueTile("remoteAir13", "device.remoteAir13", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir13"
-        }
-        valueTile("remoteAir14", "device.remoteAir14", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir14"
-        }
-        valueTile("remoteAir15", "device.remoteAir15", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteAir15"
-        }
-        
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        
-	}
 }
 
 def isIRRemoteDevice(){
@@ -360,7 +286,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
