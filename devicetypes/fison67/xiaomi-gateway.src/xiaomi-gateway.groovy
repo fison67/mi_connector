@@ -68,66 +68,6 @@ metadata {
 		input "illuminanceHistoryDataMaxCount", "number", title: "Maximum Illuminance data count", description: "0 is max", defaultValue:0, displayDuringSetup: true
 	}
 
-	tiles {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: false){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/gateway_on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/gateway_off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/gateway_on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/gateway_off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
-            }
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-        
-        valueTile("illuminance", "device.illuminance", width: 2, height: 2) {
-            state "val", label:'${currentValue}lx', defaultState: true,
-                backgroundColors:[
-                    [value: 100, color: "#153591"],
-                    [value: 200, color: "#1e9cbb"],
-                    [value: 300, color: "#90d2a7"],
-                    [value: 600, color: "#44b621"],
-                    [value: 900, color: "#f1d801"],
-                    [value: 1200, color: "#d04e00"],
-                    [value: 1500, color: "#bc2323"]
-                ]
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        standardTile("stopMusic", "device.stopMusic", inactiveLabel: false, width: 2, height: 2) {
-            state "stop", label:'STOP', action:"stopMusic", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc"
-        }
-        
-        standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
-			state "chartPower", label:'Power', nextState: "chartIlluminance", action: 'chartPower'
-			state "chartIlluminance", label:'Illuminance', nextState: "chartPower", action: 'chartIlluminance'
-		}
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-        
-        standardTile("findChild", "device.findChild", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"findChild", icon:"https://raw.githubusercontent.com/fison67/mi_connector/master/icons/find_child.png"
-        }
-        
-       	standardTile("alarm1", "device.alarm1", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"siren", icon:"st.Entertainment.entertainment3"
-        }
-        
-        
-	}
 }
 
 // parse events into attributes
@@ -371,7 +311,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -399,7 +339,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
