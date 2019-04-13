@@ -42,18 +42,6 @@ metadata {
 	simulator {
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-				attributeState("status", label:'Ready', backgroundColor: "#000000", icon:"https://github.com/fison67/mi_connector/blob/master/icons/xiaomi-remote.png?raw=true",)
-			}
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        main (["status"])
-        details(["status" ])       
-	}
 }
 
 // parse events into attributes
@@ -81,7 +69,7 @@ def playIR(code){
 def updated() {}
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -97,4 +85,3 @@ def makeCommand(body){
     ]
     return options
 }
-
