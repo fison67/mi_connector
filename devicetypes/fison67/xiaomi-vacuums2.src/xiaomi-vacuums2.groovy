@@ -65,140 +65,6 @@ metadata {
 
 	simulator {}
 
-	tiles {
-		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "initiating", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"off"
-                attributeState "charger-offline", label:'${name}', backgroundColor:"#000000", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum-ready.png?raw=true", action:"on"
-                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"charge"
-                attributeState "cleaning", label:'${name}', backgroundColor:"#4286f4", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                attributeState "returning", label:'${name}', backgroundColor:"#4e25a8", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                attributeState "charging", label:'${name}',   backgroundColor:"#25a896", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "charging-error", label:'${name}',  backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                attributeState "paused", label:'${name}',  backgroundColor:"#09540d", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#a0e812", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                attributeState "error", label:'${name}',   backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                attributeState "updating", label:'${name}',  backgroundColor:"#ffa0ea", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                
-                attributeState "docking", label:'${name}', backgroundColor:"#9049bc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"off"
-                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#91f268", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                
-                attributeState "full", label:'${name}', backgroundColor:"#ffffff", icon:"st.Electronics.electronics1", action:"on"
-                
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-            
-		}
-        
-        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
-            state "on", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        
-        standardTile("fanSpeed", "device.fanSpeed", inactiveLabel: false, width: 2, height: 2) {
-            state "quiet", label:'Quiet', action:"balanced", backgroundColor:"#00a0dc", nextState:"balanced"
-            state "balanced", label:'Balanced', action:"turbo", backgroundColor:"#1000ff", nextState:"turbo"
-            state "turbo", label:'Turbo', action:"fullSpeed", backgroundColor:"#9a71f2", nextState:"fullSpeed"
-            state "fullSpeed", label:'Max', action:"quiet", backgroundColor:"#aa00ff", nextState:"mop"
-            state "mop", label:'Mop', action:"mop", backgroundColor:"#aa00ff", nextState:"quiet"
-        }
-        
-        standardTile("paused", "device.paused", width: 2, height: 2) {
-            state "paused", label:'paused', action:"paused", backgroundColor:"#00a0dc", nextState:"restart"
-            state "restart", label:'${name}', action:"on", backgroundColor:"#09540d"
-        }
-        
-        standardTile("charge", "device.charge", width: 2, height: 2 ) {
-            state "charge", label:'Charge', action:"charge",  backgroundColor:"#25a896"
-        }
-        
-        standardTile("spot", "device.spot", width: 2, height: 2 ) {
-            state "spot", label:'Spot', action:"spotClean",  backgroundColor:"#2ca6e8"
-        }
-        
-        standardTile("find", "device.find", width: 2, height: 2 ) {
-            state "find", label:'Find Me', action:"find",  backgroundColor:"#1cffe8"
-        }
-        
-        valueTile("battery", "device.battery",  height: 2, width: 2) {
-            state "val", label:'${currentValue}%', defaultState: true,
-            	backgroundColors:[
-                    [value: 10, color: "#ff002a"],
-                    [value: 20, color: "#f4425f"],
-                    [value: 30, color: "#ef7085"],
-                    [value: 40, color: "#ea8f9e"],
-                    [value: 50, color: "#edadb7"],
-                    [value: 60, color: "#a9aee8"],
-                    [value: 70, color: "#7f87e0"],
-                    [value: 80, color: "#505bd3"],
-                    [value: 90, color: "#2131e0"]
-                ]
-        }
-        
-        controlTile("volume", "device.volume", "slider", height: 2, width: 2, inactiveLabel: false, range:"(0..100)") {
-			state ("volume", label:'${currentValue}', action:"setVolumeWithTest")
-		}
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        
-        
-        valueTile("empty2_label", "", decoration: "flat", width: 4, height: 1) {
-            state "default", label:''
-        }
-        valueTile("label_clean_time", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Clean Time'
-        }
-        valueTile("cleanTime", "device.cleanTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_clean_area", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Clean Area'
-        }
-        valueTile("cleanArea", "device.cleanArea", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_main_brush", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Main Brush'
-        }
-        valueTile("mainBrushLeftTime", "device.mainBrushLeftTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_side_brush", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Side Brush'
-        }
-        valueTile("sideBrushLeftTime", "device.sideBrushLeftTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_filter", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Filter'
-        }
-        valueTile("filterTime", "device.filterTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_sensor", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Sensor'
-        }
-        valueTile("sensorTime", "device.sensorTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        main (["mode"])
-      	details(["mode", "switch", "paused", "fanSpeed", "spot", "charge", "find", "battery", "volume", "refresh",
-        "empty2_label", "label_clean_time", "cleanTime", "label_clean_area", "cleanArea", "label_main_brush", "mainBrushLeftTime", 
-        "label_side_brush", "sideBrushLeftTime", "label_filter", "filterTime", "label_sensor", "sensorTime"])
-	}
 }
 
 // parse events into attributes
@@ -472,7 +338,7 @@ def timer(mSecond, function){
 }
 */
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -540,7 +406,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
