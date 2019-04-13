@@ -74,138 +74,6 @@ metadata {
 	simulator {
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'\nOFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ2/MDAxNTIyMTUxNzIxMTk3.xeCR1k4pk0vDOozb43Lfo6g2fMC1a_VJFUpTQ071XRUg.dyhFTAUaCwWPUYc4hPUdGiuUI5yeRJ4QpP3kX802AlIg.PNG.shin4299/Humi_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "M1", label:'\nAuto Mode', action:"setMode2", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ1/MDAxNTIyMTUxNzIxMTk5.LTiuV1QSyPu6WgMB3uR7Bc-Hy19Uwgard5XKG5jj1JIg.XpdiwfmUg3Rz6IgIWyamtsrYeW0BJRqj28XyHRuADA0g.PNG.shin4299/Humi_tile_auto.png?type=w580", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "M2", label:'\nlevel 1', action:"setMode3", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTE2/MDAxNTIyMTUxNzIxMTE3.wVp36he9l0up0SalfSgNMOff9y_U9F2wyPc5AfmK-nEg.coHcd4mj2byTBFzTWnc4yjKi7xbJb7QhfgBn9ASt5eUg.PNG.shin4299/Humi_tile_1.png?type=w580", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "M3", label:'\nlevel 2', action:"setMode4", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjEz/MDAxNTIyMTUxNzIxMTk4.VfHSHeU2sS9J-T03zqc_sSjgO4ifOxiyBtGorUPxD2kg.dnC3xCu45F_153OJfUm0Pd1_HAWFp9DWVGHLagDqOSgg.PNG.shin4299/Humi_tile_2.png?type=w580", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "M4", label:'\nlevel 3', action:"setMode5", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA5/MDAxNTIyMTUxNzIxMTk3.r9waU9A5WmDgRz6p6eiGYTl67F1jo5HGcurD9i57Mj0g.a1R4bIefNK0gT-NdDFmYveohdkXxUuRgJIszH9Q38Ogg.PNG.shin4299/Humi_tile_3.png?type=w580", backgroundColor:"#f7ae0e", nextState:"modechange"
-                attributeState "M5", label:'\nlevel 4', action:"setMode1", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA5/MDAxNTIyMTUxNzIxMTk3.r9waU9A5WmDgRz6p6eiGYTl67F1jo5HGcurD9i57Mj0g.a1R4bIefNK0gT-NdDFmYveohdkXxUuRgJIszH9Q38Ogg.PNG.shin4299/Humi_tile_3.png?type=w580", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "modechange", label:'\n${name}', icon:"st.quirky.spotter.quirky-spotter-motion", backgroundColor:"#C4BBB5"
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ2/MDAxNTIyMTUxNzIxMTk3.xeCR1k4pk0vDOozb43Lfo6g2fMC1a_VJFUpTQ071XRUg.dyhFTAUaCwWPUYc4hPUdGiuUI5yeRJ4QpP3kX802AlIg.PNG.shin4299/Humi_tile_off.png?type=w580", backgroundColor:"#C4BBB5", nextState:"off"
-			}
-			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
-        		attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
-    		}            
-			tileAttribute("device.temperature2", key: "SECONDARY_CONTROL") {
-				attributeState("temperature2", label:'                ${currentValue}°', unit:"°", defaultState: true)
-    		}            
-		    tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-        		attributeState "level", action:"switch level.setLevel"
-		    }
-//            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-//    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-//            }
-		}
-        
-		multiAttributeTile(name:"modem", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ2/MDAxNTIyMTUxNzIxMTk3.xeCR1k4pk0vDOozb43Lfo6g2fMC1a_VJFUpTQ071XRUg.dyhFTAUaCwWPUYc4hPUdGiuUI5yeRJ4QpP3kX802AlIg.PNG.shin4299/Humi_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "M1", label:'Auto Mode', action:"setMode2", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ1/MDAxNTIyMTUxNzIxMTk5.LTiuV1QSyPu6WgMB3uR7Bc-Hy19Uwgard5XKG5jj1JIg.XpdiwfmUg3Rz6IgIWyamtsrYeW0BJRqj28XyHRuADA0g.PNG.shin4299/Humi_tile_auto.png?type=w580", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "M2", label:'level 1', action:"setMode3", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTE2/MDAxNTIyMTUxNzIxMTE3.wVp36he9l0up0SalfSgNMOff9y_U9F2wyPc5AfmK-nEg.coHcd4mj2byTBFzTWnc4yjKi7xbJb7QhfgBn9ASt5eUg.PNG.shin4299/Humi_tile_1.png?type=w580", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "M3", label:'level 2', action:"setMode4", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjEz/MDAxNTIyMTUxNzIxMTk4.VfHSHeU2sS9J-T03zqc_sSjgO4ifOxiyBtGorUPxD2kg.dnC3xCu45F_153OJfUm0Pd1_HAWFp9DWVGHLagDqOSgg.PNG.shin4299/Humi_tile_2.png?type=w580", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "M4", label:'level 3', action:"setMode5", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA5/MDAxNTIyMTUxNzIxMTk3.r9waU9A5WmDgRz6p6eiGYTl67F1jo5HGcurD9i57Mj0g.a1R4bIefNK0gT-NdDFmYveohdkXxUuRgJIszH9Q38Ogg.PNG.shin4299/Humi_tile_3.png?type=w580", backgroundColor:"#f7ae0e", nextState:"modechange"
-                attributeState "M5", label:'level 4', action:"setMode1", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA5/MDAxNTIyMTUxNzIxMTk3.r9waU9A5WmDgRz6p6eiGYTl67F1jo5HGcurD9i57Mj0g.a1R4bIefNK0gT-NdDFmYveohdkXxUuRgJIszH9Q38Ogg.PNG.shin4299/Humi_tile_3.png?type=w580", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "modechange", label:'\n${name}', icon:"st.quirky.spotter.quirky-spotter-motion", backgroundColor:"#C4BBB5"
-			}
-		}
-        
-        
-        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2) {
-            state "on", label:'ON', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'OFF', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'turningOn', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'turningOff', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        valueTile("auto_label", "", decoration: "flat") {
-            state "default", label:'Auto'
-        }
-        valueTile("level1_label", "", decoration: "flat") {
-            state "default", label:'Level 1'
-        }
-        valueTile("level2_label", "", decoration: "flat") {
-            state "default", label:'Level 2'
-        }
-        valueTile("level3_label", "", decoration: "flat") {
-            state "default", label:'Level 3'
-        }
-        valueTile("level4_label", "", decoration: "flat") {
-            state "default", label:'Level 4'
-        }
-        standardTile("mode1", "device.mode") {
-			state "default", label: "Auto", action: "setMode1", icon:"st.unknown.zwave.static-controller", backgroundColor:"#73C1EC"
-		}
-        standardTile("mode2", "device.mode") {
-			state "default", label: "Level1", action: "setMode2", icon:"st.quirky.spotter.quirky-spotter-luminance-dark", backgroundColor:"#6eca8f"
-		}
-        standardTile("mode3", "device.mode") {
-			state "default", label: "Level2", action: "setMode3", icon:"st.quirky.spotter.quirky-spotter-luminance-light", backgroundColor:"#FFDE61"
-		}
-        standardTile("mode4", "device.mode") {
-			state "default", label: "Level3", action: "setMode4", icon:"st.quirky.spotter.quirky-spotter-luminance-bright", backgroundColor:"#f7ae0e"
-		}
-        standardTile("mode5", "device.mode") {
-			state "default", label: "Level4", action: "setMode5", icon:"st.quirky.spotter.quirky-spotter-luminance-bright", backgroundColor:"#ff9eb2"
-		}
-        
-        valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
-            state "default", label: 'Buzzer'
-        }        
-        valueTile("led_label", "", decoration: "flat") {
-            state "default", label:'LED'
-        }        
-        valueTile("refresh_label", "device.refresh_label", decoration: "flat") {
-            state "default", label: 'Refresh'
-        }        
-        valueTile("lock_label", "device.dry_label", decoration: "flat") {
-            state "default", label: 'Child Lock'
-        }        
-        valueTile("water_label", "", decoration: "flat") {
-            state "default", label:'No Water \n Warning'
-        }        
-        standardTile("buzzer", "device.buzzer") {
-            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#BAA7BC", nextState:"turningOff"
-            state "off", label:'Mute', action:"buzzerOn", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"buzzerOff", backgroundColor:"#d1cdd2", nextState:"turningOff"
-            state "turningOff", label:'....', action:"buzzerOn", backgroundColor:"#BAA7BC", nextState:"turningOn"
-        }
-        standardTile("ledBrightness", "device.ledBrightness") {
-            state "2", label: 'Bright', action: "setBrightDim", icon: "st.illuminance.illuminance.bright", backgroundColor: "#ff93ac", nextState:"dim"
-            state "1", label: 'Dim', action: "setBrightOff", icon: "st.illuminance.illuminance.light", backgroundColor: "#ffc2cd", nextState:"off"
-            state "0", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"bright"            
-        }         
-        standardTile("childlock", "device.childlock") {
-            state "on", label: 'ON', action: "childLockOff", icon: "st.presence.house.secured",  backgroundColor: "#FFD16C", nextState:"off"
-            state "off", label: 'OFF', action: "childLockOn", icon: "st.presence.house.unlocked", backgroundColor: "#c1baaa", nextState:"on"
-        }
-        standardTile("water2", "device.water2") {
-            state "on", label: 'WATER', action: "noact", icon: "st.valves.water.open",  backgroundColor: "#73C1EC"
-            state "off", label: 'NO WATER', action: "noact", icon: "st.valves.water.closed", backgroundColor: "#ff4732"
-        }
-        valueTile("checkin", "device.lastCheckin", width: 3, height: 1) {
-            state("default", label:'${currentValue}', defaultState: true
-        	)
-        }
-        valueTile("refresh", "device.refresh", decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-		
-   	main (["modem"])
-	details(["mode", "switch", "buzzer_label", "led_label", "lock_label", "water_label",
-    			"buzzer", "ledBrightness", "childlock",  "water2",
-    			"auto_label", "level1_label", "level2_label", "level3_label", "level4_label",  "refresh_label",
-                "mode1", "mode2", "mode3", "mode4", "mode5", "refresh", 
-                "checkin"
-                 ])
-
-
-	}
 }
 
 // parse events into attributes
@@ -458,7 +326,7 @@ def updated() {
     refresh()
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -488,7 +356,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
