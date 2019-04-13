@@ -65,73 +65,6 @@ metadata {
         input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off",  icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
-			}
-		}
-        
-        valueTile("remoteCustom1", "device.remoteCustom1", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom1"
-        }
-        valueTile("remoteCustom2", "device.remoteCustom2", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom2"
-        }
-        valueTile("remoteCustom3", "device.remoteCustom3", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom3"
-        }
-        valueTile("remoteCustom4", "device.remoteCustom4", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom4"
-        }
-        valueTile("remoteCustom5", "device.remoteCustom5", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom5"
-        }
-        valueTile("remoteCustom6", "device.remoteCustom6", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom6"
-        }
-        valueTile("remoteCustom7", "device.remoteCustom7", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom7"
-        }
-        valueTile("remoteCustom8", "device.remoteCustom8", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom8"
-        }
-        valueTile("remoteCustom9", "device.remoteCustom9", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom9"
-        }
-        valueTile("remoteCustom10", "device.remoteCustom10", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom10"
-        }
-        valueTile("remoteCustom11", "device.remoteCustom11", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom11"
-        }
-        valueTile("remoteCustom12", "device.remoteCustom12", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom12"
-        }
-        valueTile("remoteCustom13", "device.remoteCustom13", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom13"
-        }
-        valueTile("remoteCustom14", "device.remoteCustom14", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom14"
-        }
-        valueTile("remoteCustom15", "device.remoteCustom15", decoration: "flat", width: 2, height: 1 ) {
-            state "default", label:'${currentValue}', action:"remoteCustom15"
-        }
-        
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-	}
 }
 
 
@@ -333,7 +266,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
