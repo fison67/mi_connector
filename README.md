@@ -1,13 +1,13 @@
 # Mi Connector
-Connector for Xiaomi devices with [SmartThings](https://www.smartthings.com/getting-started)
+Connector for Xiaomi devices with [Hubitat](https://hubitat.com/)
 
-Simplifies the setup of Xiaomi devices with SmartThings.<br/>
+Simplifies the setup of Xiaomi devices with Hubitat.<br/>
 If Mi Connector is installed, virtual devices are registered automatically by the Mi Connector SmartApp.<br/>
-You don't have to do anything to add Xiaomi devices in SmartThings IDE.
+You don't have to do anything to add Xiaomi devices in Hubitat IDE.
 
 Please see the [prerequisites](#prerequisites) needed for this connector to work properly.
 
-> Hubitat? Use the following repo: https://github.com/fison67/Mi-Connector-Hubitat
+> Smartthings? Use the following repo: https://github.com/fison67/mi_connector
 
 ### Example Video<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
