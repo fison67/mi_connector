@@ -34,49 +34,16 @@ metadata {
         capability "Sensor"
         capability "Contact Sensor"
         capability "Battery"
-	capability "Refresh"
+		capability "Refresh"
                
         attribute "lastCheckin", "Date"
         attribute "lastOpen", "Date"
         attribute "lastClosed", "Date"
-        
 	}
-
 
 	simulator {
 	}
 
-	tiles {
-		multiAttributeTile(name:"contact", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.contact", key: "PRIMARY_CONTROL") {
-               	attributeState "open", label:'${name}', icon:"http://postfiles12.naver.net/MjAxODA0MDNfNTMg/MDAxNTIyNzI0MjgzMjk1.H97Au-OWeJ5aUpwpYbhu3P_H_cA0tMHz-EWpgDPmmTcg.Jcbknv16shFQ86cBtY-Z1n4Jx9P1WGWGpj4voOLxzV8g.PNG.shin4299/door_on1.png?type=w3", backgroundColor:"#e86d13"
-            	attributeState "closed", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI3/MDAxNTIyNjcwOTc2NDgy.WVcwn0G7-BnyFTkk4pUxZ44j-810YDbVb81-A-52D1gg.X_0ijEFzbyu8IeYXU_fr0mVtS4v_4JbZncfmoFCPH5cg.PNG.shin4299/door_off.png?type=w3", backgroundColor:"#00a0dc"
-			}
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Battery: ${currentValue}%\n')
-            }
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        valueTile("lastOpen_label", "", decoration: "flat") {
-            state "default", label:'Last\nOpen'
-        }
-        valueTile("lastOpen", "device.lastOpen", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastClosed_label", "", decoration: "flat") {
-            state "default", label:'Last\nClosed'
-        }
-        valueTile("lastClosed", "device.lastClosed", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-
-	}
 }
 
 // parse events into attributes
@@ -96,11 +63,11 @@ def setStatus(params){
  	switch(params.key){
     case "contact":
 	if(params.data == "true"){
-    		sendEvent(name:"contact", value: "closed" )
-    		sendEvent(name:"lastClosed", value: now )
+		sendEvent(name:"contact", value: "closed" )
+		sendEvent(name:"lastClosed", value: now )
 	} else {
-    		sendEvent(name:"contact", value: "open" )
-    		sendEvent(name:"lastOpen", value: now )
+		sendEvent(name:"contact", value: "open" )
+		sendEvent(name:"lastOpen", value: now )
 	}		
     	break;
     case "batteryLevel":
@@ -111,7 +78,7 @@ def setStatus(params){
     updateLastTime()
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -147,7 +114,7 @@ def refresh(){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
