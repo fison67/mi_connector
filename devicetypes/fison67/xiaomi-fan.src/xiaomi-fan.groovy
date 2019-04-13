@@ -65,7 +65,6 @@ LANGUAGE_MAP = [
 metadata {
 	definition (name: "Xiaomi Fan", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
-		capability "Fan Speed"
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
@@ -135,159 +134,6 @@ metadata {
 		input name: "historyTotalDayCount", type:"number", title: "Total Day for History Graph", description: "0 is max", defaultValue:7, range: "2..7", displayDuringSetup: true
 	}
 
-	tiles {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjIg/MDAxNTIyMzIzNDI2NjQ2.cPAScBLV_hQaqFRkRqjImmaqyFmY7FY23A23k-t8RZ4g.ORO7eIOdaPHIJwR3tMXLLvU741B6NrncFi2a29ZDWbwg.PNG.shin4299/Fan_tile_on.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjkg/MDAxNTIyMzIzNDI2NjQ4.b5E7CPu8ljgF_eHdHFDmK7wLHQG6iymo2DErBeN2u3Ug.61d9mZ5QYaP-oUoIPnXaHA_rocGnrRxBArjSbjctQGwg.PNG.shin4299/Fan_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjkg/MDAxNTIyMzIzNDI2NjQ4.b5E7CPu8ljgF_eHdHFDmK7wLHQG6iymo2DErBeN2u3Ug.61d9mZ5QYaP-oUoIPnXaHA_rocGnrRxBArjSbjctQGwg.PNG.shin4299/Fan_tile_off.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNjIg/MDAxNTIyMzIzNDI2NjQ2.cPAScBLV_hQaqFRkRqjImmaqyFmY7FY23A23k-t8RZ4g.ORO7eIOdaPHIJwR3tMXLLvU741B6NrncFi2a29ZDWbwg.PNG.shin4299/Fan_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-                        
-		    tileAttribute("device.speedlevel", key: "VALUE_CONTROL") {
-	        attributeState("VALUE_UP", action: "tempUp")
-    	    attributeState("VALUE_DOWN", action: "tempDown")
-    		}
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }            
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-   			attributeState("default", label:'${currentValue}')
-          }
-//            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-//   			attributeState("default", label:'                                               AC${currentValue}')
-//          }
-		}
-        standardTile("switch2", "device.switch", inactiveLabel: false, width: 2, height: 2) {
-            state "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTcw/MDAxNTIyMzIzNDI2NjQ3.-DR_CT7fGBUGj65di_Ku0jLCvA4oSgWbFSivfsbA26og.ajX0-he2ip3P3kI_0OqhYwSzKblR8zzIeEa4QtJfSHcg.PNG.shin4299/Fan_main_on.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
-            state "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNDIg/MDAxNTIyMzIzNDI2NjM3.kLKELF4VIDpDZoWz3FGdj1IeNl5-1QTnTUj3PpD_O54g.coZVo_0F8xdhdKxWSuUH_0ldi7v-TpkTXDJtcEMpT34g.PNG.shin4299/Fan_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'turningOn', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNDIg/MDAxNTIyMzIzNDI2NjM3.kLKELF4VIDpDZoWz3FGdj1IeNl5-1QTnTUj3PpD_O54g.coZVo_0F8xdhdKxWSuUH_0ldi7v-TpkTXDJtcEMpT34g.PNG.shin4299/Fan_main_off.png?type=w580", backgroundColor:"#73C1EC", nextState:"turningOff"
-            state "turningOff", label:'turningOff', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTcw/MDAxNTIyMzIzNDI2NjQ3.-DR_CT7fGBUGj65di_Ku0jLCvA4oSgWbFSivfsbA26og.ajX0-he2ip3P3kI_0OqhYwSzKblR8zzIeEa4QtJfSHcg.PNG.shin4299/Fan_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        valueTile("mode_label", "device.mode_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }        
-        valueTile("rotation_label", "device.rotation_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        valueTile("temperature", "device.temperature") {
-            state("val", label:'${currentValue}°', unit:'C', defaultState: true, 
-            )
-        }
-        valueTile("humidity", "device.humidity") {
-            state("val", label:'${currentValue}', unit:'%', defaultState: true, 
-            )
-        }   
-        valueTile("battery", "device.battery") {
-            state("val", label:'${currentValue}', defaultState: true, 
-            )
-        }   
-        valueTile("anglelevel", "device.anglelevel") {
-            state("val", label:'${currentValue}', defaultState: true)
-        }
-	controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(1..120)") {
-	    state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("angle", "device.setangle") {
-            state "on", label:'ON', action:"setAngleOff", icon:"st.motion.motion.inactive", backgroundColor:"#b2cc68", nextState:"turningOff"
-            state "off", label:'OFF', action:"setAngleOn", icon:"st.tesla.tesla-locked", backgroundColor:"#cad2b5", nextState:"turningOn"
-             
-            state "turningOn", label:'turningOn', action:"setAngleOff", icon:"st.tesla.tesla-locked", backgroundColor:"#cad2b5", nextState:"turningOff"
-            state "turningOff", label:'turningOff', action:"setAngleOn", icon:"st.motion.motion.inactive", backgroundColor:"#b2cc68", nextState:"turningOn"
-        }
-        
-        valueTile("angle_label", "device.angle_label", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("head_label", "device.head_label", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("angle1", "device.setangle") {
-			state "default", label: "30°", action: "setAngle30", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTAy/MDAxNTIyMzIzNjE4NjE2.2N1NVfE2fmK85H1EhwK_gqEs0FK0qSaJ1KCimGnxZFcg.CAcpOhL3yJXAlvS-JoBcGz1Uf2UnjuICzGs4hBwwK8kg.PNG.shin4299/Fan_20.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("angle2", "device.setangle") {
-			state "default", label: "60°", action: "setAngle60", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMzIg/MDAxNTIyMzIzNjE4NjE2.8HySZX7X1Lb821PxhP96mahNs7dxuYcmDYqy-8bczT8g.wMnYS-sYxbbqXBFrK06w7fT_I6sBb1IcmznRVMOrjjEg.PNG.shin4299/Fan_60.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("angle3", "device.setangle") {
-			state "default", label: "90°", action: "setAngle90", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNTgg/MDAxNTIyMzIzNDI2NjE2.86i1P_l290aYfdzh9fATsl3VA-dCVAba9ir_1Ym3mlIg.gyZmaDisBZAbtzzSg-55iwk2ie1ijd64x4ZTo5Jbu4Eg.PNG.shin4299/Fan_30.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("angle4", "device.setangle") {
-			state "default", label: "120°", action: "setAngle120", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMjIw/MDAxNTIyMzIzNjE4NjIx.t6DneqY6JyAZAicutP3NtV9Vf0wWGNAXWnVDIxnL_0gg.-5LlfL2aVTqW3ziuAXWOHFQ6C436d5-XZc_NVHxgS9Mg.PNG.shin4299/Fan_120.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("headl", "device.setdirection") {
-			state "off", label: "Left", action: "setMoveLeft", icon:"st.thermostat.thermostat-left", backgroundColor:"#d897be"
-			state "on", label: "Left", action: "setdirectionfault", icon:"st.thermostat.thermostat-left", backgroundColor:"#bcbabc", nextState:"on1"
-			state "on1", label: "Left", action: "setdirectionfault", icon:"st.thermostat.thermostat-left", backgroundColor:"#bcbabc", nextState:"on"
-		}
-        standardTile("headr", "device.setdirection") {
-			state "off", label: "Right", action: "setMoveRight", icon:"st.thermostat.thermostat-right", backgroundColor:"#d897be"
-			state "on", label: "Right", action: "setdirectionfault", icon:"st.thermostat.thermostat-right", backgroundColor:"#bcbabc", nextState:"on1"
-			state "on1", label: "Right", action: "setdirectionfault", icon:"st.thermostat.thermostat-right", backgroundColor:"#bcbabc", nextState:"on"
-		}
-        standardTile("mode", "device.fanmode") {
-            state "general", label:'general', action:"naturalOn", icon:"st.Appliances.appliances11", backgroundColor:"#73C1EC", nextState:"natural"
-            state "natural", label:'natural', action:"generalOn", icon:"st.Outdoor.outdoor19", backgroundColor:"#6eca8f", nextState:"general"
-             
-            state "change", label:'....', action:"naturalOn", backgroundColor:"#d6c6c9"
-        }
-        valueTile("refresh", "device.refresh", decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("led_label", "", decoration: "flat") {
-            state "default", label:'LED'
-        }
-        valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }        
-        
-        standardTile("buzzer", "device.buzzer") {
-            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#f9b959", nextState:"turningOff"
-            state "off", label:'Mute', action:"buzzerOn", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"buzzerOff", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOff"
-            state "turningOff", label:'....', action:"buzzerOn", icon: "st.custom.sonos.unmuted", backgroundColor:"#f9b959", nextState:"turningOn"
-        }
-        
-        standardTile("ledBrightness", "device.ledBrightness") {
-            state "bright", label: 'Bright', action: "setBrightDim", icon: "st.illuminance.illuminance.bright", backgroundColor: "#ff93ac", nextState:"dim"
-            state "dim", label: 'Dim', action: "setBrightOff", icon: "st.illuminance.illuminance.light", backgroundColor: "#ffc2cd", nextState:"off"
-            state "off", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"bright"
-        } 
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-//	for new smartthings app	
-        standardTile("powerSource", "device.powerSource") {
-            state "dc", label:'DC'
-            state "battery", label:'Battery'
-        }
-        
-    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
-			state "temperature", label:'Temperature', nextState: "humidity", action: 'chartTemperature'
-			state "humidity", label:'Humidity', nextState: "totalTemperature", action: 'chartHumidity'
-			state "totalTemperature", label:'T-Temperature', nextState: "totalHumidity", action: 'chartTotalTemperature'
-			state "totalHumidity", label:'T-Humidity', nextState: "temperature", action: 'chartTotalHumidity'
-		}
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-	
-        main (["switch2"])
-        details(["switch", "mode_label", "rotation_label",  "buzzer_label", "led_label", "timer_label", 
-        "mode", "angle", "buzzer", "ledBrightness", "tiemr0", "time", 
-        "head_label", "angle_label", "refresh",
-         "headl", "headr", "angle1", "angle2", "angle3", "angle4",
-         "chartMode", "history"
-        ])
-
-	}
 }
 
 // parse events into attributes
@@ -334,15 +180,15 @@ def setStatus(params){
     case "naturalLevel":
 		def para = params.data
         if(para == "0"){
-        sendEvent(name:"fanmode", value: "general")
+        	sendEvent(name:"fanmode", value: "general")
         }
         else {
-		String data = para
-		def stf = Float.parseFloat(data)
-		def tem = Math.round((stf+12)/25)        
-        sendEvent(name:"speedlevel", value: tem)        
-        sendEvent(name:"fanmode", value: "natural")
-        sendEvent(name:"level", value: para)
+			String data = para
+			def stf = Float.parseFloat(data)
+			def tem = Math.round((stf+12)/25)        
+			sendEvent(name:"speedlevel", value: tem)        
+			sendEvent(name:"fanmode", value: "natural")
+			sendEvent(name:"level", value: para)
         }
     	break;        
     case "angleEnable":
@@ -358,9 +204,9 @@ def setStatus(params){
 	multiatt()
     	break;        
     case "batteryLevel":
-	state.batteryLe = params.data	
+		state.batteryLe = params.data	
         sendEvent(name:"battery", value: params.data)
-	multiatt()
+		multiatt()
     	break;
     case "power":
     	state.power = (params.data == "true" ? "on" : "off")
@@ -801,7 +647,7 @@ def setLanguage(language){
 def setdirectionfault() {
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -851,7 +697,7 @@ def multiatt(){
 	sendEvent(name:"powerSource", value: (state.acPower == "☈: " ? "dc" : "battery"))
 }
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -948,4 +794,3 @@ def chartHumidity() {
     	processImage(response, "humidity")
     }
 }
-
