@@ -32,13 +32,10 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Philips Light Ceiling", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
-        capability "Actuator"
-        capability "Configuration"
-        capability "Refresh"
-		capability "Color Control"
-        capability "Switch Level"
-        capability "Health Check"
         capability "Light"
+        capability "Refresh"
+		capability "ColorTemperature"
+        capability "Switch Level"
 
         attribute "lastOn", "string"
         attribute "lastOff", "string"
@@ -59,101 +56,12 @@ metadata {
         command "stop"
 	}
 
-
-	simulator {
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-            
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
-        
-        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("lastOn_label", "", decoration: "flat") {
-            state "default", label:'Last\nON'
-        }
-        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastOff_label", "", decoration: "flat") {
-            state "default", label:'Last\nOFF'
-        }
-        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        standardTile("autoColor", "device.autoColor") {
-			state "on", label: "On", action: "setAutoColorOff", backgroundColor:"#ff9eb2", nextState:"off"
-			state "off", label: "Off", action: "setAutoColorOn", backgroundColor:"#bcbcbc", nextState:"on"
-		}
-        
-        standardTile("smartNightLight", "device.smartNightLight") {
-			state "on", label: "On", action: "setSmartNightLightOff", backgroundColor:"#ff9eb2", nextState:"off"
-			state "off", label: "Off", action: "setSmartNightLightOn", backgroundColor:"#bcbcbc", nextState:"on"
-		}
-        
-        valueTile("smartNightLabel", "", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'Smart Night'
-        }
-        valueTile("autoColorLabel", "", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'Auto Color'
-        }
-        valueTile("sceneLabel", "", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'Scene Mode'
-        }
-        standardTile("scene1", "device.scene") {
-			state "default", label: "Scene1", action: "setScene1", backgroundColor:"#f2aebc"
-		}
-        standardTile("scene2", "device.scene") {
-			state "default", label: "Scene2", action: "setScene2", backgroundColor:"#f77993"
-		}
-        standardTile("scene3", "device.scene") {
-			state "default", label: "Scene3", action: "setScene3", backgroundColor:"#f75475"
-		}
-        standardTile("scene4", "device.scene") {
-			state "default", label: "Scene4", action: "setScene4", backgroundColor:"#f72751"
-		}
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        
-   	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "smartNightLabel", "autoColorLabel", "sceneLabel", "autoColor", "smartNightLight", "scene1", "scene2", "scene3", "scene4", "time", "tiemr0" ])       
+	simulator {
 	}
 }
 
@@ -182,9 +90,7 @@ def setStatus(params){
         }
     	break;
     case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: params.data )
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
@@ -213,6 +119,11 @@ def refresh(){
 }
 
 def setLevel(brightness){
+	if(brightness < 0){
+		brightness = 0	
+	}else if(brightness > 100){
+		brightness = 100	
+	}
 	log.debug "setBrightness >> ${state.id}, val=${brightness}"
     def body = [
         "id": state.id,
@@ -223,17 +134,17 @@ def setLevel(brightness){
     sendCommand(options, null)
 }
 
-def setColor(color){
-	log.debug "setColorTemperature >> ${state.id}"
-    log.debug "${color}"
-    
+def setColorTemperature(colortemperature){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": colortemperature + "K",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+    
+    setPowerByStatus(true)	
 }
 
 def on(){
@@ -357,14 +268,13 @@ def setScene4(){
 
 def updated() {}
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        def colors = jsonObj.properties.color.values
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+       
+        sendEvent(name:"color", value: jsonObj.properties.color)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -377,7 +287,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -454,6 +364,17 @@ def setTimeRemaining(time) {
         processTimer(time * 60)
         setPowerByStatus(true)
     }
+}
+
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
 }
 
 def setPowerByStatus(turnOn){
