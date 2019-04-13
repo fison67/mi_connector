@@ -44,14 +44,7 @@ LANGUAGE_MAP = [
 
 
 metadata {
-	definition (name: "Xiaomi Heater2", namespace: "fison67", author: "fison67") {
-        /*capability "Switch"						//"on", "off"
-        capability "Switch Level"
-        capability "Temperature Measurement"
-        capability "Relative Humidity Measurement"
-		capability "Refresh"
-		capability "Sensor"
-        */
+	definition (name: "Xiaomi Heater", namespace: "fison67", author: "fison67") {
 		capability "Actuator"
 		capability "Temperature Measurement"
 		capability "Relative Humidity Measurement"
@@ -102,110 +95,6 @@ metadata {
         input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"temperature", type:"generic", width:6, height:4, canChangeIcon: true) {
-			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
-				attributeState("temperature", label:'${currentValue}°', icon: "st.alarm.temperature.normal",
-						backgroundColors:[
-                        // Fahrenheit color set
-                        [value: 0, color: "#153591"],
-                        [value: 5, color: "#1e9cbb"],
-                        [value: 10, color: "#90d2a7"],
-                        [value: 15, color: "#44b621"],
-                        [value: 20, color: "#f1d801"],
-                        [value: 25, color: "#d04e00"],
-                        [value: 30, color: "#bc2323"],
-                        [value: 44, color: "#1e9cbb"],
-                        [value: 59, color: "#90d2a7"],
-                        [value: 74, color: "#44b621"],
-                        [value: 84, color: "#f1d801"],
-                        [value: 95, color: "#d04e00"],
-                        [value: 96, color: "#bc2323"]
-						// Celsius color set (to switch, delete the 13 lines above anmd remove the two slashes at the beginning of the line below)
-                        //[value: 0, color: "#153591"], [value: 7, color: "#1e9cbb"], [value: 15, color: "#90d2a7"], [value: 23, color: "#44b621"], [value: 28, color: "#f1d801"], [value: 35, color: "#d04e00"], [value: 37, color: "#bc2323"]
-                    ]
-				)
-			}
-            tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
-        		attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
-    		}   
-		}
-		standardTile("thermostatMode", "device.thermostatMode") {
-			state "off", action: "thermostatMode.heat", icon: "st.thermostat.heating-cooling-off", backgroundColor:"#dbd9d9", nextState: "..."
-			state "heat", action: "thermostatMode.off", icon: "st.thermostat.heat", backgroundColor:"#f9c240", nextState: "..."
-			state "...", label: "Updating...", backgroundColor: "#d8c597", nextState:"..."
-		}
-		standardTile("thermostatMode2", "device.mode2", width:2, height:2, inactiveLabel: false, decoration: "flat") {
-			state "default", action: "thermostatMode.off", label:'${currentValue}°', icon: "st.thermostat.heat", nextState: "...", backgroundColor:"#f9b30e"
-			state "off", action: "thermostatMode.heat", label: "OFF", icon: "st.thermostat.heating-cooling-off", nextState: "...", backgroundColor:"#ffffff"
-			state "...", label: "Updating...", nextState:"..."
-		}
-        standardTile("thermostatFanMode", "device.thermostatFanMode", width:2, height:2, inactiveLabel: false, decoration: "flat") {
-			state "auto", action:"thermostatFanMode.fanOn", nextState:"...", icon: "st.thermostat.fan-auto"
-			state "on", action:"thermostatFanMode.fanAuto", nextState:"...", icon: "st.thermostat.fan-on"
-			state "...", label: "Updating...", nextState:"...", backgroundColor:"#ffffff"
-		}
-		standardTile("lowerHeatingSetpoint", "device.heatingSetpoint", width:2, height:1, inactiveLabel: false, decoration: "flat") {
-			state "heatingSetpoint", action:"lowerHeatingSetpoint", icon:"st.thermostat.thermostat-left"
-		}
-		valueTile("heatingSetpoint", "device.heatingSetpoint", width:2, height:1, inactiveLabel: false, decoration: "flat") {
-			state "heatingSetpoint", label:'${currentValue}° heat', backgroundColor:"#ffffff"
-		}
-		standardTile("raiseHeatingSetpoint", "device.heatingSetpoint", width:2, height:1, inactiveLabel: false, decoration: "flat") {
-			state "heatingSetpoint", action:"raiseHeatingSetpoint", icon:"st.thermostat.thermostat-right"
-		}
-		standardTile("thermostatOperatingState", "device.thermostatOperatingState") {
-			state "heating", label:'Heating', action: "", icon:"st.vents.vent-open", backgroundColor:"#f984a3"
-			state "idle", label:'Idle', action: "", icon:"st.vents.vent", backgroundColor: "#e8ccd3"
-		}
-		standardTile("refresh", "device.thermostatMode") {
-			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
-		}
-        standardTile("buzzer", "device.buzzer") {
-            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#64c5fc", nextState:"turningOff"
-            state "off", label:'Mute', action:"buzzerOn", icon: "st.custom.sonos.muted", backgroundColor:"#adc2ce", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"buzzerOff", backgroundColor:"#adc2ce", nextState:"turningOff"
-            state "turningOff", label:'....', action:"buzzerOn", backgroundColor:"#64c5fc", nextState:"turningOn"
-        }
-        standardTile("ledBrightness", "device.ledBrightness") {
-            state "0", label: 'Bright', action: "setBrightDim", icon: "st.illuminance.illuminance.bright", backgroundColor: "#e266ff", nextState:"dim"
-            state "1", label: 'Dim', action: "setBrightOff", icon: "st.illuminance.illuminance.light", backgroundColor: "#eea5ff", nextState:"off"
-            state "2", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d0ccd1", nextState:"bright"            
-        }
-        standardTile("childlock", "device.childlock") {
-            state "on", label:'Lock', action:"childLockOff", icon: "st.presence.house.secured", backgroundColor:"#96f259", nextState:"turningOff"
-            state "off", label:'Unlock', action:"childLockOn", icon: "st.presence.house.unlocked", backgroundColor:"#c5ccc1", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"childLockOff", backgroundColor:"#c5ccc1", nextState:"turningOff"
-            state "turningOff", label:'....', action:"childLockOn", backgroundColor:"#96f259", nextState:"turningOn"
-        }        
-        valueTile("settimertile", "device.settimer", height: 2, width: 1) {
-            state "default", label:'OFF\nTime\nSet', backgroundColor:"#ffffff"
-        }
-		controlTile("settimer", "device.settimer", "slider", height: 1, width: 2, range:"(1..480)") {
-	    	state "settimer", action:"settimer"
-		}
-        valueTile("settime", "device.settime", height: 1, width: 2, decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }        
-        valueTile("remaintime", "device.remaintime", height: 1, width: 2, decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }        
-        standardTile("starttimer", "device.starttimer") {
-			state "default", label: "START", action: "starttimer", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        valueTile("remaintimertile", "device.settimer", height: 1, width: 2) {
-            state "default", label:'Remain Time >>', backgroundColor:"#ffffff"
-        }
-        standardTile("stoptimer", "device.stoptimer") {
-			state "default", label: "STOP", action: "stoptimer", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-
-        main "thermostatMode2"
-		details(["temperature", "lowerHeatingSetpoint", "heatingSetpoint", "raiseHeatingSetpoint", "thermostatMode", "thermostatOperatingState",
-				 "buzzer", "ledBrightness", "childlock", "refresh", "settimertile", "settimer", "settime", "starttimer", "remaintimertile", "remaintime", "stoptimer"])
-	}
 }
 
 // parse events into attributes
@@ -515,7 +404,7 @@ def setLanguage(language){
 	sendEvent(name:"target", value: LANGUAGE_MAP["tarT"][language] )
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -537,7 +426,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
