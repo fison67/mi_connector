@@ -69,12 +69,14 @@ metadata {
 		capability "Refresh"
 		capability "Sensor"
 		capability "Power Source"
-		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
 
         attribute "clock", "enum", ["on", "off"]
         attribute "night", "enum", ["on", "off"]
         attribute "setbeap", "enum", ["am", "pm"]
         attribute "setendap", "enum", ["am", "pm"]
+		attribute "fineDustLevel", "number"// fineDustLevel : PM 2.5
+		attribute "dustLevel", "number"	// dustLevel : PM 10
+		
         
         attribute "lastCheckin", "Date"
      
@@ -99,131 +101,6 @@ metadata {
 	}
 	preferences {
 	        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
-	}
-
-	tiles {
-		multiAttributeTile(name:"fineDustLevel", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.fineDustLevel", key: "PRIMARY_CONTROL") {
-                attributeState "default", label:'${currentValue}㎍/㎥', unit:"㎍/㎥", backgroundColors:[
-			[value: -1, color: "#C4BBB5"],
-            		[value: 0, color: "#7EC6EE"],
-            		[value: 15, color: "#51B2E8"],
-            		[value: 50, color: "#e5c757"],
-            		[value: 75, color: "#E40000"],
-            		[value: 500, color: "#970203"]
-            		]
-			}
-            
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Battery: ${currentValue}%\n')
-            }		
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-		valueTile("pm25", "device.fineDustLevel", decoration: "flat", width: 2, height: 2) {
-        	state "default", label:'${currentValue}㎍/㎥', icon:"http://postfiles9.naver.net/MjAxODA0MDNfMjkw/MDAxNTIyNzI3NjY0Mzk0.yVQdGxRJMGFrGQLVzb-OUThZptHXIBmTaMEZO3LoipAg.v0Rw0_zvHr7wBk-VeH5KQxNry_zUOz4aXUn6I1QQ9xkg.PNG.shin4299/pm25_on.png?type=w3", unit:"㎍/㎥", backgroundColors:[
-			[value: -1, color: "#C4BBB5"],
-            		[value: 0, color: "#7EC6EE"],
-            		[value: 15, color: "#51B2E8"],
-            		[value: 50, color: "#e5c757"],
-            		[value: 75, color: "#E40000"],
-            		[value: 500, color: "#970203"]
-            ]
-        }
-        
-        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2) {
-            state "on", label:'ON', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'OFF', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'turningOn', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'turningOff', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        
-        valueTile("display_label", "device.display_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }        
-        valueTile("night_label", "device.night_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("power_label", "device.power_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("refresh_label", "device.refresh_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("timeset_label", "device.timeset_label", decoration: "flat", width: 1, height: 2) {
-            state "default", label:'${currentValue}', action:"setUpTime"
-        }
-        
-		standardTile("clock", "device.clock") {
-            state "on", label:'Clock', action:"clockOff", icon:"st.Office.office6", backgroundColor:"#ff9eb2", nextState:"off"
-            state "off", label:'PM2.5', action:"clockOn", icon:"st.unknown.zwave.static-controller", backgroundColor:"#73C1EC", nextState:"on"
-        }
-        standardTile("night", "device.night") {
-            state "on", label:'Night', action:"nightOff", icon: "st.Weather.weather4", backgroundColor:"#7a88bc", nextState:"off"
-            state "off", label:'Day', action:"nightOn", icon: "st.Weather.weather14", backgroundColor:"#f9b959", nextState:"on"
-        }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state("val", label:'${currentValue}%', defaultState: true, backgroundColor:"#00a0dc")
-        }
-        
-        standardTile("powerSource", "device.powerSource") {
-            state "dc", label:'USB', icon:"st.quirky.spotter.quirky-spotter-plugged", backgroundColor:"#96CEB4"
-            state "battery", label:'Battery', icon:"https://www.shareicon.net/data/128x128/2015/03/06/3189_battery_32x32.png", backgroundColor:"#abaf9e"
-        }
-        
-        standardTile("refresh", "device.refresh") {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh", backgroundColor:"#A7ADBA"
-        }
-        valueTile("setbe_label", "device.setbe_label", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("setend_label", "device.setend_label", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-
-        standardTile("setbeap", "device.setbeap", decoration: "flat") {
-            state "am", label:"am", action:"setBePm", icon:"st.Weather.weather14", backgroundColor:"#edd884", nextState:"am.."
-            state "pm", label:"pm", action:"setBeAm", icon:"st.Weather.weather4", backgroundColor:"#7a88bc", nextState:"pm.."
-
-            state "am..", label:"..", action:"setBePm", icon:"st.Weather.weather14", backgroundColor:"#edd884", nextState:"pm.."
-            state "pm..", label:"..", action:"setBeAm", icon:"st.Weather.weather4", backgroundColor:"#7a88bc", nextState:"am.."
-        }
-        standardTile("setendap", "device.setendap", decoration: "flat") {
-            state "am", label:"am", action:"setEndPm", icon:"st.Weather.weather14", backgroundColor:"#edd884", nextState:"am.."
-            state "pm", label:"pm", action:"setEndAm", icon:"st.Weather.weather4", backgroundColor:"#7a88bc", nextState:"pm.."
-
-            state "am..", label:"..", action:"setEndPm", icon:"st.Weather.weather14", backgroundColor:"#edd884", nextState:"pm.."
-            state "pm..", label:"..", action:"setEndPm", icon:"st.Weather.weather4", backgroundColor:"#7a88bc", nextState:"am.."
-        }
-        
-        valueTile("setbe_hour", "device.setbe_hour", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'${currentValue}h', action:"setBeHour"
-            }
-        valueTile("setend_hour", "device.setend_hour", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'${currentValue}h', action:"setEndHour"
-        }
-        valueTile("setbe_min", "device.setbe_min", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'${currentValue}min', action:"setBeMin"
-        }
-        valueTile("setend_min", "device.setend_min", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'${currentValue}min', action:"setEndMin"
-        }
-        standardTile("setup_be", "device.setup_be", inactiveLabel: false, decoration: "flat") {
-            state "default", label:"Set\nUp", action:"setupBe", icon:"st.secondary.refresh"
-        }
-        standardTile("setup_end", "device.setup_end", inactiveLabel: false, decoration: "flat") {
-            state "default", label:"Set\nUp", action:"setupEnd", icon:"st.secondary.refresh"
-        }
-        
-        main (["pm25"])
-		details(["fineDustLevel", "switch", "display_label", "night_label", "power_label", "refresh_label", 
-    		"clock", "night", "powerSource", "refresh",
-            "setbe_label", "setbe_hour", "setbe_min", "setbeap", "timeset_label", 
-            "setend_label", "setend_hour", "setend_min", "setendap"])
-		
 	}
 }
 
@@ -487,7 +364,7 @@ def setEndPm() {
     log.debug "setEndAP >> pm"
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -585,7 +462,7 @@ def setLanguage(language){
 	sendEvent(name:"timeset_label", value: LANGUAGE_MAP["setup"][language] )
 }
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
