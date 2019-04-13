@@ -76,128 +76,6 @@ metadata {
 	preferences {
         input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/tv-100.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/tv-100.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
-			}
-		}
-        
-        standardTile("remoteCHUp", "device.remoteCHUp", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCHUp", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/ch-up.png?raw=true"
-        }
-
-		standardTile("remoteExit", "device.remoteExit", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteExit", label: "EXIT"
-        }
-        
-        standardTile("remoteVOLUp", "device.remoteVOLUp", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteVOLUp", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/vol-up.png?raw=true"
-        }
-        
-		standardTile("remoteCHDown", "device.remoteCHDown", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCHDown", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/ch-down.png?raw=true"
-        }
-        
-        standardTile("remoteVOLMute", "device.remoteVOLMute", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteVOLMute", label: "VOL Mute"
-        }
-
-		standardTile("remoteVOLDown", "device.remoteVOLDown", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteVOLDown", label: "", icon: "https://github.com/fison67/mi_connector/blob/master/icons/vol-down.png?raw=true"
-        }
-        
-        standardTile("remoteNum1", "device.remoteNum1", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum1", label: "1"
-        }
-
-		standardTile("remoteNum2", "device.remoteNum2", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum2", label: "2"
-        }
-        
-        standardTile("remoteNum3", "device.remoteNum3", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum3", label: "3"
-        }
-        
-        standardTile("remoteNum4", "device.remoteNum4", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum4", label: "4"
-        }
-
-		standardTile("remoteNum5", "device.remoteNum5", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum5", label: "5"
-        }
-        
-        standardTile("remoteNum6", "device.remoteNum6", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum6", label: "6"
-        }   
-        
-        standardTile("remoteNum7", "device.remoteNum7", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum7", label: "7"
-        }
-
-		standardTile("remoteNum8", "device.remoteNum8", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum8", label: "8"
-        }
-        
-        standardTile("remoteNum9", "device.remoteNum9", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum9", label: "9"
-        }
-        
-        standardTile("remoteHyphen", "device.remoteHyphen", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteHyphen", label: "-"
-        }
-
-		standardTile("remoteNum0", "device.remoteNum0", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteNum0", label: "0"
-        }
-        
-        standardTile("remotePrv", "device.remotePrv", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remotePrv", label: "PRV"
-        }        
-        
-        standardTile("remoteCustom1", "device.remoteCustom1", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom1", label: "#1"
-        }
-        standardTile("remoteCustom2", "device.remoteCustom2", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom2", label: "#2"
-        }
-        standardTile("remoteCustom3", "device.remoteCustom3", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom3", label: "#3"
-        }
-        standardTile("remoteCustom4", "device.remoteCustom4", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom4", label: "#4"
-        }
-        standardTile("remoteCustom5", "device.remoteCustom5", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom5", label: "#5"
-        }
-        standardTile("remoteCustom6", "device.remoteCustom6", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom6", label: "#6"
-        }
-        standardTile("remoteCustom7", "device.remoteCustom7", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom7", label: "#7"
-        }
-        standardTile("remoteCustom8", "device.remoteCustom8", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom1", label: "#8"
-        }
-        standardTile("remoteCustom9", "device.remoteCustom9", decoration: "flat", width: 2, height: 1) {
-            state "default", action:"remoteCustom9", label: "#9"
-        }
-        
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-	}
 }
 
 
@@ -445,7 +323,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
