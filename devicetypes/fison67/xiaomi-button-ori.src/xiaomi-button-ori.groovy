@@ -32,58 +32,21 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Button Ori", namespace: "fison67", author: "fison67") {
         capability "Sensor"						//"on", "off"
-        capability "Button"
         capability "Configuration"
+        capability "PushableButton"
+        capability "DoubleTapableButton"
+		capability "HoldableButton"
+		capability "ReleasableButton"
         capability "Battery"
 		capability "Refresh"
         
         attribute "lastCheckin", "Date"
-        
-        command "click"
-        command "double_click"
-        command "long_click_press"
-        command "long_click_release"
-	}
-
-
-	simulator {
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"button", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
-                attributeState "click", label:'\nButton', icon:"http://postfiles1.naver.net/MjAxODA0MDJfMjQ3/MDAxNTIyNjcwOTc1OTA0.g_GeJwDzpJhau4j0OOi2LzKoT8Qtnlq4sHnGVBnQYHwg.DpHVKVGEZfmefd-tfuz4VnAg5vknwkfA7XDo-_Cow88g.PNG.shin4299/buttonOr_main.png?type=w3", backgroundColor:"#8CB8C9"                
-			}
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Battery: ${currentValue}%\n')
-            }		
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-        valueTile("click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#1_Core \n one_click', action:"click"
-        }
-        valueTile("double_click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#2_Core \n double_click", action:"double_click"
-        }
-        valueTile("long_click_press", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#3_Core \n long_click_press", action:"long_click_press"
-        }   
-        valueTile("long_click_release", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#4_Core \n long_click_release", action:"long_click_release"
-        }    
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
+		
+		command "push1"
+		command "push2"
 	}
 }
 
-
-def click() {buttonEvent(1, "pushed")}
-def double_click() {buttonEvent(2, "pushed")}
-def long_click_press() {buttonEvent(3, "pushed")}
-def long_click_release() {buttonEvent(4, "pushed")}
 
 // parse events into attributes
 def parse(String description) {
@@ -96,24 +59,30 @@ def setInfo(String app_url, String id) {
     state.id = id
 }
 
+def push1(){
+    sendEvent(name:"pushed", value:1, isStateChange: true, descriptionText: "Click")
+}
+
+def push2(){
+	sendEvent(name:"doubleTapped", value:1, isStateChange: true, descriptionText: "Click")
+}
+
 def setStatus(params){
 	log.debug "Mi Connector >> ${params.key} : ${params.data}"
  	switch(params.key){
     case "action":
     	if(params.data == "click") {
-        	buttonEvent(1, "pushed")
+			sendEvent(name:"pushed", value:1, isStateChange: true, descriptionText: "Click")
         } else if(params.data == "double_click") {
-        	buttonEvent(2, "pushed")
+			sendEvent(name:"doubleTapped", value:1, isStateChange: true, descriptionText: "Double Click")
         } else if(params.data == "long_click_press") {
-        	buttonEvent(3, "pushed")
-        }
-        else if(params.data == "long_click_release") {
-        	buttonEvent(4, "pushed")
-        } else { 
+			sendEvent(name:"held", value:1, isStateChange: true, descriptionText: "Long Click")
+        } else if(params.data == "long_release_press") {
+			sendEvent(name:"released", value:1, isStateChange: true, descriptionText: "Release")
         }
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data)
+    	sendEvent(name:"battery", value: params.data as int)
     	break;
     }
     
@@ -137,7 +106,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -159,7 +128,7 @@ def updateLastTime(){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
