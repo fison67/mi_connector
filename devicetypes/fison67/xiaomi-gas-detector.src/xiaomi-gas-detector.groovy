@@ -34,6 +34,7 @@ metadata {
         capability "Sensor"
         capability "Carbon Monoxide Detector"    //"detected", "clear", "tested"
         capability "Refresh"
+		
         attribute "density", "string"        
         attribute "lastCheckin", "Date"
         
@@ -42,30 +43,6 @@ metadata {
 	simulator {
 	}
 
-	tiles {
-		multiAttributeTile(name:"gas", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.carbonMonoxide", key: "PRIMARY_CONTROL") {
-               	attributeState "clear", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTg0/MDAxNTIyNjcwOTc2ODE1.2rSncv314VWU8irUYinoIi9JLQ3muxYJOVv0zNi_hpsg.ti_b998of00LFlzxjoNnD6Y2zAhq-I2Np7KvWXRaEHMg.PNG.shin4299/gas_main_off.png?type=w3" , backgroundColor:"#ffffff"
-            	attributeState "detected", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI3/MDAxNTIyNjcwOTc2OTQ3.BhACHbETMGGIUQohpJx2USQ_QwLmvOtHMkTe5tTQBzgg.2BXHQDUXhu0f5GCsZ5IFwBvdDJY0DTXmPvs4YjVD6K4g.PNG.shin4299/gas_main_on.png?type=w3" , backgroundColor:"#e86d13"
-			}
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        
-        valueTile("density", "device.density", width: 2, height: 2) {
-            state ("val", label:'${currentValue}㎍/㎥', unit:"㎍/㎥", defaultState: true, 
-            	backgroundColors:[
-                    [value: 00, color: "#fde9e5"],
-                    [value: 1000, color: "#600e00"]
-                ]
-             )
-        }
-                
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-	}
 }
 
 // parse events into attributes
@@ -98,7 +75,7 @@ def updateLastTime(){
     sendEvent(name: "lastCheckin", value: now)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -129,7 +106,7 @@ def refresh(){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
