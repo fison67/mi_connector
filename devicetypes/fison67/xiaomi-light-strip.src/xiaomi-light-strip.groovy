@@ -35,7 +35,8 @@ metadata {
         capability "Actuator"
         capability "Configuration"
         capability "Refresh"
-	capability "Color Control"
+		capability "ColorTemperature"
+		capability "Color Control"
         capability "Switch Level"
         capability "Health Check"
         capability "Light"
@@ -47,60 +48,14 @@ metadata {
       
 	}
 
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+	}
 
 	simulator {
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTU5/MDAxNTIyNjcwODg1Nzkw.IyMt_rjlBb58EZcCnzwGDEOnDxhVCZp6HYYI3QEWTG0g.RQSDWDrcLCowG_OU2_Z0uIqjIZNuH7mPoWLq5gIf4G0g.PNG.shin4299/strip_main_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjgy/MDAxNTIyNjcwODg1NjM4.uhaE4TpPzavjNsGK77KQb22ezNBNs48YTz71jyksbxEg.4McvI0chsVuq-hoUozV38UMV4yo6n5qkvNv8G_Ddk0Mg.PNG.shin4299/strip_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjgy/MDAxNTIyNjcwODg1NjM4.uhaE4TpPzavjNsGK77KQb22ezNBNs48YTz71jyksbxEg.4McvI0chsVuq-hoUozV38UMV4yo6n5qkvNv8G_Ddk0Mg.PNG.shin4299/strip_main_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTU5/MDAxNTIyNjcwODg1Nzkw.IyMt_rjlBb58EZcCnzwGDEOnDxhVCZp6HYYI3QEWTG0g.RQSDWDrcLCowG_OU2_Z0uIqjIZNuH7mPoWLq5gIf4G0g.PNG.shin4299/strip_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
-        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("lastOn_label", "", decoration: "flat") {
-            state "default", label:'Last\nON'
-        }
-        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastOff_label", "", decoration: "flat") {
-            state "default", label:'Last\nOFF'
-        }
-        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-   	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff" ])       
-	}
 }
 
 // parse events into attributes
@@ -120,17 +75,15 @@ def setStatus(params){
     case "power":
     	log.debug "MI >> power " + (params.data == "true" ? "on" : "off")
         if(params.data == "true"){
-    	sendEvent(name:"switch", value: "on")
-	    sendEvent(name: "lastOn", value: now)
+			sendEvent(name:"switch", value: "on")
+			sendEvent(name: "lastOn", value: now)
         } else {
-        sendEvent(name:"switch", value: "off")
-	    sendEvent(name: "lastOff", value: now)
+			sendEvent(name:"switch", value: "off")
+			sendEvent(name: "lastOff", value: now)
         }
     	break;
     case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: params.data )
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
@@ -139,6 +92,7 @@ def setStatus(params){
     
     sendEvent(name: "lastCheckin", value: now)
 }
+
 def refresh(){
 	log.debug "Refresh"
     def options = [
@@ -163,13 +117,29 @@ def setLevel(brightness){
     sendCommand(options, null)
 }
 
-def setColor(color){
-	log.debug "setColor >> ${state.id}"
-    log.debug "${color.hex}"
+
+def setColorTemperature(colortemperature){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
+}
+
+def setColor(color){
+	def hue = (color.hue != null) ? color.hue : 13
+	def saturation = (color.saturation != null) ? color.saturation : 13
+	def rgb = huesatToRGB(hue as Integer, saturation as Integer)
+	
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -200,15 +170,14 @@ def off(){
 
 def updated() {}
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
-        def colors = jsonObj.properties.color.values
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+		
+    	sendEvent(name:"color", value: [jsonObj.state.colorRGB.red, jsonObj.state.colorRGB.green, jsonObj.state.colorRGB.blue])
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -219,10 +188,8 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     }
 }
 
-
-
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -237,4 +204,32 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
+}
+
+def huesatToRGB(float hue, float sat) {
+	while(hue >= 100) hue -= 100
+	int h = (int)(hue / 100 * 6)
+	float f = hue / 100 * 6 - h
+	int p = Math.round(255 * (1 - (sat / 100)))
+	int q = Math.round(255 * (1 - (sat / 100) * f))
+	int t = Math.round(255 * (1 - (sat / 100) * (1 - f)))
+	switch (h) {
+		case 0: return [255, t, p]
+		case 1: return [q, 255, p]
+		case 2: return [p, 255, t]
+		case 3: return [p, q, 255]
+		case 4: return [t, p, 255]
+		case 5: return [255, p, q]
+	}
 }
