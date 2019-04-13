@@ -34,7 +34,6 @@ metadata {
         capability "Actuator"		
         capability "Door Control"
         capability "Switch Level"
-        capability "windowShade"
         capability "Switch"
         capability "Refresh"
          
@@ -48,38 +47,6 @@ metadata {
 	preferences {
 	}
 
-	tiles {
-		multiAttributeTile(name:"switch", type: "windowShade", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "close", label: 'closed', action: "open", icon: "st.doors.garage.garage-closed", backgroundColor: "#A8A8C6", nextState: "opening"
-                attributeState "open", label: 'open', action: "close", icon: "st.doors.garage.garage-open", backgroundColor: "#F7D73E", nextState: "closing"
-                attributeState "closing", label: '${name}', action: "open", icon: "st.contact.contact.closed", backgroundColor: "#B9C6A8"
-                attributeState "opening", label: '${name}', action: "close", icon: "st.contact.contact.open", backgroundColor: "#D4CF14"
-                attributeState "partly", label: 'partially\nopen', action: "close", icon: "st.doors.garage.garage-closing", backgroundColor: "#D4ACEE", nextState: "closing"              
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
-            }
-		}
-        
-        standardTile("open", "device.Switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-            state("on", label: 'open', action: "open", icon: "st.doors.garage.garage-open")
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        standardTile("close", "device.Switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-            state("off", label: 'close', action: "close", icon: "st.doors.garage.garage-closed")
-        }
-       
-	}
 }
 
 // parse events into attributes
@@ -99,7 +66,8 @@ def setStatus(params){
  	switch(params.key){
     case "curtainLevel":
     	sendEvent(name:"level", value: params.data )
-        sendEvent(name:"switch", value: (params.data == "0" ? "close" : ( params.data == "100" ? "open" : "partly" )) )
+        sendEvent(name:"switch", value: (params.data == "0" ? "off" : "on" ))
+		sendEvent(name:"door", value: (params.data == "0" ? "closed" : "open" ))
     	break;
     }
     
@@ -161,7 +129,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -184,7 +152,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
