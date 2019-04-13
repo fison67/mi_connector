@@ -33,45 +33,15 @@ metadata {
 	definition (name: "Xiaomi Smoke Detector", namespace: "fison67", author: "fison67") {
         capability "Sensor"
         capability "Smoke Detector"    //"detected", "clear", "tested"
+		capability "Battery"
+		capability "Refresh"
          
-        attribute "battery", "string"
         attribute "density", "string"        
         attribute "lastCheckin", "Date"
-        
-        command "refresh"
 	}
 
 
 	simulator {
-	}
-
-	tiles {
-		multiAttributeTile(name:"smoke", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.smoke", key: "PRIMARY_CONTROL") {
-               	attributeState "clear", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#ffffff"
-            	attributeState "detected", label:'${name}', icon:"https://postfiles.pstatic.net/MjAxODAzMjZfMTkz/MDAxNTIyMDQzNDE0MzIx.Z7WbNCehVcAmt3mM5jdadJkR-TMqI200UzKfmjYjCwYg.dnE5kkFzbJ6cXAbbSJu5SwCUcv4x-cxM0UD3RQVcVAQg.PNG.fuls/Fire_Alarm_75.png?type=w773" , backgroundColor:"#e86d13"
-			}
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        
-        valueTile("density", "device.density", width: 2, height: 2) {
-            state ("val", label:'${currentValue}obs./m', defaultState: true, 
-            	backgroundColors:[
-                    [value: 00, color: "#fde9e5"],
-                    [value: 1000, color: "#600e00"]
-                ]
-             )
-        }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
 	}
 }
 
@@ -108,7 +78,7 @@ def updateLastTime(){
     sendEvent(name: "lastCheckin", value: now)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -140,7 +110,7 @@ def refresh(){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
