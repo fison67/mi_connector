@@ -33,15 +33,12 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgbw-color-bulb", ocfDeviceType: "oic.d.light") {
+	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
-        capability "Actuator"
-        capability "Configuration"
-        capability "Refresh"
-		capability "Color Control"
-        capability "Switch Level"
-        capability "Health Check"
         capability "Light"
+        capability "Refresh"
+		capability "ColorTemperature"
+        capability "Switch Level"
 
         attribute "lastOn", "string"
         attribute "lastOff", "string"
@@ -57,74 +54,12 @@ metadata {
 
 	simulator {
 	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-            
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
-        
-        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("lastOn_label", "", decoration: "flat") {
-            state "default", label:'Last\nON'
-        }
-        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastOff_label", "", decoration: "flat") {
-            state "default", label:'Last\nOFF'
-        }
-        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        standardTile("scene1", "device.scene", decoration: "flat") {
-			state "default", label: "", action: "setScene1", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-sun-1.png?raw=true"
-		}
-        standardTile("scene2", "device.scene", decoration: "flat") {
-			state "default", label: "", action: "setScene2", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-moon-1.png?raw=true"
-		}
-        
-        main (["switch2"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0", "scene1", "scene2" ])       
+	
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
 	}
+
 }
 
 // parse events into attributes
@@ -152,9 +87,7 @@ def setStatus(params){
         }
     	break;
     case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: params.data )
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
@@ -176,7 +109,12 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def setLevel(brightness){
+def setLevel(brightness){	
+	if(brightness < 0){
+		brightness = 0	
+	}else if(brightness > 100){
+		brightness = 100	
+	}
 	log.debug "setBrightness >> ${state.id}, val=${brightness}"
     if(brightness == 0){
     	off()
@@ -184,7 +122,8 @@ def setLevel(brightness){
         def body = [
             "id": state.id,
             "cmd": "brightness",
-            "data": brightness
+            "data": brightness,
+        	"subData": getDuration()
         ]
         def options = makeCommand(body)
         sendCommand(options, null)
@@ -193,18 +132,17 @@ def setLevel(brightness){
     }
 }
 
-def setColor(color){
-	log.debug "setColorTemperature >> ${state.id} >> ${color}"
-    
+def setColorTemperature(colortemperature){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": colortemperature + "K",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
     
-    setPowerByStatus(true)
+    setPowerByStatus(true)	
 }
 
 def on(){
@@ -212,7 +150,8 @@ def on(){
     def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "on"
+        "data": "on",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -223,7 +162,8 @@ def off(){
 	def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "off"
+        "data": "off",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -256,16 +196,14 @@ def setScene2(){
 
 def updated() {}
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-        def colorRGB = colorTemperatureToRGB(jsonObj.state.colorTemperature)
-        String hex = String.format("#%02x%02x%02x", colorRGB[0], colorRGB[1], colorRGB[2]);  
-    	sendEvent(name:"color", value: hex )
+        sendEvent(name:"color", value: jsonObj.properties.color)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -278,7 +216,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -325,7 +263,6 @@ def timer(){
         }
         updateTimer()
     }
-//	log.debug "Left Time >> ${state.timerCount}"
 }
 
 def updateTimer(){
@@ -344,7 +281,6 @@ def processTimer(second){
     }else{
     	state.timerCount = second
     }
-//    log.debug "Left Time >> ${state.timerCount} seconds"
     updateTimer()
 }
 
@@ -366,35 +302,13 @@ def setPowerByStatus(turnOn){
     }
 }
 
-def colorTemperatureToRGB(kelvin){
-    def temp = kelvin / 100;
-    def red, green, blue;
-    if( temp <= 66 ){ 
-        red = 255; 
-        green = temp;
-        green = 99.4708025861 * Math.log(green) - 161.1195681661;
-
-        if( temp <= 19){
-            blue = 0;
-        } else {
-            blue = temp-10;
-            blue = 138.5177312231 * Math.log(blue) - 305.0447927307;
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
         }
-    } else {
-        red = temp - 60;
-        red = 329.698727446 * Math.pow(red, -0.1332047592);
-        
-        green = temp - 60;
-        green = 288.1221695283 * Math.pow(green, -0.0755148492 );
-
-        blue = 255;
     }
-    return [ clamp(red,   0, 255), clamp(green, 0, 255), clamp(blue,  0, 255) ]
-}
-
-
-def clamp( x, min, max ) {
-    if(x<min){ return min; }
-    if(x>max){ return max; }
-    return x;
+    return duration
 }
