@@ -52,53 +52,6 @@ metadata {
     preferences {
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNTUg/MDAxNTIyNjcwODg1MTU2.KfRiLw6Uei1mX7djpXxo0jtKlsAWLOyz04yVtEU9yZsg.3A6PUr6aM1nn2mIaD4Rt7ws_bDZi9dKlzVJJLUoiLSAg.PNG.shin4299/plug_main_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTcy/MDAxNTIyNjcwODg0OTI5.Y6YSf8yKOH56h1RsLl0MbgFyHqqGw-E-XXQ6wG_g950g.vr4pyhi92iDk-u6pisNPGdGeTkJxaidmPe5y1rW-cAEg.PNG.shin4299/plug_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTcy/MDAxNTIyNjcwODg0OTI5.Y6YSf8yKOH56h1RsLl0MbgFyHqqGw-E-XXQ6wG_g950g.vr4pyhi92iDk-u6pisNPGdGeTkJxaidmPe5y1rW-cAEg.PNG.shin4299/plug_main_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNTUg/MDAxNTIyNjcwODg1MTU2.KfRiLw6Uei1mX7djpXxo0jtKlsAWLOyz04yVtEU9yZsg.3A6PUr6aM1nn2mIaD4Rt7ws_bDZi9dKlzVJJLUoiLSAg.PNG.shin4299/plug_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.power", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Meter: ${currentValue} w\n ',icon: "st.Health & Wellness.health9")
-            }
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nUpdated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        valueTile("power", "device.power", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "power", label: 'Meter\n${currentValue} w', action: "power", defaultState: true
-		}
-        
-        standardTile("usb", "device.usb", width: 2, height: 2, canChangeIcon: true) {
-            state "off", label: '${name}', action: "usbOn", icon: "st.switches.light.off", backgroundColor: "#FFFFFF", nextState: "turningOn"
-            state "on", label: '${name}', action: "usbOff", icon: "st.switches.light.on", backgroundColor: "#00A0DC", nextState: "turningOff"
-            state "turningOn", label: '${name}', action: "usbOff", icon: "st.switches.light.off", backgroundColor: "#00A0DC", nextState: "turningOff"
-            state "turningOff", label: '${name}', action: "usbOn", icon: "st.switches.light.off", backgroundColor: "#FFFFFF", nextState: "turningOn"
-        }
-        
-        standardTile("led", "device.led", width: 2, height: 2, canChangeIcon: true) {
-            state "off", label: '${name}', action: "ledOn", icon: "st.switches.light.off", backgroundColor: "#FFFFFF", nextState: "turningOn"
-            state "on", label: '${name}', action: "ledOff", icon: "st.switches.light.on", backgroundColor: "#00A0DC", nextState: "turningOff"
-            state "turningOn", label: '${name}', action: "ledOff", icon: "st.switches.light.off", backgroundColor: "#00A0DC", nextState: "turningOff"
-            state "turningOff", label: '${name}', action: "ledOn", icon: "st.switches.light.off", backgroundColor: "#FFFFFF", nextState: "turningOn"
-        }
-        
-        valueTile("temperature", "device.temperature", inactiveLabel: false) {
-            state "temperature", label:'${currentValue}°'
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        main (["switch"])
-        details(["switch", "usb", "led", "power", "temperature", "refresh"])
-        
-	}
 }
 
 // parse events into attributes
@@ -211,7 +164,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -230,7 +183,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
