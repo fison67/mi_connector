@@ -29,7 +29,6 @@
 
 import groovy.json.JsonSlurper
 import groovy.transform.Field
-import java.text.DateFormat
 
 @Field 
 LANGUAGE_MAP = [
@@ -99,98 +98,6 @@ metadata {
         
 	}
 
-
-	tiles(scale: 2) {
-        multiAttributeTile(name:"temperature", type:"generic", width:6, height:4) {
-            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
-                attributeState("temperature", label:'${currentValue}°',
-                    backgroundColors:[
-                        // Fahrenheit color set
-                        [value: 0, color: "#153591"],
-                        [value: 5, color: "#1e9cbb"],
-                        [value: 10, color: "#90d2a7"],
-                        [value: 15, color: "#44b621"],
-                        [value: 20, color: "#f1d801"],
-                        [value: 25, color: "#d04e00"],
-                        [value: 30, color: "#bc2323"],
-                        [value: 44, color: "#1e9cbb"],
-                        [value: 59, color: "#90d2a7"],
-                        [value: 74, color: "#44b621"],
-                        [value: 84, color: "#f1d801"],
-                        [value: 95, color: "#d04e00"],
-                        [value: 96, color: "#bc2323"]
-						// Celsius color set (to switch, delete the 13 lines above anmd remove the two slashes at the beginning of the line below)
-                        //[value: 0, color: "#153591"], [value: 7, color: "#1e9cbb"], [value: 15, color: "#90d2a7"], [value: 23, color: "#44b621"], [value: 28, color: "#f1d801"], [value: 35, color: "#d04e00"], [value: 37, color: "#bc2323"]
-                    ]
-                )
-            }
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}\n')
-            }
-            tileAttribute("device.multiAttributesReport", key: "SECONDARY_CONTROL") {
-                attributeState("multiAttributesReport", label:'\n${currentValue}' //icon:"st.Weather.weather12",
-                ) }
-        }        
-        valueTile("temperature2", "device.temperature", inactiveLabel: false) {
-            state "temperature", label:'${currentValue}°', icon:"https://github.com/fison67/mi_connector/blob/master/icons/ble-temperature.png?raw=true",
-            backgroundColors:[
-                // Fahrenheit color set
-                [value: 0, color: "#153591"],
-                [value: 5, color: "#1e9cbb"],
-                [value: 10, color: "#90d2a7"],
-                [value: 15, color: "#44b621"],
-                [value: 20, color: "#f1d801"],
-                [value: 25, color: "#d04e00"],
-                [value: 30, color: "#bc2323"],
-                [value: 44, color: "#1e9cbb"],
-                [value: 59, color: "#90d2a7"],
-                [value: 74, color: "#44b621"],
-                [value: 84, color: "#f1d801"],
-                [value: 95, color: "#d04e00"],
-                [value: 96, color: "#bc2323"]
-                // Celsius color set (to switch, delete the 13 lines above anmd remove the two slashes at the beginning of the line below)
-                //[value: 0, color: "#153591"], [value: 7, color: "#1e9cbb"], [value: 15, color: "#90d2a7"], [value: 23, color: "#44b621"], [value: 28, color: "#f1d801"], [value: 35, color: "#d04e00"], [value: 37, color: "#bc2323"]
-            ]
-        }
-        
-        valueTile("humidity", "device.humidity", width: 2, height: 2, unit: "%") {
-            state("val", label:'${currentValue}%', defaultState: true, 
-            	backgroundColors:[
-                    [value: 10, color: "#153591"],
-                    [value: 30, color: "#1e9cbb"],
-                    [value: 40, color: "#90d2a7"],
-                    [value: 50, color: "#44b621"],
-                    [value: 60, color: "#f1d801"],
-                    [value: 80, color: "#d04e00"],
-                    [value: 90, color: "#bc2323"]
-                ]
-            )
-        }
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state "val", label:'${currentValue}%', defaultState: true
-        }		
-        valueTile("humi", "device.humi", decoration: "flat", inactiveLabel: false, width: 2, height: 1) {
-            state("val", label:'${currentValue}', defaultState: true)
-        }
-        
-		valueTile("bat", "device.bat", decoration: "flat", inactiveLabel: false, width: 2, height: 1) {
-            state("val", label:'${currentValue}', defaultState: true)
-        }
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-	
-    	standardTile("chartMode", "device.chartMode", width: 2, height: 3, decoration: "flat") {
-			state "temperature", label:'Temperature', nextState: "humidity", action: 'chartTemperature'
-			state "humidity", label:'Humidity', nextState: "totalTemperature", action: 'chartHumidity'
-			state "totalTemperature", label:'T-Temperature', nextState: "totalHumidity", action: 'chartTotalTemperature'
-			state "totalHumidity", label:'T-Humidity', nextState: "temperature", action: 'chartTotalHumidity'
-		}
-
-        main("temperature2")
-        details(["temperature", "humi", "bat", "chartMode", "humidity", "battery", "history"
-		])
-    }
 }
 
 // parse events into attributes
