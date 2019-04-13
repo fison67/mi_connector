@@ -35,24 +35,18 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67", mnmn: "SmartThings") {
-        capability "Air Quality Sensor"						//"on", "off"
+	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67") {
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
-		capability "Tvoc Measurement"
-        	capability "Carbon Dioxide Measurement"
+		capability "Carbon Dioxide Measurement"
 		capability "Refresh"
 		capability "Sensor"
 		capability "Power Source"
-		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
-
         
         attribute "lastCheckin", "Date"
         attribute "co2notice", "enum", ["notice", "unnotice"]  
-     
-        command "noAQS"
-        command "noSwitch"
-       
+		attribute "tvocLevel", "number"
+		attribute "fineDustLevel", "number"
 	}
 
 
@@ -60,109 +54,6 @@ metadata {
 	}
 	preferences {
 		input "co2homekit", "number", title:"CO2 Notice for Homekit", defaultValue: 1500, description:"홈킷 CO2농도 경고 최저값 설정", range: "*..*"
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"fineDustLevel", type: "generic", width: 3, height: 2){
-			tileAttribute ("device.fineDustLevel", key: "PRIMARY_CONTROL") {
-                attributeState "default", label:'${currentValue}㎍/㎥', unit:"㎍/㎥", backgroundColors:[
-				[value: 12, color: "#adff00"],
-            			[value: 36, color: "#f9d62e"],
-            			[value: 56, color: "#fc913a"],
-            			[value: 151, color: "#bf0000"],
-            			[value: 250, color: "#800000"],
-            			[value: 1000, color: "#400000"]
-            		]
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-	}
-		valueTile("pm25", "device.fineDustLevel", decoration: "flat", width: 2, height: 2) {
-        		state "default", label:'${currentValue}\n㎍/㎥', unit:"ppm", backgroundColors:[
-				[value: 12, color: "#adff00"],
-            			[value: 36, color: "#f9d62e"],
-            			[value: 56, color: "#fc913a"],
-            			[value: 151, color: "#bf0000"],
-            			[value: 250, color: "#800000"],
-            			[value: 1000, color: "#400000"]
-            		]
-        	}
-		valueTile("tvoc", "device.tvocLevel", decoration: "flat", width: 2, height: 2) {
-        		state "default", label:'${currentValue}\nppb', unit:"ppb", backgroundColors:[
-				[value: 65, color: "#adff00"],
-            			[value: 220, color: "#f9d62e"],
-            			[value: 660, color: "#fc913a"],
-            			[value: 2000, color: "#bf0000"],
-            			[value: 10000, color: "#400000"]
-            		]
-        	}
- 		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
- 			state "carbonDioxide", label:'${currentValue}\nppm', unit:"CO2", backgroundColors: [
-				[value: 1000, color: "#adff00"],
-            			[value: 1500, color: "#f9d62e"],
-            			[value: 2000, color: "#fc913a"],
-            			[value: 2500, color: "#bf0000"],
-            			[value: 5000, color: "#400000"]
- 				]
- 		}
-		valueTile("temperature", "device.temperature", width: 2, height: 2, inactiveLabel: false) {
- 			state("temperature", label: '${currentValue}°', backgroundColors: [
- 				[value: 31, color: "#153591"],
- 				[value: 44, color: "#1e9cbb"],
- 				[value: 59, color: "#90d2a7"],
- 				[value: 74, color: "#44b621"],
- 				[value: 84, color: "#f1d801"],
- 				[value: 95, color: "#d04e00"],
- 				[value: 96, color: "#bc2323"]
- 				]
- 				)
- 		}        
-		valueTile("humidity", "device.humidity", width: 2, height: 2, inactiveLabel: false) {
- 			state("humidity", label: '${currentValue}%', backgroundColors: [
- 				[value: 20, color: "#f94d1d"],
- 				[value: 40, color: "#ffb71e"],
- 				[value: 60, color: "#ddf927"],
- 				[value: 80, color: "#19ffeb"],
- 				[value: 100, color: "#18cdff"]
- 				]
- 				)
- 		}        
-    		valueTile("tvoc_label", "device.tvoc_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:"tVOC"
-        	}        
-    		valueTile("pm25_label", "device.pm25_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:"PM2.5"
-        	}        
-    		valueTile("co2_label", "device.co2_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:"CO2"
-        	}        
-    		valueTile("temp_label", "device.temp_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:"Temperature"
-        	}        
-    		valueTile("humi_label", "device.humi_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:"Humidity"
-        	}        
-        	valueTile("refresh_label", "device.refresh_label", decoration: "flat", width: 2, height: 1) {
-            		state "default", label:'Refresh'
-        	}
-        
-        valueTile("battery", "device.battery", width: 2, height: 2) {
-            state("val", label:'${currentValue}%', defaultState: true, backgroundColor:"#00a0dc")
-        }
-	standardTile("refresh", "device.thermostatMode", width: 2, height: 2) {
-		state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
-	}
-	standardTile("co2notice", "device.co2notice", width: 2, height: 2) {
-		state "unnotice", icon:"st.secondary.refresh"
-		state "notice", icon:"st.secondary.refresh"
-	}        
-
-        
-        main (["fineDustLevel"])
-		details(["fineDustLevel", "pm25_label", "tvoc_label", "co2_label", "pm25", "tvoc", "carbonDioxide", "temp_label", "humi_label", "refresh_label", "temperature", "humidity", "refresh"])
-		
 	}
 }
 
@@ -208,7 +99,7 @@ def setStatus(params){
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 
 def refresh(){
@@ -225,7 +116,7 @@ def refresh(){
 }
 
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -249,7 +140,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
