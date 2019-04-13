@@ -58,53 +58,6 @@ metadata {
 		input "historyPowerLoadDataMaxCount", "number", title: "PowerLoad Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true
 		input "historyPowerConsumedDataMaxCount", "number", title: "Power Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true   
 	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNTUg/MDAxNTIyNjcwODg1MTU2.KfRiLw6Uei1mX7djpXxo0jtKlsAWLOyz04yVtEU9yZsg.3A6PUr6aM1nn2mIaD4Rt7ws_bDZi9dKlzVJJLUoiLSAg.PNG.shin4299/plug_main_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTcy/MDAxNTIyNjcwODg0OTI5.Y6YSf8yKOH56h1RsLl0MbgFyHqqGw-E-XXQ6wG_g950g.vr4pyhi92iDk-u6pisNPGdGeTkJxaidmPe5y1rW-cAEg.PNG.shin4299/plug_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTcy/MDAxNTIyNjcwODg0OTI5.Y6YSf8yKOH56h1RsLl0MbgFyHqqGw-E-XXQ6wG_g950g.vr4pyhi92iDk-u6pisNPGdGeTkJxaidmPe5y1rW-cAEg.PNG.shin4299/plug_main_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNTUg/MDAxNTIyNjcwODg1MTU2.KfRiLw6Uei1mX7djpXxo0jtKlsAWLOyz04yVtEU9yZsg.3A6PUr6aM1nn2mIaD4Rt7ws_bDZi9dKlzVJJLUoiLSAg.PNG.shin4299/plug_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.power", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Meter: ${currentValue} w\n ',icon: "st.Health & Wellness.health9")
-            }
-            tileAttribute("device.energyMeter", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'                                 Energy: ${currentValue}KWh\n ',icon: "st.Health & Wellness.health9")
-            }
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nUpdated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        valueTile("power", "device.power", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "power", label: 'Meter\n${currentValue} w', action: "power", defaultState: true
-		}
-//        valueTile("powerVolt", "device.powerVolt", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-//        	state "volt", label: '현재전압\n${currentValue}', action: "volt", defaultState: true
-//		}        
-        valueTile("energyMeter", "device.energyMeter", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "energyMeter", label: 'Energy\n${currentValue}KWh', action: "energy", defaultState: true
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
-			state "chartPower", label:'Power', nextState: "chartPowerMeter", action: 'chartPower'
-			state "chartPowerMeter", label:'Power Meter', nextState: "chartEnergyMeter", action: 'chartPowerMeter'
-			state "chartEnergyMeter", label:'Energy Meter', nextState: "chartPower", action: 'chartEnergyMeter'
-		}
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-        
-        main (["switch"])
-        details(["switch", "power", "energyMeter", "refresh", "chartMode", "history"])
-        
-	}
 }
 
 // parse events into attributes
@@ -189,7 +142,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -210,7 +163,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
