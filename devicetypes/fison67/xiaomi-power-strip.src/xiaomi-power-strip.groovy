@@ -71,75 +71,8 @@ metadata {
 		input name: "temperatureHistoryDataMaxCount", type:"number", title: "Temperature Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true
 		input name: "powerMeterHistoryDataMaxCount", type:"number", title: "PowerMeter Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true
 		input name: "energyMeterHistoryDataMaxCount", type:"number", title: "EnergyMeter Graph Data Max Count", description: "0 is max", defaultValue:0, displayDuringSetup: true
-        
 	}
     
-	tiles {
-		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"off", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/powerStrip_off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-        
-        valueTile("power", "device.power", width:2, height:2, inactiveLabel: false, decoration: "flat" ) {
-        	state "power", label: 'Meter\n${currentValue} w', defaultState: true
-		}
-        
-        valueTile("current", "device.current", width:2, height:2, inactiveLabel: false, decoration: "flat") {
-            state "current", label:'${currentValue}'
-        }   
-        
-        valueTile("temperature", "device.temperature", width:2, height:2, inactiveLabel: false, decoration: "flat") {
-            state "temperature", label:'${currentValue}°', unit:"°"
-        }    
-        
-        standardTile("wifiLed", "device.wifiLed", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
-            state "on", label:'Led ${name}', action:"wifiLedOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'Led ${name}', action:"wifiLedOn", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"wifiLedOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"wifiLedOn", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        /* 
-        standardTile("realTime", "device.realTime", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
-            state "on", label:'${name}', action:"realTimePowerOn", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'${name}', action:"realTimePowerOff", backgroundColor:"#42f46b", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"realTimePowerOn", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"realTimePowerOff", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        */
-        standardTile("mode", "device.mode", inactiveLabel: false, width: 2, height: 2, canChangeIcon: true) {
-            state "normal", label:'${name}', action:"setModeGreen", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "green", label:'${name}', action:"setModeNormal", backgroundColor:"#42f46b", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"setModeGreen", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"setModeNormal", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-	
-    	standardTile("chartMode", "device.chartMode", width: 2, height: 1, decoration: "flat") {
-			state "chartTemperature", label:'Temperature', nextState: "chartPowerMeter", action: 'chartTemperature'
-			state "chartPowerMeter", label:'PowerMeter', nextState: "chartEnergyMeter", action: 'chartPowerMeter'
-			state "chartEnergyMeter", label:'EnergyMeter', nextState: "chartTotalTemperature", action: 'chartEnergyMeter'
-			state "chartTotalTemperature", label:'T-Temperature', nextState: "chartTotalPowerMeter", action: 'chartTotalTemperature'
-			state "chartTotalPowerMeter", label:'T-PowerMeter', nextState: "chartTotalEnergyMeter", action: 'chartTotalPowerMeter'
-			state "chartTotalEnergyMeter", label:'T-EnergyMeter', nextState: "chartTemperature", action: 'chartTotalEnergyMeter'
-		}
-        
-        carouselTile("history", "device.image", width: 6, height: 4) { }
-	}
 }
 
 // parse events into attributes
@@ -274,7 +207,7 @@ def off(){
     sendCommand(options, null)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -308,7 +241,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
