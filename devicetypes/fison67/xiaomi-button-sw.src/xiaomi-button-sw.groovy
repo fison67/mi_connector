@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Switch (v.0.0.1)
+ *  Xiaomi Switch (v.0.0.2)
  *
  * MIT License
  *
@@ -32,58 +32,14 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Button SW", namespace: "fison67", author: "fison67") {
         capability "Sensor"						//"on", "off"
-        capability "Button"
-        capability "Configuration"
+        capability "PushableButton"
         capability "Battery"
-	capability "Refresh"
-
+		capability "Refresh"
+		
         attribute "status", "string"
-        
         attribute "lastCheckin", "Date"
-        
-        command "Lclick"
-        command "Rclick"
-        command "both_click"
-        command "refesh"
-	}
-
-
-	simulator {
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"button", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.button", key: "PRIMARY_CONTROL") {
-                attributeState "click", label:'\nButton', icon:"http://postfiles9.naver.net/MjAxODA0MDJfOSAg/MDAxNTIyNjcwOTc2MTcx.Eq3RLdNXT6nbshuDgjG4qbfMjCob8eTjYv6fltmg7Zcg.1W8CkaPojCBp07iCYi5JYkJl5YTWxQL5aDG-TQ0XF_kg.PNG.shin4299/buttonSW_main.png?type=w3", backgroundColor:"#8CB8C9"
-			}
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Battery: ${currentValue}%\n')
-            }		
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-        
-        valueTile("btn0-click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#1_Core \n Left_click', action:"Lclick"
-        }
-        valueTile("btn1-click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#2_Core \n Right_click", action:"Rclick"
-        }
-        valueTile("both_click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#3_Core \n Both_click", action:"both_click"
-        }
-
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
 	}
 }
-
-
-def Lclick() {buttonEvent(1, "pushed")}
-def Rclick() {buttonEvent(2, "pushed")}
-def both_click() {buttonEvent(3, "pushed")}
 
 
 // parse events into attributes
@@ -102,12 +58,11 @@ def setStatus(params){
  	switch(params.key){
     case "action":
     	if(params.data == "btn0-click") {
-        	buttonEvent(1, "pushed")
+        	sendEvent(name:"pushed", value:1, isStateChange: true, descriptionText: "Left Click")
         } else if(params.data == "btn1-click") {
-       	 	buttonEvent(2, "pushed")
+        	sendEvent(name:"pushed", value:2, isStateChange: true, descriptionText: "Right Click")
         } else if(params.data == "both_click") {
-        	buttonEvent(3, "pushed")
-        } else {
+        	sendEvent(name:"pushed", value:3, isStateChange: true, descriptionText: "Both Click")
         }
     	break;
     case "batteryLevel":
@@ -116,10 +71,6 @@ def setStatus(params){
     }
     updateLastTime()
  }
-
-def buttonEvent(Integer button, String action) {
-    sendEvent(name: "button", value: action, data: [buttonNumber: button], descriptionText: "$device.displayName button $button was $action", isStateChange: true)
-}
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
@@ -139,7 +90,7 @@ def refresh(){
     sendCommand(options, callback)
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -156,7 +107,7 @@ def updated() {
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
