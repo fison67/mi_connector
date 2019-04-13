@@ -103,155 +103,6 @@ metadata {
 	        input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'\nOFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ2/MDAxNTIyMTUxNzIxMTk3.xeCR1k4pk0vDOozb43Lfo6g2fMC1a_VJFUpTQ071XRUg.dyhFTAUaCwWPUYc4hPUdGiuUI5yeRJ4QpP3kX802AlIg.PNG.shin4299/Humi_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "auto", label:'\nAuto Mode', action:"setModeSilent", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ1/MDAxNTIyMTUxNzIxMTk5.LTiuV1QSyPu6WgMB3uR7Bc-Hy19Uwgard5XKG5jj1JIg.XpdiwfmUg3Rz6IgIWyamtsrYeW0BJRqj28XyHRuADA0g.PNG.shin4299/Humi_tile_auto.png?type=w580", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "silent", label:'\nSilent Mode', action:"setModeMedium", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTE2/MDAxNTIyMTUxNzIxMTE3.wVp36he9l0up0SalfSgNMOff9y_U9F2wyPc5AfmK-nEg.coHcd4mj2byTBFzTWnc4yjKi7xbJb7QhfgBn9ASt5eUg.PNG.shin4299/Humi_tile_1.png?type=w580", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "medium", label:'\nMedium Mode', action:"setModeHigh", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjEz/MDAxNTIyMTUxNzIxMTk4.VfHSHeU2sS9J-T03zqc_sSjgO4ifOxiyBtGorUPxD2kg.dnC3xCu45F_153OJfUm0Pd1_HAWFp9DWVGHLagDqOSgg.PNG.shin4299/Humi_tile_2.png?type=w580", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "high", label:'\nHigh Mode', action:"setModeAuto", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA5/MDAxNTIyMTUxNzIxMTk3.r9waU9A5WmDgRz6p6eiGYTl67F1jo5HGcurD9i57Mj0g.a1R4bIefNK0gT-NdDFmYveohdkXxUuRgJIszH9Q38Ogg.PNG.shin4299/Humi_tile_3.png?type=w580", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "modechange", label:'\n${name}', icon:"st.quirky.spotter.quirky-spotter-motion", backgroundColor:"#C4BBB5"
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTQ2/MDAxNTIyMTUxNzIxMTk3.xeCR1k4pk0vDOozb43Lfo6g2fMC1a_VJFUpTQ071XRUg.dyhFTAUaCwWPUYc4hPUdGiuUI5yeRJ4QpP3kX802AlIg.PNG.shin4299/Humi_tile_off.png?type=w580", backgroundColor:"#C4BBB5", nextState:"off"
-
-                attributeState "off1", label:'\nOFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNzYg/MDAxNTIyNjcwODg0MTI2.STxrAj6ogps95LmvuOjB0BMA85vmV7nSQkoZh-8tJY0g.lJrICUhnvXTE7HoJC1GR7gzwJxrxfDqyXd7NF59h0psg.PNG.shin4299/Humi1_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn1"
-                attributeState "auto1", label:'\nAuto Mode', action:"setModeSilent", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjE0/MDAxNTIyNjcwODgzOTY3.xc9NXAkOenPbwUR2bf0vvO7P-RdA5vcjzNw7_Vu-CHgg.ggBUsFmbIRItbDqU6xoj_lxlr_jJpjFcVyxSomZAi1gg.PNG.shin4299/Humi1_main_auto.png?type=w3", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "silent1", label:'\nSilent Mode', action:"setModeMedium", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjUg/MDAxNTIyNjcwODgzNTQ2.9lTumWoRhiheYDV3v6EQamiC0ZFldzA5_0YfjzFm-gIg.lTYpe6wUUeEuPBwTzogwTM1sRX43POOIF7jKjCAV92Yg.PNG.shin4299/Humi1_main_1.png?type=w3", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "medium1", label:'\nMedium Mode', action:"setModeHigh", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI4/MDAxNTIyNjcwODgzNjgy.PPQVgYG3pUKSCPYtX7quyWlju10JYSXMlIC0g1v0NoYg.7Dv1AoIGQmVRoID5ek8DualZuy-q2C--6gt6aTINZncg.PNG.shin4299/Humi1_main_2.png?type=w3", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "high1", label:'\nHigh Mode', action:"setModeAuto", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjQ2/MDAxNTIyNjcwODgzODM4.5obz2ySIyMlI1c_AjC0dfYiLKwYGHS_RFwnUNr5kmt4g.OjvrT0NKffJis6ff4n37PEzsR5b89Ya_OazNRFUkdmIg.PNG.shin4299/Humi1_main_3.png?type=w3", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "turningOn1", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNzYg/MDAxNTIyNjcwODg0MTI2.STxrAj6ogps95LmvuOjB0BMA85vmV7nSQkoZh-8tJY0g.lJrICUhnvXTE7HoJC1GR7gzwJxrxfDqyXd7NF59h0psg.PNG.shin4299/Humi1_main_off.png?type=w3", backgroundColor:"#C4BBB5", nextState:"off1"
-			}
-			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
-        		attributeState("humidity", label:'${currentValue}', unit:"%", defaultState: true)
-    		}            
-			tileAttribute("device.temperature2", key: "SECONDARY_CONTROL") {
-				attributeState("temperature2", label:'         ${currentValue}°', unit:"°", defaultState: true)
-    		}            
-			tileAttribute("device.water2", key: "SECONDARY_CONTROL") {
-        		attributeState("water2", label:'                                ${currentValue}%', unit:"%", defaultState: true)
-    		}            
-			tileAttribute("device.target", key: "SECONDARY_CONTROL") {
-        		attributeState("target", label:'                                                              ${currentValue}:', defaultState: true)
-    		}            
-		    tileAttribute ("device.level", key: "SLIDER_CONTROL", range:"(30..80)") {
-        		attributeState "level", action:"switch level.setLevel"
-		    }
-//            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-//    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-//            }
-		}
-        
-		multiAttributeTile(name:"modem", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTI5/MDAxNTIyMTUxNzIxMTE0.jV8vnwjhiMGM3cMj0AOAkpXxMn67VHVSCOI0Oifaw_gg.caD0We4bMaw4zDle-ZElMaJ5J7X9XtgJK8r273B441cg.PNG.shin4299/Humi_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "auto", label:'Auto Mode', action:"setModeSilent", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjQz/MDAxNTIyMTUxNzIxMTEy.N1MKnCLLEKvjsBsc8AOhUiqWpGqFIjjBIdFVuDAUT48g.Ms4kVngzHK7Ce0IzTKi9KKmU1DULsGBNMXU23xZofPUg.PNG.shin4299/Humi_main_auto.png?type=w580", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "silent", label:'Silent Mode', action:"setModeMedium", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTAy/MDAxNTIyMTUxNzIxMTEy.F_FV8JiIWNtgg9TA-JmpykMS3nFMJ7SZwAnbQdbrxG4g.tlD1AuFoeWgHaPY_Wc7IVoMll6tGuyZZpteoyuvLYLIg.PNG.shin4299/Humi_main_1.png?type=w580", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "medium", label:'Medium Mode', action:"setModeHigh", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjIx/MDAxNTIyMTUxNzIxMTE2.C_mh1eH-qS9v7JDao8rTggW8ISf_JD4tumQ-TSpnUBcg.W0tNgspXKTM8X-EWHu3BL_OePZjGve43W4ZM83oMBLcg.PNG.shin4299/Humi_main_2.png?type=w580", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "high", label:'High Mode', action:"setModeAuto", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODUg/MDAxNTIyMTUxNzIxMTEy.bgJ3fJQMIqt3A60PiRitHuTih18yk3cVZezGoNnLsU0g.7njxuU4uNsJ-VUbgrkkDaoUFFq9Cy85N7oOz9Yx8DYQg.PNG.shin4299/Humi_main_3.png?type=w580", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "modechange", label:'${name}', icon:"st.quirky.spotter.quirky-spotter-motion", backgroundColor:"#C4BBB5"
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTI5/MDAxNTIyMTUxNzIxMTE0.jV8vnwjhiMGM3cMj0AOAkpXxMn67VHVSCOI0Oifaw_gg.caD0We4bMaw4zDle-ZElMaJ5J7X9XtgJK8r273B441cg.PNG.shin4299/Humi_main_off.png?type=w580", backgroundColor:"#C4BBB5", nextState:"off"
-
-                attributeState "off1", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNzYg/MDAxNTIyNjcwODg0MTI2.STxrAj6ogps95LmvuOjB0BMA85vmV7nSQkoZh-8tJY0g.lJrICUhnvXTE7HoJC1GR7gzwJxrxfDqyXd7NF59h0psg.PNG.shin4299/Humi1_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn1"
-                attributeState "auto1", label:'Auto Mode', action:"setModeSilent", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjE0/MDAxNTIyNjcwODgzOTY3.xc9NXAkOenPbwUR2bf0vvO7P-RdA5vcjzNw7_Vu-CHgg.ggBUsFmbIRItbDqU6xoj_lxlr_jJpjFcVyxSomZAi1gg.PNG.shin4299/Humi1_main_auto.png?type=w3", backgroundColor:"#73C1EC", nextState:"modechange"
-                attributeState "silent1", label:'Silent Mode', action:"setModeMedium", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjUg/MDAxNTIyNjcwODgzNTQ2.9lTumWoRhiheYDV3v6EQamiC0ZFldzA5_0YfjzFm-gIg.lTYpe6wUUeEuPBwTzogwTM1sRX43POOIF7jKjCAV92Yg.PNG.shin4299/Humi1_main_1.png?type=w3", backgroundColor:"#6eca8f", nextState:"modechange"
-                attributeState "medium1", label:'Medium Mode', action:"setModeHigh", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTI4/MDAxNTIyNjcwODgzNjgy.PPQVgYG3pUKSCPYtX7quyWlju10JYSXMlIC0g1v0NoYg.7Dv1AoIGQmVRoID5ek8DualZuy-q2C--6gt6aTINZncg.PNG.shin4299/Humi1_main_2.png?type=w3", backgroundColor:"#FFDE61", nextState:"modechange"
-                attributeState "high1", label:'High Mode', action:"setModeAuto", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjQ2/MDAxNTIyNjcwODgzODM4.5obz2ySIyMlI1c_AjC0dfYiLKwYGHS_RFwnUNr5kmt4g.OjvrT0NKffJis6ff4n37PEzsR5b89Ya_OazNRFUkdmIg.PNG.shin4299/Humi1_main_3.png?type=w3", backgroundColor:"#ff9eb2", nextState:"modechange"
-                
-                attributeState "turningOn1", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfNzYg/MDAxNTIyNjcwODg0MTI2.STxrAj6ogps95LmvuOjB0BMA85vmV7nSQkoZh-8tJY0g.lJrICUhnvXTE7HoJC1GR7gzwJxrxfDqyXd7NF59h0psg.PNG.shin4299/Humi1_main_off.png?type=w3", backgroundColor:"#C4BBB5", nextState:"off1"				
-			}
-		}
-        
-        
-        standardTile("switch", "device.switch", inactiveLabel: false, width: 2, height: 2) {
-            state "on", label:'ON', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'OFF', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'turningOn', action:"switch.off", icon:"st.Appliances.appliances17", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'turningOff', action:"switch.on", icon:"st.Appliances.appliances17", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        valueTile("auto_label", "", decoration: "flat") {
-            state "default", label:'Auto \nMode'
-        }
-        valueTile("silent_label", "", decoration: "flat") {
-            state "default", label:'Silent \nMode'
-        }
-        valueTile("medium_label", "", decoration: "flat") {
-            state "default", label:'Medium \nMode'
-        }
-        valueTile("high_label", "", decoration: "flat") {
-            state "default", label:'High \nMode'
-        }
-        standardTile("mode1", "device.mode") {
-			state "default", label: "Auto", action: "setModeAuto", icon:"st.unknown.zwave.static-controller", backgroundColor:"#73C1EC"
-		}
-        standardTile("mode2", "device.mode") {
-			state "default", label: "Silent", action: "setModeSilent", icon:"st.quirky.spotter.quirky-spotter-luminance-dark", backgroundColor:"#6eca8f"
-		}
-        standardTile("mode3", "device.mode") {
-			state "default", label: "Medium", action: "setModeMedium", icon:"st.quirky.spotter.quirky-spotter-luminance-light", backgroundColor:"#FFDE61"
-		}
-        standardTile("mode4", "device.mode") {
-			state "default", label: "High", action: "setModeHigh", icon:"st.quirky.spotter.quirky-spotter-luminance-bright", backgroundColor:"#ff9eb2"
-		}
-        
-        valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
-            state "default", label: '${currentValue}'
-        }        
-        valueTile("led_label", "", decoration: "flat") {
-            state "default", label:'LED'
-        }        
-        valueTile("time_label", "device.time_label", decoration: "flat") {
-            state "default", label: '${currentValue}'
-        }        
-        valueTile("dry_label", "device.dry_label", decoration: "flat") {
-            state "default", label: '${currentValue}'
-        }        
-        valueTile("update_label", "", decoration: "flat") {
-            state "default", label:'last \nupdate'
-        }        
-        standardTile("buzzer", "device.buzzer") {
-            state "on", label:'Sound', action:"buzzerOff", icon: "st.custom.sonos.unmuted", backgroundColor:"#BAA7BC", nextState:"turningOff"
-            state "off", label:'Mute', action:"buzzerOn", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"buzzerOff", backgroundColor:"#d1cdd2", nextState:"turningOff"
-            state "turningOff", label:'....', action:"buzzerOn", backgroundColor:"#BAA7BC", nextState:"turningOn"
-        }
-        standardTile("ledBrightness", "device.ledBrightness") {
-            state "bright", label: 'Bright', action: "setBrightDim", icon: "st.illuminance.illuminance.bright", backgroundColor: "#ff93ac", nextState:"dim"
-            state "dim", label: 'Dim', action: "setBrightOff", icon: "st.illuminance.illuminance.light", backgroundColor: "#ffc2cd", nextState:"off"
-            state "off", label: 'Off', action: "setBright", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"bright"
-            
-            state "bright2", label: 'Bright', action: "dummy", icon: "st.illuminance.illuminance.bright", backgroundColor: "#ff93ac", nextState:"bright2"
-            state "dim2", label: 'Dim', action: "dummy", icon: "st.illuminance.illuminance.light", backgroundColor: "#ffc2cd", nextState:"dim2"
-            state "off2", label: 'Off', action: "dummy", icon: "st.illuminance.illuminance.dark", backgroundColor: "#d6c6c9", nextState:"off2"
-        }         
-        valueTile("use_time", "device.use_time", width: 2, height: 1) {
-            state("val", label:'${currentValue}', defaultState: true
-        	)
-        }
-        standardTile("dry", "device.dry") {
-            state "on", label: 'ON', action: "setDryOff", icon: "st.vents.vent-open",  backgroundColor: "#FFD16C"
-            state "off", label: 'OFF', action: "setDryOn", icon: "st.vents.vent", backgroundColor: "#c1baaa"
-            state "dummy", label: 'N/A', action: "dummy", icon: "st.presence.house.secured", backgroundColor: "#d1cdd2", nextState:"dummy"
-        }
-        valueTile("checkin", "device.lastCheckin", width: 2, height: 1) {
-            state("default", label:'${currentValue}', defaultState: true
-        	)
-        }
-        valueTile("refresh", "device.refresh", decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-		
-   	main (["modem"])
-	details(["mode", "switch", "auto_label", "silent_label", "medium_label", "high_label", "mode1", "mode2", "mode3", "mode4", 
-    		 "buzzer_label", "led_label", "dry_label", "time_label", "use_time",
-                 "buzzer", "ledBrightness", "dry",  "refresh", "checkin"])
-
-
-	}
 }
 
 // parse events into attributes
@@ -532,7 +383,7 @@ def setLanguage(language){
 	sendEvent(name:"target", value: LANGUAGE_MAP["tarH"][language] )
 }
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
@@ -578,7 +429,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
