@@ -35,13 +35,11 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Light", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
-        capability "Actuator"
-        capability "Configuration"
+        capability "Light"
         capability "Refresh"
 		capability "Color Control"
+		capability "ColorTemperature"
         capability "Switch Level"
-        capability "Health Check"
-        capability "Light"
 
         attribute "lastOn", "string"
         attribute "lastOff", "string"
@@ -60,68 +58,6 @@ metadata {
 	simulator {
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
-        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("lastOn_label", "", decoration: "flat") {
-            state "default", label:'Last\nON'
-        }
-        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastOff_label", "", decoration: "flat") {
-            state "default", label:'Last\nOFF'
-        }
-        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        
-        main (["switch2"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "timer_label", "time", "tiemr0" ])       
-	}
 }
 
 // parse events into attributes
@@ -136,7 +72,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-//	log.debug "Status >> ${params}"
+	log.debug "Status >> ${params}"
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
@@ -149,9 +85,7 @@ def setStatus(params){
         }
     	break;
     case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: params.data )
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
@@ -190,16 +124,32 @@ def setLevel(brightness){
 
     	setPowerByStatus(true)
     }
-    
 }
 
-def setColor(color){
-	log.debug "setColor >> ${state.id} >> ${color.hex}"
-    
+def setColorTemperature(colortemperature){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex,
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
+}
+
+def setColor(colormap){
+	log.debug "setColor >> ${state.id} >> ${colormap}"
+	
+	def hue = (colormap.hue != "NaN") ? colormap.hue : 13
+	def saturation = (colormap.saturation != "NaN") ? colormap.saturation : 13
+	def rgb = huesatToRGB(hue as Integer, saturation as Integer)
+	
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
         "subData": getDuration()
     ]
     def options = makeCommand(body)
@@ -208,12 +158,23 @@ def setColor(color){
     setPowerByStatus(true)
 }
 
+def setHue(hue){
+	log.debug "setHue >> ${state.id} >> ${hue}"
+
+}
+
+def setSaturation(saturation){
+	log.debug "setSaturation >> ${state.id} >> ${saturation}"
+	
+}
+
 def on(){
 	log.debug "Off >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "on"
+        "data": "on",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -224,7 +185,8 @@ def off(){
 	def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "off"
+        "data": "off",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -233,15 +195,14 @@ def off(){
 
 def updated() {}
 
-def callback(physicalgraph.device.HubResponse hubResponse){
+def callback(hubitat.device.HubResponse hubResponse){
 	def msg
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-     	String hex = String.format("#%02x%02x%02x", jsonObj.state.colorRGB.red, jsonObj.state.colorRGB.blue, jsonObj.state.colorRGB.green);
-        sendEvent(name:"color", value: hex )
+        sendEvent(name:"color", value: jsonObj.properties.color)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -254,7 +215,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
@@ -301,7 +262,6 @@ def timer(){
         }
         updateTimer()
     }
-//	log.debug "Left Time >> ${state.timerCount}"
 }
 
 def updateTimer(){
@@ -320,7 +280,6 @@ def processTimer(second){
     }else{
     	state.timerCount = second
     }
-//    log.debug "Left Time >> ${state.timerCount} seconds"
     updateTimer()
 }
 
@@ -351,4 +310,21 @@ def getDuration(){
         }
     }
     return duration
+}
+
+def huesatToRGB(float hue, float sat) {
+	while(hue >= 100) hue -= 100
+	int h = (int)(hue / 100 * 6)
+	float f = hue / 100 * 6 - h
+	int p = Math.round(255 * (1 - (sat / 100)))
+	int q = Math.round(255 * (1 - (sat / 100) * f))
+	int t = Math.round(255 * (1 - (sat / 100) * (1 - f)))
+	switch (h) {
+		case 0: return [255, t, p]
+		case 1: return [q, 255, p]
+		case 2: return [p, 255, t]
+		case 3: return [p, q, 255]
+		case 4: return [t, p, 255]
+		case 5: return [255, p, q]
+	}
 }
