@@ -46,31 +46,6 @@ metadata {
     preferences {
 	}
 
-	tiles {
-		multiAttributeTile(name:"presence", type: "generic", width: 6, height: 4){
-			tileAttribute ("device.presence", key: "PRIMARY_CONTROL") {
-               	attributeState "not present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link.png?raw=true", backgroundColor:"#e86d13"
-            	attributeState "present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link.png?raw=true", backgroundColor:"#00a0dc"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'\nLast Update: ${currentValue}')
-            }
-		}
-        
-        valueTile("lastPresent_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Last\nPresent'
-        }
-        valueTile("lastPresent", "device.lastPresent", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastNotPresent_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Last\nNot Present'
-        }
-        valueTile("lastNotPresent", "device.lastNotPresent", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-	}
 }
 
 // parse events into attributes
