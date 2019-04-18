@@ -76,7 +76,7 @@ def setStatus(params){
     	sendEvent(name:"fineDustLevel", value: params.data as float)
     	break;
     case "temperature":
-    	sendEvent(name:"temperature", value: params.data as float)
+    	sendEvent(name:"temperature", value: Float.parseFloat(params.data.replace("C","").replace(" ","")))
     	break;
     case "tvoc":
     	sendEvent(name:"tvocLevel", value: params.data as float)
@@ -86,7 +86,7 @@ def setStatus(params){
     	break;
     case "co2":
     	def co2ppm = params.data as int
-    	sendEvent(name:"carbonDioxide", value: params.data as int)
+    	sendEvent(name:"carbonDioxide", value: co2ppm)
         sendEvent(name:"co2notice", value: ( co2ppm >= state.co2notice ? "notice" : "unnotice"))        
     	break;
     case "battery":
