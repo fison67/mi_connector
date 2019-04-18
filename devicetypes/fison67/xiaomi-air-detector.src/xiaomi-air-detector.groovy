@@ -185,7 +185,7 @@ def setStatus(params){
     	sendEvent(name:"fineDustLevel", value: params.data as float)
     	break;
     case "temperature":
-    	sendEvent(name:"temperature", value: params.data as float)
+    	sendEvent(name:"temperature", value: Float.parseFloat(params.data.replace("C","").replace(" ","")))
     	break;
     case "tvoc":
     	sendEvent(name:"tvocLevel", value: params.data as float)
