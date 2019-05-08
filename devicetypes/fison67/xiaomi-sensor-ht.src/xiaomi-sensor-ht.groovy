@@ -46,7 +46,6 @@ metadata {
 		attribute "currentDay", "String"
 
         attribute "lastCheckin", "Date"
-		attribute "lastCheckinDate", "String"
 
         command "chartTemperature"
         command "chartHumidity"
@@ -205,16 +204,9 @@ def setStatus(params){
     	break;		
     }
     
-    def now = formatDate()    
-    def nowDate = new Date(now).getTime()
-
-	// Any report - temp, humidity, pressure, & battery - results in a lastCheckin event and update to Last Checkin tile
-	// However, only a non-parseable report results in lastCheckin being displayed in events log
-    sendEvent(name: "lastCheckin", value: now, displayed: false)
-    sendEvent(name: "lastCheckinDate", value: nowDate, displayed: false)
-
 	// Check if the min/max temp and min/max humidity should be reset
-    checkNewDay(now)
+    checkNewDay()
+    updateLastTime()
 }
 
 def makeTemperature(temperature){
@@ -237,6 +229,11 @@ def refresh(){
         ]
     ]
     sendCommand(options, callback)
+}
+
+def sendCommand(options, _callback){
+    def myhubAction = new  physicalgraph.device.HubAction(options, null, [callback: _callback])
+    sendHubCommand(myhubAction)
 }
 
 def callback(physicalgraph.device.HubResponse hubResponse){
@@ -263,9 +260,9 @@ def updateLastTime(){
 
 def updated() {}
 
-def checkNewDay(now) {
+def checkNewDay() {
 	def oldDay = ((device.currentValue("currentDay")) == null) ? "32" : (device.currentValue("currentDay"))
-	def newDay = new Date(now).format("dd")
+	def newDay = new Date().format("dd")
 	if (newDay != oldDay) {
 		resetMinMax()
 		sendEvent(name: "currentDay", value: newDay, displayed: false)
