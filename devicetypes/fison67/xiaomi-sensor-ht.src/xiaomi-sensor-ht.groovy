@@ -109,16 +109,10 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data )
     	break;		
     }
-      
-    def nowDate = new Date().getTime()
-
-	// Any report - temp, humidity, pressure, & battery - results in a lastCheckin event and update to Last Checkin tile
-	// However, only a non-parseable report results in lastCheckin being displayed in events log
-    sendEvent(name: "lastCheckin", value: now, displayed: false)
-    sendEvent(name: "lastCheckinDate", value: nowDate, displayed: false)
-
+    
 	// Check if the min/max temp and min/max humidity should be reset
-    checkNewDay(now)
+    checkNewDay()
+	updateLastTime()
 }
 
 def makeTemperature(temperature){
@@ -172,9 +166,9 @@ def updateLastTime(){
 
 def updated() {}
 
-def checkNewDay(now) {
+def checkNewDay() {
 	def oldDay = ((device.currentValue("currentDay")) == null) ? "32" : (device.currentValue("currentDay"))
-	def newDay = new Date(now).format("dd")
+	def newDay = new Date().format("dd")
 	if (newDay != oldDay) {
 		resetMinMax()
 		sendEvent(name: "currentDay", value: newDay, displayed: false)
