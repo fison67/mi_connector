@@ -109,9 +109,8 @@ def setStatus(params){
     	sendEvent(name:"battery", value: params.data )
     	break;		
     }
-    
-    def now = formatDate()    
-    def nowDate = new Date(now).getTime()
+      
+    def nowDate = new Date().getTime()
 
 	// Any report - temp, humidity, pressure, & battery - results in a lastCheckin event and update to Last Checkin tile
 	// However, only a non-parseable report results in lastCheckin being displayed in events log
