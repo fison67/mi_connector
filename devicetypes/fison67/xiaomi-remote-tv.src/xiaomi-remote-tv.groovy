@@ -480,77 +480,77 @@ def playIRCmd(code){
 }
 
 def updated() {
-	if(settings.number_1 != ""){
+	if(settings.number_1 != "" && settings.number_1 != null){
     	state['tv-1'] = settings.number_1
     }
-    if(settings.number_2 != ""){
+    if(settings.number_2 != "" && settings.number_2 != null){
     	state['tv-2'] = settings.number_2
     }    
-    if(settings.number_3 != ""){
+    if(settings.number_3 != "" && settings.number_3 != null){
     	state['tv-3'] = settings.number_3
     }
-    if(settings.number_4 != ""){
+    if(settings.number_4 != "" && settings.number_4 != null){
     	state['tv-4'] = settings.number_4
     }
-    if(settings.number_5 != ""){
+    if(settings.number_5 != "" && settings.number_5 != null){
     	state['tv-5'] = settings.number_5
     }
-    if(settings.number_6 != ""){
+    if(settings.number_6 != "" && settings.number_6 != null){
     	state['tv-6'] = settings.number_6
     }
-    if(settings.number_7 != ""){
+    if(settings.number_7 != "" && settings.number_7 != null){
     	state['tv-7'] = settings.number_7
     }
-    if(settings.number_8 != ""){
+    if(settings.number_8 != "" && settings.number_8 != null){
     	state['tv-8'] = settings.number_8
     }
-    if(settings.number_9 != ""){
+    if(settings.number_9 != "" && settings.number_9 != null){
     	state['tv-9'] = settings.number_9
     }
-    if(settings.number_0 != ""){
+    if(settings.number_0 != "" && settings.number_0 != null){
     	state['tv-0'] = settings.number_0
     }
-    if(settings.ch_up != ""){
+    if(settings.ch_up != "" && settings.ch_up != null){
     	state['tv-ch-up'] = settings.ch_up
     }
-    if(settings.ch_down != ""){
+    if(settings.ch_down != "" && settings.ch_down != null){
     	state['tv-ch-down'] = settings.ch_down
     }
-    if(settings.vol_up != ""){
+    if(settings.vol_up != "" && settings.vol_up != null){
     	state['tv-vol-up'] = settings.vol_up
     }
-    if(settings.vol_down != ""){
+    if(settings.vol_down != "" && settings.vol_down != null){
     	state['tv-vol-down'] = settings.vol_down
     }
-    if(settings.vol_mute != ""){
+    if(settings.vol_mute != "" && settings.vol_mute != null){
     	state['tv-vol-mute'] = settings.vol_mute
     }
     
-    if(settings.custom_1 != ""){
+    if(settings.custom_1 != "" && settings.custom_1 != null){
         state['custom-1'] = settings.custom_1
     }
-    if(settings.custom_2 != ""){
+    if(settings.custom_2 != "" && settings.custom_2 != null){
         state['custom-2'] = settings.custom_2
     }    
-    if(settings.custom_3 != ""){
+    if(settings.custom_3 != "" && settings.custom_3 != null){
         state['custom-3'] = settings.custom_3
     }
-    if(settings.custom_4 != ""){
+    if(settings.custom_4 != "" && settings.custom_4 != null){
         state['custom-4'] = settings.custom_4
     }
-    if(settings.custom_5 != ""){
+    if(settings.custom_5 != "" && settings.custom_5 != null){
         state['custom-5'] = settings.custom_5
     }
-    if(settings.custom_6 != ""){
+    if(settings.custom_6 != "" && settings.custom_6 != null){
         state['custom-6'] = settings.custom_6
     }
-    if(settings.custom_7 != ""){
+    if(settings.custom_7 != "" && settings.custom_7 != null){
         state['custom-7'] = settings.custom_7
     }
-    if(settings.custom_8 != ""){
+    if(settings.custom_8 != "" && settings.custom_8 != null){
         state['custom-8'] = settings.custom_8
     }
-    if(settings.custom_9 != ""){
+    if(settings.custom_9 != "" && settings.custom_9 != null){
         state['custom-9'] = settings.custom_9
     }
 }
