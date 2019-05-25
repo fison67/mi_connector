@@ -44,7 +44,7 @@ metadata {
         capability "Refresh"
 		capability "Sensor"
 		capability "Power Source"
-		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
+		capability "Fine Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
 
         
         attribute "lastCheckin", "Date"
