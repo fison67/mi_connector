@@ -39,6 +39,8 @@ metadata {
         capability "Outlet"
         capability "Refresh"
         
+        attribute "led", "string"
+		attribute "usb", "string"
         attribute "lastCheckin", "Date"
         
         command "usbOn"
