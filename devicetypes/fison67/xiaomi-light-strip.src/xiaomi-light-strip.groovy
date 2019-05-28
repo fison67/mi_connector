@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Strip(v.0.0.1)
+ *  Xiaomi Light Strip(v.0.0.2)
  *
  * MIT License
  *
@@ -28,25 +28,32 @@
 */
 
 import groovy.json.JsonSlurper
+import java.awt.Color
 
 metadata {
-	definition (name: "Xiaomi Light Strip", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Light Strip", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgb-color-bulb") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
-        capability "Configuration"
         capability "Refresh"
-	capability "Color Control"
+		capability "Color Control"
+		capability "ColorTemperature"
         capability "Switch Level"
-        capability "Health Check"
         capability "Light"
 
         attribute "lastOn", "string"
         attribute "lastOff", "string"
         
         attribute "lastCheckin", "Date"
+         
+        command "setTimeRemaining"
+        command "stop"
       
 	}
 
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+	}
 
 	simulator {
 	}
@@ -98,8 +105,20 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
+        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Set Timer\n${currentValue}'
+        }
+        
+        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
+	    	state "time", action:"setTimeRemaining"
+		}
+        
+        standardTile("tiemr0", "device.timeRemaining") {
+			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
+		}
+        
    	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff" ])       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -118,19 +137,23 @@ def setStatus(params){
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
-    	log.debug "MI >> power " + (params.data == "true" ? "on" : "off")
         if(params.data == "true"){
-    	sendEvent(name:"switch", value: "on")
-	    sendEvent(name: "lastOn", value: now)
+            sendEvent(name:"switch", value: "on")
+            sendEvent(name: "lastOn", value: now)
         } else {
-        sendEvent(name:"switch", value: "off")
-	    sendEvent(name: "lastOff", value: now)
+            sendEvent(name:"switch", value: "off")
+            sendEvent(name: "lastOff", value: now)
         }
     	break;
     case "color":
     	def colors = params.data.split(",")
         String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
     	sendEvent(name:"color", value: hex )
+        
+        float[] hsbValues = new float[3];
+		def hueSat = Color.RGBtoHSB(colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger(),hsbValues)
+    	sendEvent(name:"hue", value: (hueSat[0] * 100) as int  )
+    	sendEvent(name:"saturation", value: (hueSat[1] * 100) as int)
     	break;
     case "brightness":
     	sendEvent(name:"level", value: params.data )
@@ -153,26 +176,56 @@ def refresh(){
 }
 
 def setLevel(brightness){
-	log.debug "setBrightness >> ${state.id}, val=${brightness}"
-    def body = [
-        "id": state.id,
-        "cmd": "brightness",
-        "data": brightness
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+	log.debug "setBrightness >> ${brightness}"
+    
+    if(brightness == 0){
+    	off()
+    }else{
+        def body = [
+            "id": state.id,
+            "cmd": "brightness",
+            "data": brightness,
+        	"subData": getDuration()
+        ]
+        def options = makeCommand(body)
+        sendCommand(options, null)
+
+    	setPowerByStatus(true)
+    }
+    
 }
 
 def setColor(color){
-	log.debug "setColor >> ${state.id}"
-    log.debug "${color.hex}"
+	log.debug "SetColor >> ${color}"
+    def colors = color.hex
+    if(colors == null){
+    	def rgb = huesatToRGB(color.hue as Integer, color.saturation as Integer)
+        colors = "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})"
+    }
+    
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": colors,
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+    
+    setPowerByStatus(true)
+}
+
+def setColorTemperature(colortemperature){
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
 }
 
 def on(){
@@ -206,8 +259,13 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
+        
         def colors = jsonObj.properties.color.values
         String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
+        
+    	sendEvent(name:"hue", value: jsonObj.state.colorHue  )
+    	sendEvent(name:"saturation", value: jsonObj.state.colorSaturation)
+    	sendEvent(name:"colorTemperature", value: jsonObj.state.colorTemperature)
     	sendEvent(name:"color", value: hex )
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
@@ -218,8 +276,6 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         log.error "Exception caught while parsing data: "+e;
     }
 }
-
-
 
 def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
@@ -237,4 +293,103 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+def msToTime(duration) {
+    def seconds = (duration%60).intValue()
+    def minutes = ((duration/60).intValue() % 60).intValue()
+    def hours = ( (duration/(60*60)).intValue() %24).intValue()
+
+    hours = (hours < 10) ? "0" + hours : hours
+    minutes = (minutes < 10) ? "0" + minutes : minutes
+    seconds = (seconds < 10) ? "0" + seconds : seconds
+
+    return hours + ":" + minutes + ":" + seconds
+}
+
+def stop() { 
+	unschedule()
+	state.timerCount = 0
+	updateTimer()
+}
+
+def timer(){
+	if(state.timerCount > 0){
+    	state.timerCount = state.timerCount - 30;
+        if(state.timerCount <= 0){
+        	if(device.currentValue("switch") == "on"){
+        		off()
+            }
+        }else{
+        	runIn(30, timer)
+        }
+        updateTimer()
+    }
+//	log.debug "Left Time >> ${state.timerCount}"
+}
+
+def updateTimer(){
+    def timeStr = msToTime(state.timerCount)
+    sendEvent(name:"leftTime", value: "${timeStr}")
+    sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def processTimer(second){
+	if(state.timerCount == null){
+    	state.timerCount = second;
+    	runIn(30, timer)
+    }else if(state.timerCount == 0){
+		state.timerCount = second;
+    	runIn(30, timer)
+    }else{
+    	state.timerCount = second
+    }
+//    log.debug "Left Time >> ${state.timerCount} seconds"
+    updateTimer()
+}
+
+def setTimeRemaining(time) { 
+	if(time > 0){
+        log.debug "Set a Timer ${time}Mins"
+        processTimer(time * 60)
+        setPowerByStatus(true)
+    }
+}
+
+def setPowerByStatus(turnOn){
+	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+        if(turnOn){
+        	on()
+        }else{
+        	off()
+        }
+    }
+}
+
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
+}
+
+def huesatToRGB(float hue, float sat) {
+	while(hue >= 100) hue -= 100
+	int h = (int)(hue / 100 * 6)
+	float f = hue / 100 * 6 - h
+	int p = Math.round(255 * (1 - (sat / 100)))
+	int q = Math.round(255 * (1 - (sat / 100) * f))
+	int t = Math.round(255 * (1 - (sat / 100) * (1 - f)))
+	switch (h) {
+		case 0: return [255, t, p]
+		case 1: return [q, 255, p]
+		case 2: return [p, 255, t]
+		case 3: return [p, q, 255]
+		case 4: return [t, p, 255]
+		case 5: return [255, p, q]
+	}
 }
