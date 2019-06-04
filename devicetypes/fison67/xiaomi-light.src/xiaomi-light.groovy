@@ -36,7 +36,7 @@ import java.awt.Color
 import java.util.ArrayList
 
 metadata {
-	definition (name: "Xiaomi Light", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Simulated_RGBW_Bulb", ocfDeviceType: "oic.d.light") {
+	definition (name: "Xiaomi Light", namespace: "fison67", author: "fison67", vid: "generic-rgb-color-bulb", ocfDeviceType: "oic.d.light") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
         capability "Refresh"
