@@ -188,6 +188,8 @@ def setLevel(brightness){
     if(brightness == 0){
     	off()
     }else{
+    	setPowerByStatus(true)
+        
         def body = [
             "id": state.id,
             "cmd": "brightness",
@@ -196,14 +198,15 @@ def setLevel(brightness){
         ]
         def options = makeCommand(body)
         sendCommand(options, null)
-
-    	setPowerByStatus(true)
     }
     
 }
 
 def setColor(color){
 	log.debug "setColor >> ${state.id} >> ${color}"
+    
+    setPowerByStatus(true)
+    
     def colors = color.hex
     if(colors == null){
     	def rgb = huesatToRGB(color.hue as Integer, color.saturation as Integer)
@@ -218,8 +221,6 @@ def setColor(color){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
-    
-    setPowerByStatus(true)
 }
 
 def setColorTemperature(colortemperature){
