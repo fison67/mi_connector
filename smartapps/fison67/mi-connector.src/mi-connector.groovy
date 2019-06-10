@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.22)
+ *  Mi Connector (v.0.0.23)
  *
  * MIT License
  *
@@ -385,7 +385,7 @@ def addDevice(){
         }else if(params.type == "shuii.humidifier.jsq001"){
         	dth = "Xiaomi Humidifier 3";
             name = "Xiaomi Humidifier 3";
-       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1"){	
+       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za4"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
@@ -415,7 +415,7 @@ def addDevice(){
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
         	dth = "Xiaomi Power Strip";
             name = "Xiaomi Power Strip";
-        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.m1"|| params.type == "chuangmi.plug.m2" || params.type == "chuangmi.plug.m3" || params.type == "lumi.plug"){
+        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.v3" || params.type == "chuangmi.plug.m1"|| params.type == "chuangmi.plug.m2" || params.type == "chuangmi.plug.m3" || params.type == "lumi.plug"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
         }else if(params.type == "chuangmi.plug.v3"){
