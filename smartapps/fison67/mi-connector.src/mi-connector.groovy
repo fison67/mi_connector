@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.23)
+ *  Mi Connector (v.0.0.24)
  *
  * MIT License
  *
@@ -493,6 +493,9 @@ def addDevice(){
         }else if(params.type == "zhimi.heater.za1"){
         	dth = "Xiaomi Heater"
             name = "Xiaomi Heater"
+        }else if(params.type == "zhimi.airfresh.va2"){
+        	dth = "Xiaomi Air Fresh"
+            name = "Xiaomi Air Fresh"
         }
         
         
