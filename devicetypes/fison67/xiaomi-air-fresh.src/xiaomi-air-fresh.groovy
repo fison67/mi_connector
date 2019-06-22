@@ -49,8 +49,9 @@ metadata {
         attribute "buzzer", "enum", ["on", "off"]        
         attribute "ledBrightness", "enum", ["bright", "dim", "off"]        
         attribute "f1_hour_used", "number"
-        attribute "filter1_life", "number"
+        attribute "used_time", "number"
         attribute "average_aqi", "number"
+        attribute "motorSpeed", "number"
         attribute "mode", "enum", ["auto", "silent", "interval", "low", "middle", "strong"]        
         
         attribute "lastCheckin", "Date"
@@ -246,10 +247,10 @@ metadata {
             state "change", label:'....', action:"setBrightOff", backgroundColor:"#d6c6c9"
         }         
         valueTile("f1_hour_used", "device.f1_hour_used", width: 2, height: 1) {
-            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
+            state("val", label:'${currentValue}H', defaultState: true, backgroundColor:"#bcbcbc")
         }
-        valueTile("filter1_life", "device.filter1_life", width: 2, height: 1) {
-            state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
+        valueTile("used_time", "device.used_time", width: 2, height: 1) {
+            state("val", label:'${currentValue}H', defaultState: true, backgroundColor:"#bcbcbc")
         }
         main (["mode"])
         details(["mode", "switch", "pm25_label", "co2_label", "temp_label", "humi_label", 
@@ -257,7 +258,7 @@ metadata {
         "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
         "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
         "led_label", "buzzer_label", "refresh_label", "usage_label", "f1_hour_used", 
-        "buzzer", "ledBrightness", "refresh", "filter_label", "filter1_life"
+        "buzzer", "ledBrightness", "refresh", "filter_label", "used_time"
         ])
         
 	}
@@ -282,16 +283,16 @@ def setStatus(params){
     case "mode":
         state.lastMode = params.data
         sendEvent(name:"mode", value: params.data )
-    	break;
+    	break
     case "pm2.5":
     	sendEvent(name:"fineDustLevel", value: params.data)
-    	break;
+    	break
     case "aqi":
     	sendEvent(name:"fineDustLevel", value: params.data)
-    	break;
+    	break
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data)
-    	break;
+    	break
     case "power":
     	if(params.data == "true") {
     		sendEvent(name:"switch", value:"on")
@@ -301,31 +302,34 @@ def setStatus(params){
             sendEvent(name:"mode", value: "off")
             sendEvent(name:"switch", value:"off")
         }
-    	break;
+    	break
     case "temperature":
 		def stf = Float.parseFloat(params.data.replace("C",""))
         sendEvent(name:"temperature", value: Math.round(stf*10)/10 )
-    	break;
+    	break
     case "buzzer":
         sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off"))
-    	break;
+    	break
     case "ledBrightness":
         sendEvent(name:"ledBrightness", value: params.data)
-    	break;
+    	break
     case "co2":
     	sendEvent(name:"carbonDioxide", value: params.data as int)
     	break
     case "filterHoursUsed":
 		def use = Math.round(Float.parseFloat(params.data)/24)    
     	sendEvent(name:"f1_hour_used", value: use )
-        break;
-    case "filterLifeRemaining":
-		def life = Math.round(Float.parseFloat(params.data)*1.45)    
-    	sendEvent(name:"filter1_life", value: life )
-    	break;
+        break
+    case "useTime":
+		def life = Math.round(Float.parseFloat(params.data)/60/60)    
+    	sendEvent(name:"used_time", value: life )
+    	break
     case "averageAqi":
-    	sendEvent(name:"airQuality", value: params.data )
-    	break;
+    	sendEvent(name:"airQuality", value: params.data as int)
+    	break
+    case "motorSpeed":
+    	sendEvent(name:"motorSpeed", value: params.data as int)
+    	break
     }
     
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
@@ -458,8 +462,22 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-	//	sendEvent(name:"airQuality", value: "N/A" )
-	    
+        sendEvent(name:"airQuality", value: jsonObj.properties.buzzer ? "on" : "off")
+        sendEvent(name:"carbonDioxide", value: jsonObj.properties.co2)
+        sendEvent(name:"f1_hour_used", value: jsonObj.properties.filterHoursUsed)
+        sendEvent(name:"used_time", value: jsonObj.properties.useTime / 60 / 60)
+        sendEvent(name:"mode", value: jsonObj.properties.mode)
+        sendEvent(name:"motorSpeed", value: jsonObj.properties.motorSpeed)
+    	sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"])
+        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value )
+    	sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity)
+    	sendEvent(name:"ledBrightness", value: jsonObj.properties.ledBrightness)
+    	sendEvent(name:"switch", value: jsonObj.properties.power ? "on" : "off")
+        
+    	if(!jsonObj.properties.power) {
+            sendEvent(name:"mode", value: "off")
+        }
+        
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
         sendEvent(name: "lastCheckin", value: now)
 
