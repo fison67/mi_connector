@@ -115,14 +115,14 @@ metadata {
         valueTile("pm25_label", "", decoration: "flat") {
             state "default", label:'PM2.5 \n㎍/㎥'
         }        
-        valueTile("aqi_label", "", decoration: "flat") {
-            state "default", label:'AQI \n㎍/㎥'
+        valueTile("co2_label", "", decoration: "flat") {
+            state "default", label:'CO2 \nppm'
         }        
         valueTile("temp_label", "device.temp_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
+            state "default", label:'Temperature'
         }
         valueTile("humi_label", "device.humi_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
+            state "default", label:'Humidity'
         }
 		valueTile("pm25_value", "device.fineDustLevel", decoration: "flat") {
         	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
@@ -134,15 +134,15 @@ metadata {
             	[value: 500, color: "#970203"]
             ]
         }
-		valueTile("aqi", "device.airQuality", decoration: "flat") {
-        	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
+		valueTile("carbonDioxide", "device.carbonDioxide", decoration: "flat") {
+        	state "default", label:'${currentValue}', unit:"ppm", backgroundColors:[
 				[value: -1, color: "#bcbcbc"],
-				[value: 0, color: "#bcbcbc"],
-            	[value: 0.5, color: "#7EC6EE"],
-            	[value: 15, color: "#51B2E8"],
-            	[value: 50, color: "#e5c757"],
-            	[value: 75, color: "#E40000"],
-            	[value: 500, color: "#970203"]
+				[value: 400, color: "#bcbcbc"],
+            	[value: 600, color: "#7EC6EE"],
+            	[value: 800, color: "#51B2E8"],
+            	[value: 1000, color: "#e5c757"],
+            	[value: 1300, color: "#E40000"],
+            	[value: 1600, color: "#970203"]
             ]
         }        
         valueTile("temperature", "device.temperature") {
@@ -195,17 +195,20 @@ metadata {
         valueTile("high_label", "device.high_label", decoration: "flat") {
             state "default", label:'Strong'
         }
-        valueTile("strong_label", "device.strong_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
+        valueTile("refresh_label", "device.refresh_label", decoration: "flat") {
+            state "default", label:'Refresh'
         }
         valueTile("led_label", "device.led_label", decoration: "flat") {
-            state "default", label:'${currentValue}'
+            state "default", label:'Led'
         }
         valueTile("buzzer_label", "device.buzzer_label", decoration: "flat") {
             state "default", label:'Buzzer'
         }
         valueTile("usage_label", "device.usage_label", decoration: "flat") {
-            state "default", label:'$Used'
+            state "default", label:'Used'
+        }
+        valueTile("filter_label", "device.filter_label", decoration: "flat") {
+            state "default", label:'Filter Used'
         }
         standardTile("refresh", "device.refresh") {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh", backgroundColor:"#A7ADBA"
@@ -249,12 +252,12 @@ metadata {
             state("val", label:'${currentValue}', defaultState: true, backgroundColor:"#bcbcbc")
         }
         main (["mode"])
-        details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
-        "pm25_value", "aqi", "temperature", "humidity", 
+        details(["mode", "switch", "pm25_label", "co2_label", "temp_label", "humi_label", 
+        "pm25_value", "carbonDioxide", "temperature", "humidity", 
         "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
         "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
-        "strong_label", "buzzer_label", "led_label", "usage_label", "f1_hour_used", 
-        "mode7", "buzzer", "ledBrightness", "refresh", "filter1_life"
+        "led_label", "buzzer_label", "refresh_label", "usage_label", "f1_hour_used", 
+        "buzzer", "ledBrightness", "refresh", "filter_label", "filter1_life"
         ])
         
 	}
@@ -273,16 +276,12 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-    log.debug "${params.key} : ${params.data}"
+    log.debug "Status >> ${params.key} [${params.data}]"
  
  	switch(params.key){
     case "mode":
-    	if(params.data == "idle") {
-        }
-    	else {
-        	state.lastMode = params.data
-        	sendEvent(name:"mode", value: params.data )
-        }
+        state.lastMode = params.data
+        sendEvent(name:"mode", value: params.data )
     	break;
     case "pm2.5":
     	sendEvent(name:"fineDustLevel", value: params.data)
@@ -313,19 +312,16 @@ def setStatus(params){
     case "ledBrightness":
         sendEvent(name:"ledBrightness", value: params.data)
     	break;
-    case "led":
-        sendEvent(name:"ledBrightness", value: (params.data == "true" ? "bright" : "off"))
-    	break
     case "co2":
     	sendEvent(name:"carbonDioxide", value: params.data as int)
     	break
-    case "f1_hour_used":
+    case "filterHoursUsed":
 		def use = Math.round(Float.parseFloat(params.data)/24)    
-    	sendEvent(name:"f1_hour_used", value: state.usage + " " + use + state.day )
+    	sendEvent(name:"f1_hour_used", value: use )
         break;
     case "filterLifeRemaining":
 		def life = Math.round(Float.parseFloat(params.data)*1.45)    
-    	sendEvent(name:"filter1_life", value: state.remain + " " + life + state.day )
+    	sendEvent(name:"filter1_life", value: life )
     	break;
     case "averageAqi":
     	sendEvent(name:"airQuality", value: params.data )
@@ -351,9 +347,7 @@ def refresh(){
 def setFanSpeed(level){
 	def speed = Math.round(level/625*100)    
 	log.debug "setSpeed >> ${state.id}, speed=" + speed
-    if(model == "MiAirPurifier"){
-    }
-    else {
+   
     def body = [
         "id": state.id,
         "cmd": "speed",
@@ -362,7 +356,6 @@ def setFanSpeed(level){
     def options = makeCommand(body)
     sendCommand(options, null)
 	sendEvent(name: "level", value: speed)
-	}
 }
 
 def setCommand(cmd, mode){
