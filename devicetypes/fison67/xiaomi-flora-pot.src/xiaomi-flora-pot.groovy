@@ -57,9 +57,10 @@ metadata {
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
         capability "Illuminance Measurement"
-        
 		capability "Refresh"
                
+        attribute "versions", "string"
+        attribute "fertility", "number"
         attribute "lastCheckin", "Date"
         
         command "chartTemperature"
