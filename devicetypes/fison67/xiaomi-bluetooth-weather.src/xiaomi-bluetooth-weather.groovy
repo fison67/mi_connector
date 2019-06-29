@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Bluetooth Temperature & Humidity (v.0.0.1)
+ *  Xiaomi Bluetooth Temperature & Humidity (v.0.0.2)
  *
  * MIT License
  *
@@ -215,14 +215,27 @@ def setStatus(params){
     def data = new JsonSlurper().parseText(params.data)
     log.debug data
     
-    sendEvent(name:"battery", value: data.batteryLevel)
-    sendEvent(name:"temperature", value: makeTemperature(data.sensor.temperature))
-    sendEvent(name:"temperature2", value: makeTemperature(data.sensor.temperature))
-    
-    sendEvent(name:"humidity", value: data.sensor.relativeHumidity)
-    
-    updateMinMaxTemps( makeTemperature(data.sensor.temperature) )
-    updateMinMaxHumidity( data.sensor.relativeHumidity )
+    if(data.batteryLevel){
+    	sendEvent(name:"battery", value: data.batteryLevel)
+    }
+    if(data.sensor != null){
+        sendEvent(name:"temperature", value: makeTemperature(data.sensor.temperature))
+        sendEvent(name:"temperature2", value: makeTemperature(data.sensor.temperature))
+    	sendEvent(name:"humidity", value: data.sensor.relativeHumidity)
+        updateMinMaxTemps( makeTemperature(data.sensor.temperature) )
+        updateMinMaxHumidity( data.sensor.relativeHumidity )
+    }else{
+    	if(data.temperature != null){
+        	sendEvent(name:"temperature", value: makeTemperature(data.temperature))
+        	sendEvent(name:"temperature2", value: makeTemperature(data.temperature))
+        }
+        if(data.relativeHumidity != null){
+        	sendEvent(name:"humidity", value: data.relativeHumidity)
+        }
+        
+        updateMinMaxTemps( makeTemperature(data.temperature) )
+        updateMinMaxHumidity( data.relativeHumidity )
+    }
     
     updateLastTime()
     checkNewDay()
