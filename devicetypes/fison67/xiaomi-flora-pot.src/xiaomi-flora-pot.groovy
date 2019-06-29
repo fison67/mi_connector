@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Mi Flora Pot (v.0.0.1)
+ *  Xiaomi Mi Flora Pot (v.0.0.2)
  *
  * MIT License
  *
@@ -220,15 +220,31 @@ def setStatus(params){
 	log.debug "${params.key} : ${params.data}"
     
     def data = new JsonSlurper().parseText(params.data)
-    log.debug data.sensor
     
-    sendEvent(name:"battery", value: data.firmware.battery)
-    sendEvent(name:"versions", value: 'version: ' + data.firmware.firmware)
+    if(data.firmware != null){
+        sendEvent(name:"battery", value: data.firmware.battery)
+        sendEvent(name:"versions", value: 'version: ' + data.firmware.firmware)
+    }
     
-    sendEvent(name:"temperature", value: data.sensor.temperature)
-    sendEvent(name:"illuminance", value: data.sensor.lux)
-    sendEvent(name:"humidity", value: data.sensor.moisture)
-    sendEvent(name:"fertility", value: data.sensor.fertility)
+    if(data.sensor != null){
+        sendEvent(name:"temperature", value: makeTemperature(data.sensor.temperature))
+        sendEvent(name:"illuminance", value: data.sensor.lux)
+        sendEvent(name:"humidity", value: data.sensor.moisture)
+        sendEvent(name:"fertility", value: data.sensor.fertility)
+    }
+    
+    if(data.temperature != null){
+        sendEvent(name:"temperature", value: makeTemperature(data.temperature))
+    }
+    if(data.moisture != null){
+        sendEvent(name:"humidity", value: data.moisture)
+    }
+    if(data.lux != null){
+        sendEvent(name:"illuminance", value: data.lux)
+    }
+    if(data.fertility != null){
+        sendEvent(name:"fertility", value: data.fertility)
+    }
     
     updateLastTime()
 }
