@@ -220,14 +220,14 @@ def setStatus(params){
     }
     if(data.sensor != null){
         sendEvent(name:"temperature", value: makeTemperature(data.sensor.temperature))
-        sendEvent(name:"temperature2", value: makeTemperature(data.sensor.temperature))
+        sendEvent(name:"temperature2", value: makeTemperature(data.sensor.temperature), displayed: false)
     	sendEvent(name:"humidity", value: data.sensor.relativeHumidity)
         updateMinMaxTemps( makeTemperature(data.sensor.temperature) )
         updateMinMaxHumidity( data.sensor.relativeHumidity )
     }else{
     	if(data.temperature != null){
         	sendEvent(name:"temperature", value: makeTemperature(data.temperature))
-        	sendEvent(name:"temperature2", value: makeTemperature(data.temperature))
+        	sendEvent(name:"temperature2", value: makeTemperature(data.temperature), displayed: false)
         }
         if(data.relativeHumidity != null){
         	sendEvent(name:"humidity", value: data.relativeHumidity)
@@ -391,7 +391,7 @@ private getPictureName(type) {
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 
 def getWordByLang(id){
