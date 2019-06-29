@@ -100,6 +100,7 @@ Added support devices.
 |   | zhimi.airpurifier.v7  |   X |    |
 |   | zhimi.airpurifier.mc1  |   X |    |
 |   | zhimi.airpurifier.ma2  |   X |    |
+| Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |  O |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
 |   | shuii.humidifier.jsq001  |   O |  O  |
@@ -169,6 +170,7 @@ Added support devices.
 | Xiaomi Flora | ble.flora  |  △  |  O  |
 | Xiaomi Flora Pot | ble.floraPot  |  △  |  O  |
 | Xiaomi Temp-Humid Sensor | ble.mitemperature  |  △  |  O  |
+| Xiaomi E-Ink Temp-Humid Sensor | ble.einktemperature  |  △  |  O  |
 
 <img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button Aqara" width="200px"><img src="./imgs/product/cube.png" title="Cube" width="200px">
 <img src="./imgs/product/door.jpg" title="Door" width="200px"><img src="./imgs/product/door_aq.png" title="Door Aqara" width="200px"><img src="./imgs/product/fire.jpg" title="Fire Sensor" width="200px">
@@ -201,6 +203,8 @@ Added support devices.
 <img src="./imgs/product/xiaomi-bedside-lamp.jpeg?raw=true" title="Xiaomi Bedside Lamp" width="200px">
 <img src="./imgs/product/xiaomi-bedside-lamp-2.jpg?raw=true" title="Xiaomi Bedside Lamp2" width="200px">
 <img src="./imgs/product/philips-bedside-lamp.jpg?raw=true" title="Xiaomi Philips Bedside Lamp" width="200px">
+<img src="./imgs/product/xiaomi-air-fresh.jpg?raw=true" title="Xiaomi Air Fresh" width="200px">
+<img src="./imgs/product/xiaomi-eink-temperature.jpeg?raw=true" title="Xiaomi E-Ink Temperatre" width="200px">
 
 
 
