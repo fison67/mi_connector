@@ -129,16 +129,22 @@ Added support devices.
 | Yeelight Color  | yeelink.light.color1  |   O |    |
 |   | yeelink.light.color2  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
+|   | yeelink.light.strip2  |   O |    |
 | Bedside Lamp  | yeelink.light.bslamp1  |   O |   O |
 |   | yeelink.light.bslamp2  |   X |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |   | yeelink.light.ceiling2  |   O |    |
+|   | yeelink.light.ceiling3  |   O |    |
+|   | yeelink.light.ceiling4  |   O |    |
+|   | yeelink.light.ceiling5  |   O |    |
 |   | yeelink.light.ceiling6  |   O |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 | Philips Bedside Lamp  | philips.light.moonlight  |   O |   O |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
+|   | chuangmi.remote.h102a03  |   △ |  O |
+|   | chuangmi.remote.v2  |   △ |  O |
 |  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
 
 ### Zigbee Devices
