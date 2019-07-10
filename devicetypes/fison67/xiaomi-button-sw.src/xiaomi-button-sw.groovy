@@ -103,12 +103,16 @@ def setStatus(params){
        	 	buttonEvent(2, "pushed")
         } else if(params.data == "both_click") {
         	buttonEvent(3, "pushed")
-        } else if(params.data == "btn0-double_click") {
+        } else if(params.data == "btn0-long_click") {
         	buttonEvent(4, "pushed")
-        } else if(params.data == "btn1-double_click") {
+        } else if(params.data == "btn1-long_click") {
         	buttonEvent(5, "pushed")
-        } else if(params.data == "long_both_click") {
+        } else if(params.data == "btn0-double_click") {
         	buttonEvent(6, "pushed")
+        } else if(params.data == "btn1-double_click") {
+        	buttonEvent(7, "pushed")
+        } else if(params.data == "long_both_click") {
+        	buttonEvent(8, "pushed")
         } 
     	break;
     case "batteryLevel":
