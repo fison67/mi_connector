@@ -31,7 +31,7 @@ import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Button SW", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch", ocfDeviceType: "oic.d.switch") {
-        capability "Sensor"						//"on", "off"
+        capability "Sensor"						
         capability "Button"
         capability "Battery"
         
@@ -107,6 +107,8 @@ def setStatus(params){
         	buttonEvent(4, "pushed")
         } else if(params.data == "btn1-double_click") {
         	buttonEvent(5, "pushed")
+        } else if(params.data == "long_both_click") {
+        	buttonEvent(6, "pushed")
         } 
     	break;
     case "batteryLevel":
