@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Vacuums (v.0.0.2)
+ *  Xiaomi Vacuums (v.0.0.3)
  *
  * MIT License
  *
@@ -37,6 +37,7 @@ metadata {
         capability "Refresh"	
         
         attribute "status", "string"
+        attribute "mode", "string"
         attribute "cleanTime", "string"
         attribute "cleanArea", "NUMBER"
         attribute "in_cleaning", "string"
@@ -63,6 +64,10 @@ metadata {
         command "setVolumeWithTest"
 	}
 
+    preferences {
+        input name: "offOption", title:"OFF Option" , type: "enum", required: true, options: ["off", "return"], defaultValue: "off"
+	}
+    
 	simulator {}
 
 	tiles {
@@ -237,12 +242,15 @@ def setStatus(params){
  	switch(params.key){
     case "mode":
     	sendEvent(name:"mode", value: params.data )
-        if(params.data == "paused"){
-    		sendEvent(name:"switch", value: "paused" )
+        
+        if(params.data == "cleaning"){
+        	sendEvent(name:"switch", value: "on", displayed: false)
+        }else{
+        	sendEvent(name:"switch", value: "off", displayed: false)
         }
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data)
+    	sendEvent(name:"battery", value: params.data, displayed: false)
     	break;
     case "fanSpeed":
     	def val = params.data.toInteger()
@@ -264,8 +272,8 @@ def setStatus(params){
     	sendEvent(name:"fanSpeed_label", value: _value )
     	break;
     case "cleaning":
-    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off") )
-       	sendEvent(name:"paused", value: params.data == "true" ? "paused" : "restart" )     
+    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
+       	sendEvent(name:"paused", value: params.data == "true" ? "paused" : "restart", displayed: false )     
     	break;
     case "volume":
     	sendEvent(name:"volume", value: params.data )
@@ -446,8 +454,7 @@ def find(){
     sendCommand(options, null)
 }
 
-def on(){
-		log.debug "On >> ${state.id}"
+def clean(){
     def body = [
         "id": state.id,
         "cmd": "clean"
@@ -456,14 +463,23 @@ def on(){
     sendCommand(options, null)
 }
 
+def on(){
+    log.debug "On >> ${state.id}"
+    clean()
+}
+
 def off(){
-	log.debug "Off >> ${state.id}"
-	def body = [
-        "id": state.id,
-        "cmd": "stop"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+	if(offOption == "off"){
+        log.debug "Off >> ${state.id}"
+        def body = [
+            "id": state.id,
+            "cmd": "stop"
+        ]
+        def options = makeCommand(body)
+        sendCommand(options, null)
+    }else{
+    	charge()
+    }
 }
 
 /*
