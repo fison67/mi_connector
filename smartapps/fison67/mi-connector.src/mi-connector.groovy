@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.25)
+ *  Mi Connector (v.0.0.26)
  *
  * MIT License
  *
@@ -48,6 +48,7 @@ preferences {
    page(name: "langPage")
    page(name: "remoteDevicePage")
    page(name: "remoteDeviceNextPage")
+   page(name: "versionPage")
 }
 
 
@@ -70,6 +71,10 @@ def mainPage() {
             paragraph "View this SmartApp's configuration to use it in other places."
             href url:"${apiServerUrl("/api/smartapps/installations/${app.id}/config?access_token=${state.accessToken}")}", style:"embedded", required:false, title:"Config", description:"Tap, select, copy, then click \"Done\""
        	}
+        
+        section() {
+          	href "versionPage", title: "Software Version", description:""
+       	}
     }
 }
 
@@ -78,6 +83,27 @@ def langPage(){
     	section ("Select") {
         	input "Korean",  title: "Korean", multiple: false, required: false
         }
+    }
+}
+
+def versionPage(){
+	
+	def options = [
+     	"method": "GET",
+        "path": "/settings/version",
+        "headers": [
+        	"HOST": settings.address,
+            "Content-Type": "application/json"
+        ]
+    ]
+    def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: versionCallBack])
+    sendHubCommand(myhubAction)
+
+	dynamicPage(name: "versionPage", title:"", refreshInterval:5) {
+        section {
+            paragraph "Version: " + state.dockerVersion
+        }
+        
     }
 }
 
@@ -496,6 +522,9 @@ def addDevice(){
         }else if(params.type == "zhimi.airfresh.va2"){
         	dth = "Xiaomi Air Fresh"
             name = "Xiaomi Air Fresh"
+        }else if(params.type == "air.fan.ca23ad9"){
+        	dth = "Xiaomi Circulator"
+            name = "Xiaomi Circulator"
         }
         
         
@@ -656,6 +685,18 @@ def getLocationID(){
     try{ locationID = location.hubs[0].id }catch(err){}
     return locationID
 }
+
+def versionCallBack(physicalgraph.device.HubResponse hubResponse) {
+    def msg, json, status
+    try {
+        msg = parseLanMessage(hubResponse.description)
+        log.debug "${msg.body}"
+        state.dockerVersion = msg.body
+    } catch (e) {
+        logger('warn', "Exception caught while parsing data: "+e);
+    }
+}
+
 
 mappings {
     if (!params.access_token || (params.access_token && params.access_token != state.accessToken)) {
