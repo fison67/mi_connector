@@ -55,6 +55,12 @@ If this project helps you, you can give me a cup of coffee<br/>
 
 # Release Notes
 
+### Version: 0.0.4
+```
+Added a function to add a device by db file.
+Added support devices.
+```
+
 ### Version: 0.0.3
 ```
 Added a graph in DTH & Web. [ Important!!! You must install a DB. ]
@@ -123,6 +129,7 @@ Added support devices.
 |   | zhimi.fan.v3  |   O |    |
 |   | zhimi.fan.sa1  |   X |  O |
 |   | zhimi.fan.za1  |   O |  O |
+|   | air.fan.ca23ad9  |   O |  O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |    |
 |   | yeelink.light.mono1  |   O |    |
 |   | yeelink.light.ct2  |   O |    |
@@ -211,7 +218,7 @@ Added support devices.
 <img src="./imgs/product/philips-bedside-lamp.jpg?raw=true" title="Xiaomi Philips Bedside Lamp" width="200px">
 <img src="./imgs/product/xiaomi-air-fresh.jpg?raw=true" title="Xiaomi Air Fresh" width="200px">
 <img src="./imgs/product/xiaomi-eink-temperature.jpeg?raw=true" title="Xiaomi E-Ink Temperatre" width="200px">
-
+<img src="./imgs/product/xiaomi-circulator.png?raw=true" title="Xiaomi Circulator" width="200px">
 
 
 # Installation
@@ -230,11 +237,6 @@ Added support devices.
 |fison67/mi-connector:latest|
 |fison67/mi-connector-arm:latest|
 
-### Beta Versions
-| Docker tag |
-| ------------- |
-|fison67/mi-connector:test2|
-|fison67/mi-connector-arm:test2|
 
 ## Install Mi Connector API Server
 ### Raspberry Pi
