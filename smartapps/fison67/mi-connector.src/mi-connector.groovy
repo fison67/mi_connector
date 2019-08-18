@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.27)
+ *  Mi Connector (v.0.0.28)
  *
  * MIT License
  *
@@ -483,6 +483,9 @@ def addDevice(){
         }else if(params.type == "lumi.curtain"){
         	dth = "Xiaomi Curtain";
             name = "Xiaomi Curtain";
+        }else if(params.type == "lumi.curtain.b1"){
+        	dth = "Xiaomi Curtain2";
+            name = "Xiaomi Curtain B1";
         }else if(params.type == "lumi.water"){
 			dth = "Xiaomi Water Detector";
             name = "Xiaomi Water Dectector";
