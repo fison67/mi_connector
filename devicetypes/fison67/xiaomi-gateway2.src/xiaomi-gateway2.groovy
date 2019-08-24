@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Gateway2 (v.0.0.2)
+ *  Xiaomi Gateway2 (v.0.0.3)
  *
  * MIT License
  *
@@ -91,21 +91,21 @@ metadata {
 		}
         
         standardTile("airConditionerMode", "device.airConditionerMode", width: 2, height: 2) {
-            state "auto", label:'Auto', action:"setModeAuto", backgroundColor:"#ffffff", nextState:"cool"
-            state "cool", label:'Cool', action:"setModeCool", backgroundColor:"#73C1EC", nextState:"heat"
-            state "heat", label:'Heat', action:"setModeHeat", backgroundColor:"#ff9eb2", nextState:"auto"
+            state "auto", label:'Auto', action:"setModeCool", backgroundColor:"#ffffff", nextState:"cool"
+            state "cool", label:'Cool', action:"setModeHeat", backgroundColor:"#73C1EC", nextState:"heat"
+            state "heat", label:'Heat', action:"setModeAuto", backgroundColor:"#ff9eb2", nextState:"auto"
         }
         
         standardTile("speed", "device.speed", width: 2, height: 2) {
-            state "low", label:'Low', action:"setSpeedLow", backgroundColor:"#ffffff", nextState:"medium"
-            state "medium", label:'Medium', action:"setSpeedMedium", backgroundColor:"#73C1EC", nextState:"high"
-            state "high", label:'High', action:"setSpeedHigh", backgroundColor:"#ff9eb2", nextState:"auto"
-            state "auto", label:'Auto', action:"setSpeedAuto", backgroundColor:"#ff9eb2", nextState:"low"
+            state "low", label:'Low', action:"setSpeedMedium", backgroundColor:"#ffffff", nextState:"medium"
+            state "medium", label:'Medium', action:"setSpeedHigh", backgroundColor:"#73C1EC", nextState:"high"
+            state "high", label:'High', action:"setSpeedAuto", backgroundColor:"#ff9eb2", nextState:"auto"
+            state "auto", label:'Auto', action:"setSpeedLow", backgroundColor:"#ff9eb2", nextState:"low"
         }
         
         standardTile("swing", "device.swing", width: 2, height: 2) {
-            state "on", label:'ON', action:"setSwingOn", backgroundColor:"#ffffff", nextState:"turningOff"
-            state "off", label:'OFF', action:"setSpeedMedium", backgroundColor:"#73C1EC", nextState:"turningOn"
+            state "on", label:'ON', action:"setSwingOff", backgroundColor:"#ffffff", nextState:"turningOff"
+            state "off", label:'OFF', action:"setSwingOn", backgroundColor:"#73C1EC", nextState:"turningOn"
             state "turningOn", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
             state "turningOff", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
         }
@@ -155,6 +155,7 @@ def setStatus(params){
         break;
     case "temperature":
     	sendEvent(name:"level", value: params.data)
+        
         break;
     case "mode":
     	if(params.data == "0"){
