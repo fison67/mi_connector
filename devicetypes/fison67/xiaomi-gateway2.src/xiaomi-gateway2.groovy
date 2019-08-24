@@ -32,7 +32,6 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch") {
         capability "Switch"						//"on", "off"
-        capability "Temperature Measurement"
         capability "Thermostat Cooling Setpoint"
         capability "Thermostat Heating Setpoint"
         capability "Thermostat Mode"
@@ -154,8 +153,8 @@ def setStatus(params){
     	sendEvent(name:"power", value: params.data)
         break;
     case "temperature":
-    	sendEvent(name:"level", value: params.data)
-        
+    	sendEvent(name:"level", value: params.data as int)
+    	sendEvent(name:"coolingSetpoint", value: params.data as int)
         break;
     case "mode":
     	if(params.data == "0"){
