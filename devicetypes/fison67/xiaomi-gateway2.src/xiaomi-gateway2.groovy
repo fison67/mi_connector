@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Gateway2 (v.0.0.1)
+ *  Xiaomi Gateway2 (v.0.0.2)
  *
  * MIT License
  *
@@ -33,7 +33,9 @@ metadata {
 	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch") {
         capability "Switch"						//"on", "off"
         capability "Temperature Measurement"
-        capability "Air Conditioner Mode"
+        capability "Thermostat Cooling Setpoint"
+        capability "Thermostat Heating Setpoint"
+        capability "Thermostat Mode"
         capability "Actuator"
         capability "Configuration"
         capability "Power Meter"
@@ -156,11 +158,11 @@ def setStatus(params){
         break;
     case "mode":
     	if(params.data == "0"){
-    		sendEvent(name:"airConditionerMode", value: "heat")
+    		sendEvent(name:"thermostatMode", value: "heat")
         }else if(params.data == "1"){
-    		sendEvent(name:"airConditionerMode", value: "cool")
+    		sendEvent(name:"thermostatMode", value: "cool")
         }else if(params.data == "2"){
-    		sendEvent(name:"airConditionerMode", value: "auto")
+    		sendEvent(name:"thermostatMode", value: "auto")
         }
         break;
     case "swing":
@@ -287,6 +289,14 @@ def off(){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+}
+
+def setCoolingSetpoint(temperature){
+	setLevel(temperature)
+}
+
+def setHeatingSetpoint(temperature){
+	setLevel(temperature)
 }
 
 def setLevel(level){
