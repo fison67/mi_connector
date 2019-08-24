@@ -30,17 +30,31 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch") {
         capability "Switch"						//"on", "off"
         capability "Temperature Measurement"
-        capability "Illuminance Measurement"
+        capability "Air Conditioner Mode"
         capability "Actuator"
         capability "Configuration"
         capability "Power Meter"
         capability "Switch Level"
         capability "Refresh"
         
+        attribute "speed", "enum", ["low", "medium", "high", "auto"]
+        attribute "swing", "enum", ["on", "off"]
         attribute "lastCheckin", "Date"
+        
+        command "setModeAuto"
+        command "setModeCool"
+        command "setModeHeat"
+        
+        command "setSpeedLow"
+        command "setSpeedMedium"
+        command "setSpeedHigh"
+        command "setSpeedAuto"
+        
+        command "setSwingOn"
+        command "setSwingOff"
         
         command "findChild"
         command "playIR", ["string"]
@@ -74,7 +88,27 @@ metadata {
             
 		}
         
-        controlTile("level", "device.level", "slider", height: 1, width: 2, range:"(17..30)") {
+        standardTile("airConditionerMode", "device.airConditionerMode", width: 2, height: 2) {
+            state "auto", label:'Auto', action:"setModeAuto", backgroundColor:"#ffffff", nextState:"cool"
+            state "cool", label:'Cool', action:"setModeCool", backgroundColor:"#73C1EC", nextState:"heat"
+            state "heat", label:'Heat', action:"setModeHeat", backgroundColor:"#ff9eb2", nextState:"auto"
+        }
+        
+        standardTile("speed", "device.speed", width: 2, height: 2) {
+            state "low", label:'Low', action:"setSpeedLow", backgroundColor:"#ffffff", nextState:"medium"
+            state "medium", label:'Medium', action:"setSpeedMedium", backgroundColor:"#73C1EC", nextState:"high"
+            state "high", label:'High', action:"setSpeedHigh", backgroundColor:"#ff9eb2", nextState:"auto"
+            state "auto", label:'Auto', action:"setSpeedAuto", backgroundColor:"#ff9eb2", nextState:"low"
+        }
+        
+        standardTile("swing", "device.swing", width: 2, height: 2) {
+            state "on", label:'ON', action:"setSwingOn", backgroundColor:"#ffffff", nextState:"turningOff"
+            state "off", label:'OFF', action:"setSpeedMedium", backgroundColor:"#73C1EC", nextState:"turningOn"
+            state "turningOn", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        
+        controlTile("level", "device.level", "slider", height: 2, width: 2, range:"(17..30)") {
 	    	state "temperature", action:"setLevel"
 		}
         
@@ -120,11 +154,107 @@ def setStatus(params){
     case "temperature":
     	sendEvent(name:"level", value: params.data)
         break;
+    case "mode":
+    	if(params.data == "0"){
+    		sendEvent(name:"airConditionerMode", value: "heat")
+        }else if(params.data == "1"){
+    		sendEvent(name:"airConditionerMode", value: "cool")
+        }else if(params.data == "2"){
+    		sendEvent(name:"airConditionerMode", value: "auto")
+        }
+        break;
+    case "swing":
+    	sendEvent(name:"swing", value: params.data == "0" ? "on" : "off")
+        break;
+    case "speed":
+    	switch(params.data){
+        case "0":
+    		sendEvent(name:"speed", value: "low")
+        	break
+        case "1":
+    		sendEvent(name:"speed", value: "medium")
+        	break
+        case "2":
+    		sendEvent(name:"speed", value: "high")
+        	break
+        case "3":
+    		sendEvent(name:"speed", value: "auto")
+        	break
+        }
+        break;
     }
     
     updateLastTime()
 }
 
+def setAirConditionerMode(mode){
+	log.debug "setAirConditionerMode >> ${mode}"
+    def body = [
+        "id": state.id,
+        "cmd": "changeMode",
+        "data": mode
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setModeAuto(){
+	setAirConditionerMode("auto")
+}
+
+def setModeCool(){
+	setAirConditionerMode("cool")
+}
+
+def setModeHeat(){
+	setAirConditionerMode("heat")
+}
+
+def setSpeed(speed){
+	log.debug "setSpeed >> ${speed}"
+    def body = [
+        "id": state.id,
+        "cmd": "changeWind",
+        "data": speed
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setSpeedLow(){
+	setSpeed("low")
+}
+
+def setSpeedMedium(){
+	setSpeed("medium")
+}
+
+def setSpeedHigh(){
+	setSpeed("high")
+}
+
+def setSpeedAuto(){
+	setSpeed("auto")
+}
+     
+def setSwing(power){
+	log.debug "setSwing >> ${power}"
+    def body = [
+        "id": state.id,
+        "cmd": "changeSwing",
+        "data": power
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}     
+     
+def setSwingOn(){
+	setSwing("on")
+}
+
+def setSwingOff(){
+	setSwing("off")
+} 
 
 def playIR(code){
 	log.debug "Play IR >> ${code}"
