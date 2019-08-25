@@ -112,7 +112,7 @@ def setStatus(params){
     	sendEvent(name:"level", value: params.data )
         sendEvent(name:"windowShade", value: (params.data == "0" ? "closed" : ( params.data == "100" ? "open" : "partially open" )) )
     	break;
-    case "battery":
+    case "batteryLevel":
         sendEvent(name:"battery", value: params.data as int)
         break
     }
