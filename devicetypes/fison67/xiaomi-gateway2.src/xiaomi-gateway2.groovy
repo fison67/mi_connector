@@ -105,8 +105,8 @@ metadata {
         standardTile("swing", "device.swing", width: 2, height: 2) {
             state "on", label:'ON', action:"setSwingOff", backgroundColor:"#ffffff", nextState:"turningOff"
             state "off", label:'OFF', action:"setSwingOn", backgroundColor:"#73C1EC", nextState:"turningOn"
-            state "turningOn", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
+            state "turningOn", label:'${name}', action:"setSwingOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'${name}', action:"setSwingOn", backgroundColor:"#ffffff", nextState:"turningOn"
         }
         
         controlTile("level", "device.level", "slider", height: 2, width: 2, range:"(17..30)") {
