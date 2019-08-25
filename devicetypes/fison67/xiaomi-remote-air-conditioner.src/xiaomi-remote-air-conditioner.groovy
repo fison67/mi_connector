@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Remote Air Conditioner (v.0.0.3)
+ *  Xiaomi Remote Air Conditioner (v.0.0.4)
  *
  * MIT License
  *
@@ -30,11 +30,15 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Remote Air Conditioner", namespace: "fison67", author: "fison67") {
-        capability "Switch"
-        capability "Configuration"
-        capability "Switch Level"
-        capability "Air Conditioner Mode"
+	definition (name: "Xiaomi Remote Air Conditioner", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-thermostat-1") {
+
+        capability "Thermostat"
+        capability "Thermostat Cooling Setpoint"
+		capability "Thermostat Operating State"
+        capability "Thermostat Mode"
+        capability "Temperature Measurement"
+        capability "Relative Humidity Measurement"
+        capability "Refresh"
         
         command "setStatus"
         command "playIRCmdByID", ["string"]
@@ -56,6 +60,11 @@ metadata {
         
         command "setTimeRemaining"
         command "stop"
+        command "tempUp"
+        command "tempDown"
+        
+        command "setTemperature", ["number"]
+        command "setHumidity", ["number"]
 	}
 
 
@@ -68,16 +77,62 @@ metadata {
 
 	tiles(scale: 2) {
 		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"off",  icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#00a0dc", nextState:"off"
-                attributeState "off", label:'${name}', action:"on", icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-remote-controller.png?raw=true", backgroundColor:"#ffffff", nextState:"on"
+        multiAttributeTile(name:"thermostatFull", type: "thermostat", width: 6, height: 2){
+
+            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
+				attributeState("temperature", label:'${currentValue}°',
+					backgroundColors: [
+						// Celsius
+						[value: 0, color: "#153591"],
+						[value: 7, color: "#1e9cbb"],
+						[value: 15, color: "#90d2a7"],
+						[value: 23, color: "#44b621"],
+						[value: 28, color: "#f1d801"],
+						[value: 35, color: "#d04e00"],
+						[value: 37, color: "#bc2323"],
+						// Fahrenheit
+						[value: 40, color: "#153591"],
+						[value: 44, color: "#1e9cbb"],
+						[value: 59, color: "#90d2a7"],
+						[value: 74, color: "#44b621"],
+						[value: 84, color: "#f1d801"],
+						[value: 95, color: "#d04e00"],
+						[value: 96, color: "#bc2323"]
+					]
+				)
 			}
+            tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
+				attributeState("idle", backgroundColor: "#cccccc")
+				attributeState("cooling", backgroundColor: "#00A0DC")
+			}
+			tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
+				attributeState("off", action: "setThermostatMode", label: "Off", icon: "st.thermostat.heating-cooling-off")
+				attributeState("cool", action: "setThermostatMode", label: "Cool", icon: "st.thermostat.cool")
+			}
+            tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
+                attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
+            }
+            tileAttribute("device.coolingSetpoint", key: "VALUE_CONTROL") {
+                attributeState("VALUE_UP", action: "tempUp")
+                attributeState("VALUE_DOWN", action: "tempDown")
+            }
+            tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
+                attributeState("coolingSetpoint", label:'${currentValue}', unit:"dF", defaultState: true)
+            }
 		}
         
-        controlTile("level", "device.level", "slider", height: 1, width: 2, range:"(15..30)") {
-	    	state "temperature", action:"setLevel"
+        standardTile("thermostatMode2", "device.thermostatMode", inactiveLabel: false, width: 2, height: 2) {
+            state "cool", label:'COOL', action:"off", backgroundColor:"#73C1EC", nextState:"off"
+            state "off", label:'OFF', action:"cool", backgroundColor:"#ffffff", nextState:"cool"
+        }
+        
+        controlTile("coolingSetpoint", "device.coolingSetpoint", "slider", height: 2, width: 2, range:"(17..30)") {
+	    	state "coolingSetpoint", action:"setCoolingSetpoint"
 		}
+        valueTile("temp1", "device.temp1", decoration: "flat", width: 2, height: 2 ) {
+            state "default", label:''
+        }
+        
         
         valueTile("remoteAir1", "device.remoteAir1", decoration: "flat", width: 2, height: 1 ) {
             state "default", label:'${currentValue}', action:"remoteAir1"
@@ -137,6 +192,9 @@ metadata {
 			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
         
+        main (["thermostatMode2"])
+        details(["thermostatFull", "thermostatMode2", "coolingSetpoint", "temp1", "remoteAir1", "remoteAir2", "remoteAir3", "remoteAir4", "remoteAir5", "remoteAir6", "remoteAir7", "remoteAir8", "remoteAir9",
+        "remoteAir11", "remoteAir12", "remoteAir13", "remoteAir14", "remoteAir15", "timer_label", "time", "tiemr0"])
 	}
 }
 
@@ -167,7 +225,7 @@ def timer(){
 	if(state.timerCount > 0){
     	state.timerCount = state.timerCount - 30;
         if(state.timerCount <= 0){
-        	if(device.currentValue("switch") == "on"){
+        	if(device.currentValue("thermostatMode") == "cool"){
         		off()
             }
         }else{
@@ -181,6 +239,14 @@ def updateTimer(){
     def timeStr = msToTime(state.timerCount)
     sendEvent(name:"leftTime", value: "${timeStr}")
     sendEvent(name:"timeRemaining", value: Math.round(state.timerCount/60))
+}
+
+def setTemperature(temperature){
+    sendEvent(name:"temperature", value: temperature)
+}
+
+def setHumidity(humidity){
+	sendEvent(name:"humidity", value: humidity)
 }
 
 def processTimer(second){
@@ -205,9 +271,9 @@ def setTimeRemaining(time) {
 }
 
 def setPowerByStatus(turnOn){
-	if(device.currentValue("switch") == (turnOn ? "off" : "on")){
+	if(device.currentValue("thermostatMode") == (turnOn ? "off" : "cool")){
         if(turnOn){
-        	on()
+        	cool()
         }else{
         	off()
         }
@@ -228,6 +294,8 @@ def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
+    
+    sendEvent(name:"supportedThermostatModes", value: ["cool", "idle"])
 }
 
 def setData(dataList){
@@ -244,36 +312,59 @@ def setData(dataList){
 }
 
 def setStatus(data){
-	sendEvent(name:"switch", value: data )
+	sendEvent(name:"thermostatMode", value: data == "on" ? "cool" : "off" )
+	sendEvent(name:"thermostatOperatingState", value: data == "on" ? "cooling" : "idle" )
 }
 
-def on(){
+def refresh(){
+
+}
+
+def cool(){
 	playIRCmd(state['air-on'])
     if(!syncByDevice){
-		sendEvent(name:"switch", value: "on" )
+		sendEvent(name:"thermostatMode", value: "cool" )
+		sendEvent(name:"thermostatOperatingState", value: "cooling" )
     }
 }
 
 def off(){
 	playIRCmd(state['air-off'])
     if(!syncByDevice){
-		sendEvent(name:"switch", value: "off" )
+		sendEvent(name:"thermostatMode", value: "off" )
+		sendEvent(name:"thermostatOperatingState", value: "idle" )
 	}
 }
 
-/**
-*  mode >> auto, cool, dry, coolClean, dryClean, fanOnly, heat, heatClean, notSupported
-*/
-def setAirConditionerMode(mode){
-
+def setThermostatMode(mode){
+	sendEvent(name:'thermostatMode', value: mode )
+    if(mode == "cool"){
+    	cool()
+    }else if(mode == "off"){
+    	off()
+    }
 }
 
-def setLevel(level){
-	def code = state['temperature-' + level]
+def setCoolingSetpoint(temperature){
+	def code = state['temperature-' + temperature]
 	if(code){
 		playIRCmd(code)
-        sendEvent(name:'level', value: level )
+        sendEvent(name:'coolingSetpoint', value: temperature )
+        if(device.currentValue("thermostatMode") != "cool"){
+			sendEvent(name:"thermostatMode", value: "cool" )
+        }
     }
+}
+
+def tempUp(){
+	def temperature = (device.currentValue("coolingSetpoint") as int) + 1
+	log.debug "temperature: " + temperature
+    setCoolingSetpoint(temperature)
+}
+
+def tempDown(){
+	def temperature = (device.currentValue("coolingSetpoint") as int) - 1
+    setCoolingSetpoint(temperature)
 }
 
 def remoteAir1(){
