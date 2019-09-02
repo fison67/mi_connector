@@ -431,7 +431,20 @@ Step 3 and 4 are only needed if the repo has not been added earlier (e.g. in the
 7. From the same screen open the Local Area Network Communication Protocol screen
 8. Slide the toggle element for “Local Area Network Communication Protocol” to enabled<br/>
 <img src="https://www.domoticz.com/wiki/images/4/41/Mihome_lan.png">
-9. Restart Mi Connector and then register gateway.
+9. Restart Mi Connector and then register gateway.<br/>
+10. If you do step by step, but zigbee device is not working<br/>
+install a nmap first.<br/>
+sudo nmap -sU gatewayip -p 9898, 4321<br/>
+..................................<br/>
+PORT     STATE         SERVICE<br/>
+4321/udp open|filtered rwhois<br/>
+9898/udp open          monkeycom<br/><br/>
+..................................<br/>
+If Port is closed xiaomi gateway doesn't report zigbee status to mi connector anymore.<br/>
+You have to buy new one and enable a lan protocol first, don't firmware update first!!!<br/>
+Or have a look this link<br/>
+https://community.openhab.org/t/solved-openhab2-xiaomi-mi-gateway-does-not-respond/52963/114<br/>
+<br/><br/>
 
 ### When you can't control device on ST
 > Maybe you put the server address on SmartApp (Mi Connector)<br/>
