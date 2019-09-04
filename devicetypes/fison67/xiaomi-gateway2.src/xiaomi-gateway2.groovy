@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Gateway2 (v.0.0.3)
+ *  Xiaomi Gateway2 (v.0.0.4)
  *
  * MIT License
  *
@@ -36,10 +36,10 @@ metadata {
         capability "Thermostat Heating Setpoint"
         capability "Thermostat Mode"
         capability "Actuator"
-        capability "Configuration"
         capability "Power Meter"
         capability "Switch Level"
         capability "Refresh"
+        capability "Alarm"
         
         attribute "speed", "enum", ["low", "medium", "high", "auto"]
         attribute "swing", "enum", ["on", "off"]
@@ -59,6 +59,8 @@ metadata {
         
         command "findChild"
         command "playIR", ["string"]
+     	command "sirenByID"
+        command "offSiren"
 	}
 
 
@@ -67,6 +69,10 @@ metadata {
 
 	preferences {
 		input name:	"mode", type:"enum", title:"Mode", options:["Air Conditioner", "Socket"], description:"", defaultValue: "Air Conditioner"
+		input name:"volume", type:"number", title:"Siren Volume", range: "0..100", defaultValue:10, description:"Gateway Siren Volume(0 ~ 100)"
+        input name:"alarm", type:"enum", title:"Siren Type", required: false, options: ["Police Car#1", "Police Car#2", "Accident", "Count Down", "Ghost", "Sniper Rifle", "Battle", 
+        "Air Raid", "Bark", "Door", "Knock", "Amuse", "Alarm Clock", "Clock MiMix", "Clock Enthusiastic", "Guitar Classic", "Ice World Piano",
+        "Leisure Time", "ChildHood", "Morning StreamLiet", "MusicBox", "Orange", "Thinker"]
 	}
 
 	tiles {
@@ -134,6 +140,133 @@ def setInfo(String app_url, String id) {
 	state.app_url = app_url
     state.id = id
 }
+
+def sirenByID(id){
+    sendCommand( makeCommand( makeAlarmContent(id) ) , null)
+}
+
+def makeAlarmContent(id){
+	if(settings.volume == null){
+    	settings.volume = 10
+    }
+	def body = [
+        "id": state.id,
+        "cmd": "playMusic",
+        "data": id,
+        "subData": settings.volume.toInteger()
+    ]
+    return body
+}
+
+def siren(){
+    def sirenIndex = 0
+    def sirenType = settings.alarm
+    if(sirenType != null){
+    	switch(sirenType){
+        case "Police Car#1":
+        	sirenIndex = 0
+        	break;
+        case "Police Car#2":
+        	sirenIndex = 1
+        	break;
+        case "Accident":
+        	sirenIndex = 2
+        	break;
+        case "Count Down":
+        	sirenIndex = 3
+        	break;
+        case "Ghost":
+        	sirenIndex = 4
+        	break;
+        case "Sniper Rifle":
+        	sirenIndex = 5
+        	break;
+        case "Battle":
+        	sirenIndex = 6
+        	break;
+        case "Air Raid":
+        	sirenIndex = 7
+        	break;
+        case "Bark":
+        	sirenIndex = 8
+        	break;
+        case "Door":
+        	sirenIndex = 10
+        	break;
+        case "Knock":
+        	sirenIndex = 11
+        	break;
+        case "Amuse":
+        	sirenIndex = 12
+        	break;
+        case "Alarm Clock":
+        	sirenIndex = 13
+        	break;
+        case "Clock MiMix":
+        	sirenIndex = 20
+        	break;
+        case "Clock Enthusiastic":
+        	sirenIndex = 21
+        	break;
+        case "Guitar Classic":
+        	sirenIndex = 22
+        	break;
+        case "Ice World Piano":
+        	sirenIndex = 23
+        	break;
+        case "Leisure Time":
+        	sirenIndex = 24
+        	break;
+        case "ChildHood":
+        	sirenIndex = 25
+        	break;
+        case "Morning StreamLiet":
+        	sirenIndex = 26
+        	break;
+        case "MusicBox":
+        	sirenIndex = 27
+        	break;
+        case "Orange":
+        	sirenIndex = 28
+        	break;
+        case "Thinker":
+        	sirenIndex = 29
+        	break;
+        }
+    }
+	log.debug "Request a siren >> ${sirenType}(${sirenIndex})" 
+    sendCommand( makeCommand( makeAlarmContent(sirenIndex) ) , null)
+    sendEvent(name:"switch", value: "on")
+}
+
+def both(){
+	strobe()
+    siren()
+}
+
+def strobe(){}
+
+def playMusic(id, volume){
+	log.debug "playMusic >> ${state.id}"
+    def body = [
+        "id": state.id,
+        "cmd": "playMusic",
+        "data": id,
+        "subData": volume.toInteger()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def offSiren(){
+    def body = [
+        "id": state.id,
+        "cmd": "stopMusic"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 
 def setStatus(params){
     log.debug "${params.key} : ${params.data}"
@@ -289,6 +422,8 @@ def off(){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+    
+    offSiren()
 }
 
 def setCoolingSetpoint(temperature){
@@ -316,6 +451,7 @@ def updateLastTime(){
 }
 
 def updated() {
+
 }
 
 def sendCommand(options, _callback){
