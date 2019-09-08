@@ -346,11 +346,11 @@ def setThermostatMode(mode){
 }
 
 def setHeatingSetpoint(temperature){
-	log.debug "setHeatingSetpoint: " + temperature
-	def code = state['temperature-' + temperature]
+	log.debug "setHeatingSetpoint: " + temperature.intValue()
+	def code = state['temperature-' + temperature.intValue()]
 	if(code){
 		playIRCmd(code)
-        sendEvent(name:'heatingSetpoint', value: temperature )
+        sendEvent(name:'heatingSetpoint', value: temperature.intValue() )
         if(device.currentValue("thermostatMode") != "heat"){
 			sendEvent(name:"thermostatMode", value: "heat" )
         }
@@ -358,11 +358,11 @@ def setHeatingSetpoint(temperature){
 }
 
 def setCoolingSetpoint(temperature){
-	log.debug "setCoolingSetpoint: " + temperature
-	def code = state['temperature-' + temperature]
+	log.debug "setCoolingSetpoint: " + temperature.intValue()
+	def code = state['temperature-' + temperature.intValue()]
 	if(code){
 		playIRCmd(code)
-        sendEvent(name:'coolingSetpoint', value: temperature )
+        sendEvent(name:'coolingSetpoint', value: temperature.intValue() )
         if(device.currentValue("thermostatMode") != "cool"){
 			sendEvent(name:"thermostatMode", value: "cool" )
         }
