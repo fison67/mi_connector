@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Switch (v.0.0.2)
+ *  Xiaomi Button SW2 (v.0.0.3)
  *
  * MIT License
  *
@@ -30,18 +30,13 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Button SW", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch", ocfDeviceType: "oic.d.switch") {
+	definition (name: "Xiaomi Button SW", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "SmartThings-smartthings-SmartSense_Button", ocfDeviceType: 'x.com.st.d.remotecontroller') {
         capability "Sensor"						
         capability "Button"
         capability "Battery"
         
         attribute "lastCheckin", "Date"
-        
-        command "Lclick"
-        command "Rclick"
-        command "both_click"
 	}
-
 
 	simulator {
 	}
@@ -56,16 +51,6 @@ metadata {
             }
 		}
         
-        valueTile("btn0-click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#1_Core \n Left_click', action:"Lclick"
-        }
-        valueTile("btn1-click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#2_Core \n Right_click", action:"Rclick"
-        }
-        valueTile("both_click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#3_Core \n Both_click", action:"both_click"
-        }
-
         valueTile("battery", "device.battery", width: 2, height: 2) {
             state "val", label:'${currentValue}%', defaultState: true
         }
@@ -76,12 +61,6 @@ metadata {
 	}
 }
 
-
-def Lclick() {buttonEvent(1, "pushed")}
-def Rclick() {buttonEvent(2, "pushed")}
-def both_click() {buttonEvent(3, "pushed")}
-
-
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
@@ -91,6 +70,11 @@ def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
+}
+
+def installed(){
+    sendEvent(name: "supportedButtonValues", value: ["pushed","held","double"].encodeAsJSON(), displayed: false)
+    sendEvent(name: "numberOfButtons", value: 3, displayed: false)
 }
 
 def setStatus(params){
@@ -104,17 +88,17 @@ def setStatus(params){
         } else if(params.data == "both_click") {
         	buttonEvent(3, "pushed")
         } else if(params.data == "btn0-long_click") {
-        	buttonEvent(4, "pushed")
+        	buttonEvent(1, "held")
         } else if(params.data == "btn1-long_click") {
-        	buttonEvent(5, "pushed")
+        	buttonEvent(2, "held")
         } else if(params.data == "btn0-double_click") {
-        	buttonEvent(6, "pushed")
+        	buttonEvent(1, "double")
         } else if(params.data == "btn1-double_click") {
-        	buttonEvent(7, "pushed")
+        	buttonEvent(2, "double")
         } else if(params.data == "long_both_click") {
-        	buttonEvent(8, "pushed")
+        	buttonEvent(3, "held")
         } else if(params.data == "double_both_click") {
-        	buttonEvent(9, "pushed")
+        	buttonEvent(3, "double")
         } 
     	break;
     case "batteryLevel":
@@ -130,7 +114,7 @@ def buttonEvent(Integer button, String action) {
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 
 def updated() {}
