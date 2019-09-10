@@ -1,6 +1,5 @@
-
 /**
- *  Xiaomi Switch (v.0.0.2)
+ *  Xiaomi Switch (v.0.0.3)
  *
  * MIT License
  *
@@ -31,20 +30,13 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Button AQ", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Button AQ", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "SmartThings-smartthings-SmartSense_Button", ocfDeviceType: 'x.com.st.d.remotecontroller') {
         capability "Sensor"						//"on", "off"
         capability "Button"
-        capability "Configuration"
         capability "Battery"
         capability "Refresh"
                
         attribute "lastCheckin", "Date"
-        
-        command "click"
-        command "double_click"
-        command "long_click"
-        command "long_release_press"
-        
 	}
 
 
@@ -63,31 +55,15 @@ metadata {
     			attributeState("default", label:'\nLast Update: ${currentValue}')
             }
 		}
-        valueTile("click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#1_Core \n one_click', action:"click"
-        }
-        valueTile("double_click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#2_Core \n double_click", action:"double_click"
-        }     
-        valueTile("long_click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#3_Core \n long_click', action:"long_click"
-        }
-        valueTile("long_release_press", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:"Button#4_Core \n long_release_press", action:"long_release_press"
-        } 
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
         }
         
         main (["button"])
-        details(["button", "click", "double_click", "long_click", "long_release_press", "refresh"])        
+        details(["button", "refresh"])        
 	}
 }
 
-def click() {buttonEvent(1, "pushed")}
-def double_click() {buttonEvent(2, "pushed")}
-def long_click() {buttonEvent(3, "pushed")}
-def long_release_press() {buttonEvent(4, "pushed")}
 
 // parse events into attributes
 def parse(String description) {
@@ -107,11 +83,11 @@ def setStatus(params){
     	if(params.data == "click") {
         	buttonEvent(1, "pushed")
         } else if(params.data == "double_click") {
-        	buttonEvent(2, "pushed")
+        	buttonEvent(1, "double")
         } else if(params.data == "long_click_press") {
-        	buttonEvent(3, "pushed")
+        	buttonEvent(1, "held")
         } else if(params.data == "long_release_press") {
-        	buttonEvent(4, "pushed")
+        	buttonEvent(1, "up")
         }
     	break;
     case "batteryLevel":
@@ -151,6 +127,11 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
+}
+
+def installed(){
+    sendEvent(name: "supportedButtonValues", value: ["pushed","held","double", "up"].encodeAsJSON(), displayed: false)
+    sendEvent(name: "numberOfButtons", value: 1, displayed: false)
 }
 
 def updated() {
