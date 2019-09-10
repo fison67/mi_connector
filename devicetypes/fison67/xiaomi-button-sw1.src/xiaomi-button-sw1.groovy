@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Switch SW1 (v.0.0.1)
+ *  Xiaomi Switch SW1 (v.0.0.2)
  *
  * MIT License
  *
@@ -30,18 +30,13 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Button SW1", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Button SW1", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-SmartSense_Button", ocfDeviceType: 'x.com.st.d.remotecontroller') {
         capability "Sensor"						//"on", "off"
         capability "Button"
-        capability "Configuration"
+        capability "Battery"
+		capability "Refresh"
          
-        attribute "status", "string"
-        attribute "battery", "string"
-        
         attribute "lastCheckin", "Date"
-        
-        command "click"
-        command "refresh"
 	}
 
 
@@ -58,9 +53,6 @@ metadata {
             }
 		}
         
-        valueTile("click", "device.button", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'Button#_Core \n click', action:"click"
-        }
         valueTile("battery", "device.battery", width: 2, height: 2) {
             state "val", label:'${currentValue}%', defaultState: true
         }
@@ -71,11 +63,6 @@ metadata {
 	}
 }
 
-
-def click() {buttonEvent(1, "pushed")}
-
-
-// parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
 }
@@ -86,12 +73,21 @@ def setInfo(String app_url, String id) {
     state.id = id
 }
 
+def installed(){
+    sendEvent(name: "supportedButtonValues", value: ["pushed","held","double"].encodeAsJSON(), displayed: false)
+    sendEvent(name: "numberOfButtons", value: 1, displayed: false)
+}
+
 def setStatus(params){
 	log.debug "Mi Connector >> ${params.key} : ${params.data}"
  	switch(params.key){
     case "action":
     	if(params.data == "click") {
         	buttonEvent(1, "pushed")
+        } else if(params.data == "double_click") {
+        	buttonEvent(1, "double")
+        } else if(params.data == "long_click_press") {
+        	buttonEvent(1, "held")
         } 
     	break;
     case "batteryLevel":
@@ -136,8 +132,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     }
 }
 
-def updated() {
-}
+def updated() {}
 
 def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
