@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.4)
+ *  Xiaomi Air Purifier (v.0.0.5)
  *
  * MIT License
  *
@@ -96,7 +96,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Purifier", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Air Purifier", namespace: "fison67", author: "fison67", vid:"SmartThings-smartthings-Awair", ocfDeviceType:"generic-switch") {
         capability "Switch"						//"on", "off"
         capability "Switch Level"
         capability "Temperature Measurement"
@@ -108,7 +108,6 @@ metadata {
 		capability "Sensor"
 		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
          
-        attribute "switch", "string"
         attribute "buzzer", "enum", ["on", "off"]        
         attribute "ledBrightness", "enum", ["bright", "dim", "off"]        
         attribute "f1_hour_used", "number"
@@ -190,8 +189,8 @@ metadata {
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
             }
-            tileAttribute ("device.fanSpeed", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"FanSpeed.setFanSpeed"
+            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+                attributeState "level", action:"setLevel"
             }            
 		}
         standardTile("modemain", "device.mode", width: 2, height: 2) {
@@ -222,7 +221,7 @@ metadata {
             state "default", label:'PM2.5 \n㎍/㎥'
         }        
         valueTile("aqi_label", "", decoration: "flat") {
-            state "default", label:'AQI \n㎍/㎥'
+            state "default", label:'AQI'
         }        
         valueTile("temp_label", "device.temp_label", decoration: "flat") {
             state "default", label:'${currentValue}'
@@ -240,8 +239,8 @@ metadata {
             	[value: 500, color: "#970203"]
             ]
         }
-		valueTile("aqi", "device.airQuality", decoration: "flat") {
-        	state "default", label:'${currentValue}', unit:"㎍/㎥", backgroundColors:[
+		valueTile("airQuality", "device.airQuality", decoration: "flat") {
+        	state "default", label:'${currentValue}', unit:"", backgroundColors:[
 				[value: -1, color: "#bcbcbc"],
 				[value: 0, color: "#bcbcbc"],
             	[value: 0.5, color: "#7EC6EE"],
@@ -389,7 +388,7 @@ metadata {
 
         main (["modemain"])
         details(["mode", "switch", "pm25_label", "aqi_label", "temp_label", "humi_label", 
-        "pm25_value", "aqi", "temperature", "humidity", 
+        "pm25_value", "airQuality", "temperature", "humidity", 
         "auto_label", "silent_label", "favorit_label", "low_label", "medium_label", "high_label", 
         "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", 
         "strong_label", "buzzer_label", "led_label", "usage_label", "f1_hour_used", 
@@ -416,18 +415,20 @@ def setStatus(params){
  
  	switch(params.key){
     case "mode":
-    	if(params.data == "idle") {
-        }
-    	else {
+    	if(params.data != "idle") {
         	state.lastMode = params.data
         	sendEvent(name:"mode", value: params.data )
         }
+        if(params.data == "auto"){
+            sendEvent(name:"level", value: 0)
+            sendEvent(name:"fanSpeed", value: 0)
+		}
     	break;
     case "pm2.5":
     	sendEvent(name:"fineDustLevel", value: params.data)
     	break;
     case "aqi":
-    	sendEvent(name:"fineDustLevel", value: params.data)
+    	sendEvent(name:"airQuality", value: params.data as int)
     	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data)
@@ -436,22 +437,16 @@ def setStatus(params){
     	if(params.data == "true") {
     		sendEvent(name:"switch", value:"on")
             sendEvent(name:"mode", value: state.lastMode)
-        }
-        else if(params.data == "false") {
+        } else if(params.data == "false") {
             sendEvent(name:"mode", value: "off")
             sendEvent(name:"switch", value:"off")
         }
     	break;
     case "temperature":
-		def para = "${params.data}"
-		String data = para
-		def st = data.replace("C","");
-		def stf = Float.parseFloat(st)
+		def stf = Float.parseFloat(params.data.replace("C",""))
 		def tem = Math.round(stf*10)/10
-	    if(model == "MiAirPurifier"){
-    	}
-    	else {
-        sendEvent(name:"temperature", value: tem )
+	    if(model != "MiAirPurifier"){
+    		sendEvent(name:"temperature", value: tem )
         }
     	break;
     case "buzzer":
@@ -460,38 +455,33 @@ def setStatus(params){
     case "ledBrightness":
         sendEvent(name:"ledBrightness", value: params.data)
     	break;
-    case "speed":
-		def para = "${params.data}"
-		String data = para
-		def stf = Float.parseFloat(data)
-		def speed = Math.round(stf*625/100)    
-        sendEvent(name:"fanSpeed", value: speed)
+    case "favoriteLevel":
+		def stf = Float.parseFloat(params.data)
+		def level = Math.round(stf*6.25)    
+        sendEvent(name:"level", value: level)
+        sendEvent(name:"fanSpeed", value: calFanSpeed(level))
     	break;
     case "led":
         sendEvent(name:"ledBrightness", value: (params.data == "true" ? "bright" : "off"))
     	break;
     case "f1_hour_used":
-		def para = "${params.data}"
-		String data = para
-		def stf = Float.parseFloat(data)
+		def stf = Float.parseFloat(params.data)
 		def use = Math.round(stf/24)    
     	sendEvent(name:"f1_hour_used", value: state.usage + " " + use + state.day )
         break;
     case "filter1_life":
-		def para = "${params.data}"
-		String data = para
-		def stf = Float.parseFloat(data)
+		def stf = Float.parseFloat(params.data)
 		def life = Math.round(stf*1.45)    
     	sendEvent(name:"filter1_life", value: state.remain + " " + life + state.day )
+        sendEvent(name:"filterStatus", value: life == 0 ? "replace" : "normal")
     	break;
     case "average_aqi":
-    
-    	sendEvent(name:"airQuality", value: params.data )
+    	sendEvent(name:"average_aqi", value: params.data as int)
     	break;
     }
     
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 
 def refresh(){
@@ -506,20 +496,53 @@ def refresh(){
     ]
     sendCommand(options, callback)
 }
-def setFanSpeed(level){
-	def speed = Math.round(level/625*100)    
-	log.debug "setSpeed >> ${state.id}, speed=" + speed
-    if(model == "MiAirPurifier"){
+
+def calFanSpeed(level){
+	if(level == 0){
+    	return 0
+	}else if(0 < level && level <= 33){
+    	return 1
+    }else if(33 < level && level <= 66){
+    	return 2
+    }else if(66 < level && level <= 100){
+    	return 3
     }
-    else {
-    def body = [
-        "id": state.id,
-        "cmd": "speed",
-        "data": speed
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
-	sendEvent(name: "level", value: speed)
+}
+
+def calFanLevel(speed){
+	if(speed == 0){
+    	return 0
+    }else if(speed == 1){
+    	return 33
+    }else if(speed == 2){
+    	return 66
+    }else if(speed == 3){
+    	return 100
+    }
+}
+
+def setFanSpeed(speed){
+	log.debug "setFanSpeed " + speed
+	def level = calFanLevel(speed)
+    if(level > 0){
+    	setLevel(level)
+    }else{
+    	setModeAuto()
+    }
+    sendEvent(name:"fanSpeed", value: level)
+}
+
+def setLevel(level){
+	def speed = Math.round(level/6.25)    
+	log.debug "setLevel >> " + level + " >> " + speed
+    if(model != "MiAirPurifier"){
+        def body = [
+            "id": state.id,
+            "cmd": "speed",
+            "data": speed
+        ]
+        def options = makeCommand(body)
+        sendCommand(options, null)
 	}
 }
 def setModeAuto(){
@@ -783,47 +806,52 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-    if(model == "MiAirPurifier"){
-		sendEvent(name:"airQuality", value: "N/A" )
-		sendEvent(name:"mode3", value: "notab" )
-		sendEvent(name:"temperature", value: "N/A" )
-		sendEvent(name:"humidity", value: "N/A" )
-		sendEvent(name:"mode4", value: "default" )
-		sendEvent(name:"mode5", value: "default" )
-		sendEvent(name:"mode6", value: "default" )
-		sendEvent(name:"mode7", value: "default" )    
-	        if(jsonObj.properties.aqi != null && jsonObj.properties.aqi != ""){
-        		sendEvent(name:"fineDustLevel", value: jsonObj.properties.aqi)
-        	}
-	        if(jsonObj.properties.pm25 != null && jsonObj.properties.pm25 != ""){
-        		sendEvent(name:"fineDustLevel", value: jsonObj.properties.aqi)
-        	}
+        if(model == "MiAirPurifier"){
+            sendEvent(name:"airQuality", value: "N/A" )
+            sendEvent(name:"mode3", value: "notab" )
+            sendEvent(name:"temperature", value: "N/A" )
+            sendEvent(name:"humidity", value: "N/A" )
+            sendEvent(name:"mode4", value: "default" )
+            sendEvent(name:"mode5", value: "default" )
+            sendEvent(name:"mode6", value: "default" )
+            sendEvent(name:"mode7", value: "default" )    
+        } else {
+            sendEvent(name:"mode4", value: "notab" )
+            sendEvent(name:"mode5", value: "notab" )
+            sendEvent(name:"mode6", value: "notab" )
+            sendEvent(name:"mode7", value: "notab" )
+            sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity )
+            sendEvent(name:"temperature", value: jsonObj.properties.temperature.value  )
         }
-     else {
-		sendEvent(name:"mode4", value: "notab" )
-		sendEvent(name:"mode5", value: "notab" )
-		sendEvent(name:"mode6", value: "notab" )
-		sendEvent(name:"mode7", value: "notab" )
-	    sendEvent(name:"humidity", value: jsonObj.properties.relativeHumidity )
-    	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value  )
-	        if(jsonObj.properties.aqi != null && jsonObj.properties.aqi != ""){
-        		sendEvent(name:"fineDustLevel", value: jsonObj.properties.aqi)
-        	}
-        	if(jsonObj.properties.averageAqi != null && jsonObj.properties.averageAqi != ""){
-        		sendEvent(name:"airQuality", value: jsonObj.properties.averageAqi)
-        	}
+        if(jsonObj.state.aqi != null && jsonObj.state.aqi != ""){
+            sendEvent(name:"airQuality", value: jsonObj.state.aqi)
         }
-		if(jsonObj.properties.power == true){
-			sendEvent(name:"mode", value: jsonObj.state.mode)
-			sendEvent(name:"switch", value: "on" )
-		} else {
-			sendEvent(name:"mode", value: "off" )
-			sendEvent(name:"switch", value: "off" )
-		}
+        if(jsonObj.state.averageAqi != null && jsonObj.state.averageAqi != ""){
+            sendEvent(name:"average_aqi", value: jsonObj.state.averageAqi)
+        }
+        if(jsonObj.properties["pm2.5"] != null && jsonObj.properties["pm2.5"] != ""){
+            sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"])
+        }
+	//
+		if(jsonObj.properties.favoriteLevel != null && jsonObj.properties.favoriteLevel != ""){
+        	def level = Math.round(jsonObj.properties.favoriteLevel*6.25)   
+            sendEvent(name:"level", value: level)
+            sendEvent(name:"fanSpeed", value: calFanSpeed(level))
+        }
+
+        if(jsonObj.properties.power == true){
+            sendEvent(name:"mode", value: jsonObj.state.mode)
+            sendEvent(name:"switch", value: "on" )
+        } else {
+            sendEvent(name:"mode", value: "off" )
+            sendEvent(name:"switch", value: "off" )
+        }
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer == true ? "on" : "off"))
         
         if(jsonObj.state.filterLifeRemaining != null && jsonObj.state.filterLifeRemaining != ""){
-    		sendEvent(name:"filter1_life", value: state.remain + " " + Math.round(jsonObj.state.filterLifeRemaining*1.45) + state.day )    
+        	def life = Math.round(jsonObj.state.filterLifeRemaining*1.45) 
+    		sendEvent(name:"filter1_life", value: state.remain + " " + life + state.day )    
+        	sendEvent(name:"filterStatus", value: life == 0 ? "replace" : "normal")
         }
         if(jsonObj.state.filterHoursUsed != null && jsonObj.state.filterHoursUsed != ""){
     		sendEvent(name:"f1_hour_used", value: state.usage + " " + Math.round(jsonObj.state.filterHoursUsed/24) + state.day )
@@ -832,7 +860,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         	sendEvent(name:"ledBrightness", value: jsonObj.properties.ledBrightness)
         }
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-        sendEvent(name: "lastCheckin", value: now)
+        sendEvent(name: "lastCheckin", value: now, displayed: false)
 
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
