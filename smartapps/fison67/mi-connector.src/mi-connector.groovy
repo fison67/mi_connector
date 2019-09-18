@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.30)
+ *  Mi Connector (v.0.0.31)
  *
  * MIT License
  *
@@ -531,7 +531,10 @@ def addDevice(){
         }else if(params.type == "air.fan.ca23ad9"){
         	dth = "Xiaomi Circulator"
             name = "Xiaomi Circulator"
-        }
+        }else if(params.type == "nwt.derh.wdh318efw1"){
+        	dth = "Xiaomi Dehumidifier"
+            name = "Xiaomi Dehumidifier"
+        }	
         
         
         if(dth == null){
@@ -615,6 +618,10 @@ def addDevice(){
     	}
     }
     
+}
+
+def _getServerURL(){
+     return settings.address
 }
 
 def updateDevice(){
