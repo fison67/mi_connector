@@ -30,30 +30,23 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67", ocfDeviceType: "x.com.st.d.sensor.motion" , vid: "generic-motion") {
+	definition (name: "Xiaomi Motion", namespace: "fison67", author: "fison67", ocfDeviceType: "x.com.st.d.sensor.motion" , vid: "generic-motion-4") {
         capability "Motion Sensor"
         capability "Illuminance Measurement"
-    //    capability "Configuration"
+        capability "Battery"
         capability "Sensor"
         capability "Refresh"
-   //     capability "Momentary"
-    //    capability "Health Check"
          
-        attribute "battery", "string"
         attribute "lastMotion", "Date"
-
         attribute "lastCheckin", "Date"
-        
-	//	attribute "status", "enum", ["active", "inactive"]
         
 		command "reset"	
         command "chartMotion"
         command "chartIlluminance"
 	}
-
-
-	simulator {
-	}
+    
+	simulator {}
+    
 	preferences {
 		input "motionReset", "number", title: "Motion Reset Time", description: "", defaultValue:120, displayDuringSetup: true
 		input "historyDayCount", "number", title: "Day for History Graph", description: "", defaultValue:1, displayDuringSetup: true
@@ -181,8 +174,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     }
 }
 
-def updated() {
-}
+def updated() {}
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
@@ -207,7 +199,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -279,7 +271,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
