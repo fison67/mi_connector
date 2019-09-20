@@ -126,8 +126,7 @@ metadata {
 	}
 
 
-	simulator {
-	}
+	simulator { }
 	preferences {
         input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
         
@@ -330,6 +329,7 @@ def setStatus(params){
 		def stf = Float.parseFloat(data)
 		int tem = Math.round((stf+12)/25)        
         sendEvent(name:"speedlevel", value: tem)
+        sendEvent(name:"fanSpeed", value: tem)
     	break;        
     case "naturalLevel":
 		def para = params.data
@@ -381,7 +381,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -490,6 +490,26 @@ def tempDown(){
     } else if (currentSpeed == "4"){
     setFanSpeed3()
     } else {}
+}
+
+def setFanSpeed(speed){
+	def val = 100
+    if(0 < speed && speed <= 25){
+    	val = 25
+    }else if(25 <speed && speed <= 50){
+    	val = 50
+    }else if(50 < speed && speed <= 75){
+    	val = 75
+    }else if(75 < speed && speed <= 100){
+    	val = 100
+    }
+	def body = [
+        "id": state.id,
+        "cmd": "fanSpeed",
+        "data": val
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
 }
 
 def setFanSpeed1(){
@@ -860,7 +880,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
