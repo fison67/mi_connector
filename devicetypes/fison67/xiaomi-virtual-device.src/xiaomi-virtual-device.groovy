@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Virtual Device", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Virtual Device", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch", ocfDeviceType: "oic.d.switch") {
         capability "Sensor"
         capability "Presence Sensor"			//"present", "not present"
                
@@ -49,8 +49,8 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"presence", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.presence", key: "PRIMARY_CONTROL") {
-               	attributeState "not present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link.png?raw=true", backgroundColor:"#e86d13"
-            	attributeState "present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link.png?raw=true", backgroundColor:"#00a0dc"
+               	attributeState "not present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link2.png?raw=true", backgroundColor:"#e86d13"
+            	attributeState "present", label:'${name}', icon:"https://github.com/fison67/mi_connector/blob/master/icons/virtual-link2.png?raw=true", backgroundColor:"#00a0dc"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -94,13 +94,8 @@ def setStatus(params){
     
  	switch(params.key){
     case "presence":
-        if(params.data == "true"){
-            sendEvent(name:"presence", value: "present" )
-            sendEvent(name:"lastPresent", value: now() )
-        } else {
-            sendEvent(name:"presence", value: "not present" )
-            sendEvent(name:"lastNotPresent", value: now() )
-        }		
+    	sendEvent(name: "presence", value: (params.data == "true" ? "present" : "not present") )
+    	sendEvent(name: (params.data == "true" ? "lastPresent" : "lastNotPresent"), value: now() )
     	break;
     }
     
