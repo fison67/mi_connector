@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light (v.0.0.3)
+ *  Xiaomi Light (v.0.0.2)
  *
  * MIT License
  *
@@ -33,9 +33,8 @@ metadata {
 	definition (name: "Xiaomi Light Mono", namespace: "fison67", author: "fison67") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
-        capability "Configuration"
         capability "Refresh"
-		capability "Color Control"
+		capability "ColorTemperature"
         capability "Switch Level"
         capability "Light"
         
@@ -71,8 +70,8 @@ metadata {
             tileAttribute ("device.level", key: "SLIDER_CONTROL") {
                 attributeState "level", action:"switch level.setLevel"
             }
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
+            tileAttribute ("device.colorTemperature", key: "COLOR_CONTROL") {
+                attributeState "colorTemperature", action:"setColorTemperature"
             }
 		}
 		multiAttributeTile(name:"switch2", type: "lighting"){
@@ -139,7 +138,7 @@ def setStatus(params){
     	sendEvent(name:"level", value: params.data )
     	break;
     }
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 
 def refresh(){
@@ -148,7 +147,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -169,14 +168,32 @@ def setLevel(brightness){
 
 def setColor(color){
 	log.debug "setColor >> ${state.id} >> ${color.hex}"
+    def colors = color.hex
+    if(colors == null){
+    	def rgb = huesatToRGB(color.hue as Integer, color.saturation as Integer)
+        colors = "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})"
+    }
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex,
+        "data": colors,
         "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+}
+
+def setColorTemperature(colortemperature){
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
 }
 
 def on(){
@@ -234,7 +251,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
