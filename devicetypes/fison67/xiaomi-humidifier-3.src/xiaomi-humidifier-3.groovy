@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Humidifier(v.0.0.1)
+ *  Xiaomi Humidifier3 (v.0.0.1)
  *
  * MIT License
  *
@@ -227,8 +227,8 @@ def setStatus(params){
     	sendEvent(name:"humidity", value: params.data )
     	break;
     case "mode":
-	state.mode = params.data
-    def level = params.data as int
+		state.mode = params.data
+    	def level = params.data as int
     	sendEvent(name:"mode", value: "M"+params.data)
     	sendEvent(name:"level", value: level*20)        
     	break;
@@ -280,7 +280,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -497,7 +497,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
