@@ -30,11 +30,13 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Remote Custom", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Remote Custom", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch", ocfDeviceType:"oic.d.switch") {
         capability "Switch"
         capability "Configuration"
+        capability "Refresh"
         
         command "setStatus"
+        command "setOffStatus"
         command "playIRCmdByID", ["string"]
         command "playIR", ["string"]
         command "remoteCustom1"
@@ -63,6 +65,7 @@ metadata {
     
     preferences {
         input name: "syncByDevice", title:"Sync By Device" , type: "bool", required: true, defaultValue:true, description:"" 
+        input name: "autoOff", title:"Set off ater on" , type: "bool", required: true, defaultValue:true, description:"" 
 	}
 
 	tiles(scale: 2) {
@@ -240,7 +243,11 @@ def on(){
 	remoteCustom1()
     if(!syncByDevice){
 		sendEvent(name:"switch", value: "on" )
+        if(autoOff){
+        	runIn(3, setOffStatus)
+        }
     }
+    
 }
 
 def off(){
@@ -248,6 +255,10 @@ def off(){
     if(!syncByDevice){
 		sendEvent(name:"switch", value: "off" )
 	}
+}
+
+def setOffStatus(){
+	sendEvent(name:"switch", value: "off", displayed: false )
 }
 
 def remoteCustom1(){
@@ -342,7 +353,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
