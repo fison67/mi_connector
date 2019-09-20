@@ -35,7 +35,7 @@ LANGUAGE_MAP = [
 ]
 
 metadata {
-	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Xiaomi_Temperature_Humidity_Sensor", ocfDeviceType: "x.com.st.d.airqualitysensor") {
+	definition (name: "Xiaomi Air Detector", namespace: "fison67", author: "fison67", vid: "SmartThings-smartthings-Awair", ocfDeviceType: "x.com.st.d.airqualitysensor") {
         capability "Air Quality Sensor"						//"on", "off"
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
@@ -43,21 +43,17 @@ metadata {
         capability "Carbon Dioxide Measurement"
         capability "Refresh"
 		capability "Sensor"
-		capability "Power Source"
-		capability "Fine Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
+		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
 
-        
         attribute "lastCheckin", "Date"
         attribute "co2notice", "enum", ["notice", "unnotice"]  
      
         command "noAQS"
         command "noSwitch"
-       
 	}
-
-
-	simulator {
-	}
+    
+	simulator { }
+    
 	preferences {
 		input "co2homekit", "number", title:"CO2 Notice for Homekit", defaultValue: 1500, description:"홈킷 CO2농도 경고 최저값 설정", range: "*..*"
 	}
@@ -183,6 +179,12 @@ def setStatus(params){
  	switch(params.key){
     case "pm2.5":
     	sendEvent(name:"fineDustLevel", value: params.data as float)
+        def airQuality = (params.data as float) * 1.6
+        if(airQuality > 100){
+        	airQuality = 100
+        }
+    	sendEvent(name:"airQuality", value: airQuality)
+        
     	break;
     case "temperature":
     	sendEvent(name:"temperature", value: Float.parseFloat(params.data.replace("C","").replace(" ","")))
@@ -217,7 +219,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -234,6 +236,13 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		state.BeginTime = jsonObj.state.nightBeginTime
 		state.EndTime = jsonObj.state.nightEndTime
 		sendEvent(name:"fineDustLevel", value: jsonObj.state.aqi )
+        
+        def airQuality = jsonObj.state.aqi * 1.6
+        if(airQuality > 100){
+        	airQuality = 100
+        }
+    	sendEvent(name:"airQuality", value: airQuality)
+        
 		sendEvent(name:"temperature", value: jsonObj.state.temperature )
 		sendEvent(name:"humidity", value: jsonObj.state.humidity )
 		sendEvent(name:"carbonDioxide", value: jsonObj.state.co2 )
@@ -258,7 +267,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
