@@ -33,12 +33,13 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgbw-color-bulb", ocfDeviceType: "oic.d.light") {
+	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-color-temperature-bulb-2200K-6500K", ocfDeviceType: "oic.d.light") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
         capability "Configuration"
         capability "Refresh"
 		capability "Color Control"
+		capability "ColorTemperature"
         capability "Switch Level"
         capability "Health Check"
         capability "Light"
@@ -58,6 +59,11 @@ metadata {
 	simulator {
 	}
 
+	preferences {
+		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
+        input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+	}
+    
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
@@ -121,9 +127,12 @@ metadata {
         standardTile("scene2", "device.scene", decoration: "flat") {
 			state "default", label: "", action: "setScene2", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-moon-1.png?raw=true"
 		}
+        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 1, range:"(2700..6500)") {
+	    	state "time", action:"setColorTemperature"
+		}
         
         main (["switch2"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0", "scene1", "scene2" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0", "scene1", "scene2","colorTemperature" ])       
 	}
 }
 
@@ -169,7 +178,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -184,7 +193,8 @@ def setLevel(brightness){
         def body = [
             "id": state.id,
             "cmd": "brightness",
-            "data": brightness
+            "data": brightness,
+        	"subData": getDuration()
         ]
         def options = makeCommand(body)
         sendCommand(options, null)
@@ -199,7 +209,8 @@ def setColor(color){
     def body = [
         "id": state.id,
         "cmd": "color",
-        "data": color.hex
+        "data": color.hex,
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -207,12 +218,26 @@ def setColor(color){
     setPowerByStatus(true)
 }
 
+def setColorTemperature(colortemperature){
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
+}
+
 def on(){
 	log.debug "On >> ${state.id}"
     def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "on"
+        "data": "on",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -223,7 +248,8 @@ def off(){
 	def body = [
         "id": state.id,
         "cmd": "power",
-        "data": "off"
+        "data": "off",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -287,7 +313,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -397,4 +423,32 @@ def clamp( x, min, max ) {
     if(x<min){ return min; }
     if(x>max){ return max; }
     return x;
+}
+/*
+def rgbToColorTemperature(red, blue){
+	def temperature, testRGB;
+    def epsilon=0.4;
+    def minTemperature = 1000;
+    def maxTemperature = 40000;
+    while (maxTemperature - minTemperature > epsilon) {
+        temperature = (maxTemperature + minTemperature) / 2;
+        testRGB = colorTemperature2rgb(temperature);
+        if ((testRGB.blue / testRGB.red) >= (blue / red)) {
+          maxTemperature = temperature;
+        } else {
+          minTemperature = temperature;
+        }
+    }
+    return Math.round(temperature);
+}
+*/
+def getDuration(){
+	def smoothOn = settings.smooth == "" ? "On" : settings.smooth
+    def duration = 500
+    if(smoothOn == "On"){
+        if(settings.duration != null){
+            duration = settings.duration
+        }
+    }
+    return duration
 }
