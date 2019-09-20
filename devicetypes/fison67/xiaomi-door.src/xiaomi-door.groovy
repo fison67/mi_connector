@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Door", namespace: "fison67", author: "fison67", vid: "generic-contact") {
+	definition (name: "Xiaomi Door", namespace: "fison67", author: "fison67", vid: "generic-contact", ocfDeviceType: "x.com.st.d.sensor.contact") {
         capability "Sensor"
         capability "Contact Sensor"
         capability "Battery"
@@ -156,7 +156,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -173,7 +173,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
