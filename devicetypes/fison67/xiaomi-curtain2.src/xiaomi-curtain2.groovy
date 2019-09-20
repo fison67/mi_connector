@@ -45,11 +45,9 @@ metadata {
 	}
 
 
-	simulator {
-	}
+	simulator { }
 
-	preferences {
-	}
+	preferences { }
 
 	tiles {
 		multiAttributeTile(name:"windowShade", type: "windowShade", width: 6, height: 4, canChangeIcon: true){
@@ -109,7 +107,7 @@ def setStatus(params){
     
  	switch(params.key){
     case "curtainLevel":
-    	sendEvent(name:"level", value: params.data )
+    	sendEvent(name:"level", value: params.data as int)
         sendEvent(name:"windowShade", value: (params.data == "0" ? "closed" : ( params.data == "100" ? "open" : "partially open" )) )
     	break;
     case "batteryLevel":
@@ -178,7 +176,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -190,7 +188,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
     try {
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
-        
+        log.debug jsonObj
         sendEvent(name:"level", value: jsonObj.state.curtainLevel)
         sendEvent(name:"battery", value: jsonObj.properties.batteryLevel)
        
@@ -218,7 +216,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
