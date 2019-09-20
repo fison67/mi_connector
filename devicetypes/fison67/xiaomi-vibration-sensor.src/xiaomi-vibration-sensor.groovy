@@ -81,7 +81,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-	log.debug "Mi Connector >> ${params.key} : ${params.data}"
+	log.debug "Mi Connector >> ${params.key} : ${params.data} : ${params.subData}"
     
  	switch(params.key){
     case "action":
@@ -123,7 +123,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -157,7 +157,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
