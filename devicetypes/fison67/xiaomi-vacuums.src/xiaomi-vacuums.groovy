@@ -30,7 +30,8 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67", vid: "generic-switch", ocfDeviceType: "oic.d.switch") {
+    	capability "Robot Cleaner Cleaning Mode"
         capability "Switch"		
 		capability "Fan Speed"
         capability "Battery"	
@@ -242,11 +243,12 @@ def setStatus(params){
  	switch(params.key){
     case "mode":
     	sendEvent(name:"mode", value: params.data )
-        
         if(params.data == "cleaning"){
         	sendEvent(name:"switch", value: "on", displayed: false)
+        	sendEvent(name:"robotCleanerCleaningMode", value: "auto", displayed: false)
         }else{
         	sendEvent(name:"switch", value: "off", displayed: false)
+        	sendEvent(name:"robotCleanerCleaningMode", value: "stop", displayed: false)
         }
     	break;
     case "batteryLevel":
@@ -310,6 +312,17 @@ def setStatus(params){
     updateLastTime()
 }
 
+def setRobotCleanerCleaningMode(mode){
+	switch(mode){
+    case "auto":
+    	on()
+    	break
+    case "stop":
+    	off()
+    	break
+    }
+}
+
 public String formatSeconds(int timeInSeconds){
     int secondsLeft = timeInSeconds % 3600 % 60;
     int minutes = Math.floor(timeInSeconds % 3600 / 60);
@@ -333,7 +346,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -573,7 +586,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
