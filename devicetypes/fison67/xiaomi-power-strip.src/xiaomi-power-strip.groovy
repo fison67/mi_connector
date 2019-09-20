@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Power Strip", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Power Strip", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch-power-energy") {
     	capability "Actuator"
         capability "Switch"				
         capability "Power Meter"
@@ -297,7 +297,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -317,7 +317,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
