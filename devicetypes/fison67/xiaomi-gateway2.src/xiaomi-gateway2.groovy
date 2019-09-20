@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-switch") {
+	definition (name: "Xiaomi Gateway2", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-siren", ocfDeviceType: "x.com.st.d.siren") {
         capability "Switch"						//"on", "off"
         capability "Thermostat Cooling Setpoint"
         capability "Thermostat Heating Setpoint"
@@ -464,7 +464,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -478,7 +478,7 @@ def findChild(){
      	"method": "GET",
         "path": "/devices/gateway/${state.id}/findChild",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
