@@ -290,12 +290,14 @@ def setExternalAddress(address){
 	state.externalAddress = address
 }
 
+def installed(){
+    sendEvent(name: "supportedThermostatModes", value: ["cool", "off"])
+}
+
 def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
-    
-    sendEvent(name:"supportedThermostatModes", value: ["cool", "idle"])
 }
 
 def setData(dataList){
