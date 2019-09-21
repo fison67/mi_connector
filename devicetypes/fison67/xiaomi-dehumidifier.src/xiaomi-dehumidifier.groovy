@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Dehumidifier (v.0.0.1)
+ *  Xiaomi Dehumidifier (v.0.0.2)
  *
  * MIT License
  *
@@ -267,7 +267,7 @@ def setModeDryCloth(){
 	log.debug "setModeDryCloth"
     def body = [
         "id": state.id,
-        "cmd": "mode",
+        "cmd": "changeMode",
         "data": "dry_cloth"
     ]
     def options = makeCommand(body)
@@ -298,7 +298,7 @@ def setLedOn(){
 	log.debug "setLedOn"
     def body = [
         "id": state.id,
-        "cmd": "ledBrightness",
+        "cmd": "led",
         "data": "on"
     ]
     def options = makeCommand(body)
