@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Bedside Lamp (v.0.0.1)
+ *  Xiaomi Philips Bedside Lamp (v.0.0.2)
  *
  * MIT License
  *
@@ -96,6 +96,9 @@ def setStatus(params){
             sendEvent(name: "lastOff", value: now, displayed: false)
         }
     	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break;
     case "color":
     	sendEvent(name:"color", value: params.data )
     	break;
@@ -116,7 +119,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -159,10 +162,7 @@ def setColorTemperature(colortemperature){
 def setColor(color){
 	log.debug "setColor >> ${state.id} >> ${color}"
 
-	def hue = (color.hue != "NaN") ? color.hue : 13
-	def saturation = (color.saturation != "NaN") ? color.saturation : 13
-	def rgb = huesatToRGB(hue as Integer, saturation as Integer)
-	
+	def rgb = huesatToRGB(color.hue as Integer, color.saturation as Integer)
     def body = [
         "id": state.id,
         "cmd": "color",
@@ -174,6 +174,55 @@ def setColor(color){
     
     setPowerByStatus(true)
 }
+
+def setHue(hue){
+	log.debug "setHue >> ${hue}"
+	state._hue = hue
+	if(state._saturation == null){
+		return
+	}
+	
+	def rgb = huesatToRGB(state._hue as Integer, state._saturation as Integer)
+	log.debug "setColor >> ${rgb}"
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)
+	
+	state._hue = null
+	state._saturation = null
+}
+
+def setSaturation(saturation){
+	log.debug "setSaturation >> ${saturation}"
+	state._saturation = saturation
+	if(state._hue == null){
+		return
+	}
+	
+	def rgb = huesatToRGB(state._hue as Integer, state._saturation as Integer)
+	log.debug "setColor >> ${rgb}"
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)
+	
+	state._hue = null
+	state._saturation = null
+}
+
 
 def setScene1(){
 	log.debug "setScene1 >> ${state.id}"
@@ -281,7 +330,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -385,3 +434,4 @@ def huesatToRGB(float hue, float sat) {
 		case 5: return [255, p, q]
 	}
 }
+
