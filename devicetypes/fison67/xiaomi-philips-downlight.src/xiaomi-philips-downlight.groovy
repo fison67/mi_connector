@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Downlight (v.0.0.1)
+ *  Xiaomi Philips Downlight (v.0.0.2)
  *
  * MIT License
  *
@@ -72,8 +72,8 @@ def setStatus(params){
 	log.debug "${params.key} >> ${params.data}"
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
-    case "color":
-    	sendEvent(name:"color", value: params.data )
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int )
     	break;
     case "power":
         if(params.data == "true"){
@@ -122,7 +122,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -257,7 +257,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
