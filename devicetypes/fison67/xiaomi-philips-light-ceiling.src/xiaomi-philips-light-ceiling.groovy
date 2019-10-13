@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Light Ceiling(v.0.0.2)
+ *  Xiaomi Philips Light Ceiling(v.0.0.3)
  *
  * MIT License
  *
@@ -33,11 +33,9 @@ metadata {
 	definition (name: "Xiaomi Philips Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgbw-color-bulb", ocfDeviceType: "oic.d.light") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
-        capability "Configuration"
         capability "Refresh"
-		capability "Color Control"
+		capability "ColorTemperature"
         capability "Switch Level"
-        capability "Health Check"
         capability "Light"
 
         attribute "lastOn", "string"
@@ -66,11 +64,11 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -80,21 +78,7 @@ metadata {
             tileAttribute ("device.level", key: "SLIDER_CONTROL") {
                 attributeState "level", action:"switch level.setLevel"
             }
-            
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
 		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfODQg/MDAxNTIyMTUzOTg0NzIw.61z5mx6FESuZ_PGX9lLn4SE62-DwhdwvZKLuoxwRQQYg.iyatTTFzMSQ8X_BAxMTqsd9mp2QSmArqO5jAKhkctUEg.PNG.shin4299/Yeelight_main_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMjY3/MDAxNTIyMTUzOTg0NzMx.eymIqPh2CSLBt1h5rgVRyqZWaBgm-AXOiRe3crmav1Ug.4ZSrZUCtOjWYraxmPAWV9RoLe0Rnnw1XRB54a5gNLs0g.PNG.shin4299/Yeelight_main_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
         
         valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
             state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
@@ -144,6 +128,10 @@ metadata {
 			state "default", label: "Scene4", action: "setScene4", backgroundColor:"#f72751"
 		}
         
+        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 2, range:"(2700..6500)") {
+	    	state "colorTemperature", action:"setColorTemperature"
+		}
+        
         controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
 	    	state "time", action:"setTimeRemaining"
 		}
@@ -153,7 +141,7 @@ metadata {
 		}
         
    	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "smartNightLabel", "autoColorLabel", "sceneLabel", "autoColor", "smartNightLight", "scene1", "scene2", "scene3", "scene4", "time", "tiemr0" ])       
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "smartNightLabel", "autoColorLabel", "sceneLabel", "autoColor", "smartNightLight", "scene1", "scene2", "scene3", "scene4", "colorTemperature", "time", "tiemr0" ])       
 	}
 }
 
@@ -181,11 +169,9 @@ def setStatus(params){
             sendEvent(name: "lastOff", value: now)
         }
     	break;
-    case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
-    	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
@@ -231,6 +217,23 @@ def setColor(color){
         "id": state.id,
         "cmd": "color",
         "data": color.hex
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setColorTemperature(_colortemperature){
+	def colortemperature = _colortemperature
+	if(colortemperature < 2700){
+    	colortemperature = 2700
+    }else if(colortemperature > 6500){
+    	colortemperature = 6500
+    }
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": colortemperature + "K",
+        "subData": getDuration()
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
