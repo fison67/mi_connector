@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Strip(v.0.0.2)
+ *  Xiaomi Light Strip(v.0.0.3)
  *
  * MIT License
  *
@@ -61,11 +61,11 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjk0/MDAxNTIyNjcwODg1OTMx.n6G1A3XFe4doZyui91enS6AMUMsQNSHPdSpkoYS_gvsg.POSBaBK39h4En1qEDyuEo7jbAYNATYDWWEKiwWJiAi4g.PNG.shin4299/strip_tile_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjcx/MDAxNTIyNjcwODg2MDU1._pGoPgVCcXCjJMXfVCgnIk06IHeyVM_qRnCfUo14J8Eg.2yivBQIJ-L7vKrunjG3JEeKgh3x4Edm5trSLF-xUqicg.PNG.shin4299/strip_tile_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -79,16 +79,6 @@ metadata {
                 attributeState "color", action:"setColor"
             }
 		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTU5/MDAxNTIyNjcwODg1Nzkw.IyMt_rjlBb58EZcCnzwGDEOnDxhVCZp6HYYI3QEWTG0g.RQSDWDrcLCowG_OU2_Z0uIqjIZNuH7mPoWLq5gIf4G0g.PNG.shin4299/strip_main_on.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjgy/MDAxNTIyNjcwODg1NjM4.uhaE4TpPzavjNsGK77KQb22ezNBNs48YTz71jyksbxEg.4McvI0chsVuq-hoUozV38UMV4yo6n5qkvNv8G_Ddk0Mg.PNG.shin4299/strip_main_off.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMjgy/MDAxNTIyNjcwODg1NjM4.uhaE4TpPzavjNsGK77KQb22ezNBNs48YTz71jyksbxEg.4McvI0chsVuq-hoUozV38UMV4yo6n5qkvNv8G_Ddk0Mg.PNG.shin4299/strip_main_off.png?type=w3", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODA0MDJfMTU5/MDAxNTIyNjcwODg1Nzkw.IyMt_rjlBb58EZcCnzwGDEOnDxhVCZp6HYYI3QEWTG0g.RQSDWDrcLCowG_OU2_Z0uIqjIZNuH7mPoWLq5gIf4G0g.PNG.shin4299/strip_main_on.png?type=w3", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
         valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
             state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
         }        
@@ -105,6 +95,9 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
+        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 2, range:"(2700..6500)") {
+	    	state "colorTemperature", action:"setColorTemperature"
+		}
         valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
             state "default", label:'Set Timer\n${currentValue}'
         }
@@ -117,8 +110,8 @@ metadata {
 			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
         
-   	main (["switch2"])
-	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "timer_label", "time", "tiemr0" ])       
+   	main (["switch"])
+	details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemperature", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -134,6 +127,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
+	log.debug "${params.key} >> ${params.data}"
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
@@ -158,9 +152,12 @@ def setStatus(params){
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break
     }
     
-    sendEvent(name: "lastCheckin", value: now)
+    sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
 def refresh(){
 	log.debug "Refresh"
@@ -260,12 +257,14 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-        def colors = jsonObj.properties.color.values
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
+        def colors = jsonObj.state.colorRGB
+        String hex = String.format("#%02x%02x%02x", colors.red, colors.green, colors.blue);  
         
     	sendEvent(name:"hue", value: jsonObj.state.colorHue  )
     	sendEvent(name:"saturation", value: jsonObj.state.colorSaturation)
-    	sendEvent(name:"colorTemperature", value: jsonObj.state.colorTemperature)
+        if(jsonObj.properties.colorTemperature){
+    		sendEvent(name:"colorTemperature", value: jsonObj.properties.colorTemperature[0] as int)
+        }
     	sendEvent(name:"color", value: hex )
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
