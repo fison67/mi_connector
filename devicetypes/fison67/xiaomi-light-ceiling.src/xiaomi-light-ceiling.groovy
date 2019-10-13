@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling(v.0.0.3)
+ *  Xiaomi Light Ceiling(v.0.0.4)
  *
  * MIT License
  *
@@ -27,7 +27,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  *
  *
- * Version. 0.0.2 >> Add Timer by fison67
 */
 
 import groovy.json.JsonSlurper
@@ -36,14 +35,12 @@ metadata {
 	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-color-temperature-bulb-2200K-6500K", ocfDeviceType: "oic.d.light") {
         capability "Switch"						//"on", "off"
         capability "Actuator"
-        capability "Configuration"
         capability "Refresh"
-		capability "Color Control"
 		capability "ColorTemperature"
         capability "Switch Level"
-        capability "Health Check"
         capability "Light"
 
+		attribute "mode", "enum", ["daylight", "moonlight"]
         attribute "lastOn", "string"
         attribute "lastOff", "string"
         
@@ -51,9 +48,6 @@ metadata {
          
         command "setTimeRemaining"
         command "stop"
-        
-        command "setScene1"
-        command "setScene2"
 	}
 
 	simulator {
@@ -62,16 +56,17 @@ metadata {
 	preferences {
 		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
         input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+        input name: "makeChild", title:"Make a background light" , type: "enum", options:["no", "yes"], required: true, defaultValue: "no"
 	}
     
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
                 
-                attributeState "turningOn", label:'\n${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'\n${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
             
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -81,22 +76,7 @@ metadata {
             tileAttribute ("device.level", key: "SLIDER_CONTROL") {
                 attributeState "level", action:"switch level.setLevel"
             }
-            
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
 		}
-		multiAttributeTile(name:"switch2", type: "lighting"){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'ON', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'OFF', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-
-			}
-        }
-        
         valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
             state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
         }        
@@ -112,6 +92,9 @@ metadata {
         valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
+        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 2, range:"(2700..6500)") {
+	    	state "colorTemperature", action:"setColorTemperature"
+		}
         valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
             state "default", label:'Set Timer\n${currentValue}'
         }
@@ -121,18 +104,9 @@ metadata {
         standardTile("tiemr0", "device.timeRemaining") {
 			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
 		}
-        standardTile("scene1", "device.scene", decoration: "flat") {
-			state "default", label: "", action: "setScene1", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-sun-1.png?raw=true"
-		}
-        standardTile("scene2", "device.scene", decoration: "flat") {
-			state "default", label: "", action: "setScene2", icon: "https://github.com/fison67/mi_connector/blob/master/icons/scene-moon-1.png?raw=true"
-		}
-        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 1, range:"(2700..6500)") {
-	    	state "time", action:"setColorTemperature"
-		}
-        
-        main (["switch2"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "colorTemp", "timer_label", "time", "tiemr0", "scene1", "scene2","colorTemperature" ])       
+        childDeviceTiles("all")
+        main (["switch"])
+        details(["switch", "all", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff",  "colorTemperature", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -145,33 +119,84 @@ def setInfo(String app_url, String id) {
 	log.debug "${app_url}, ${id}"
 	state.app_url = app_url
     state.id = id
+    
+    installMoon()
+}
+
+def _getServerURL(){
+	return parent._getServerURL()
+}
+
+def _getID(){
+	return state.id
 }
 
 def setStatus(params){
-    log.debug "Status >> " + params.data
+    log.debug "${params.key} >> " + params.data
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
         if(params.data == "true"){
             sendEvent(name:"switch", value: "on")
-            sendEvent(name: "lastOn", value: now)
+            sendEvent(name: "lastOn", value: now, displayed: false)
         } else {
             sendEvent(name:"switch", value: "off")
-            sendEvent(name: "lastOff", value: now)
+            sendEvent(name: "lastOff", value: now, displayed: false)
         }
-    	break;
-    case "color":
-    	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
-    	break;
+    	break
+    case "bgPower":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("switch", params.data == "true" ? "on" : "off")
+        }
+    	break
+    case "colorTemperature":
+        sendEvent(name:"colorTemperature", value: params.data as int )
+    	break
+    case "bgColor":
+    	def target = getBackgroundLight()
+        log.debug target
+        if(target){
+//        	def colors = params.data.split(",")
+//            String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger())
+    		target.setStatus("color", params.data)
+        }
+    	break
+    case "bgColorTemperature":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("colorTemperature", params.data as int)
+        }
+    	break
     case "brightness":
-    	sendEvent(name:"level", value: params.data )
-    	break;
+    	sendEvent(name:"level", value: params.data as int)
+    	break
+    case "bgBrightness":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("level", params.data as int)
+        }
+    	break
+    case "activeMode":
+    	def target = getMoonLight()
+        log.debug target
+        if(target){
+    		target.setStatus("switch", params.data == "daylight" ? "off" : "on")
+        }
+    	break
     }
     
     sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
+
+def getBackgroundLight(){
+    return childDevices.find { it.deviceNetworkId ==  "${device.deviceNetworkId}-child" }
+}
+
+def getMoonLight(){
+    return childDevices.find { it.deviceNetworkId ==  "${device.deviceNetworkId}-moon" }
+}
+
 def refresh(){
 	log.debug "Refresh"
     def options = [
@@ -203,22 +228,14 @@ def setLevel(brightness){
     }
 }
 
-def setColor(color){
-	log.debug "setColorTemperature >> ${state.id} >> ${color}"
+def setColorTemperature(_colortemperature){
+	def colortemperature = _colortemperature
+	if(colortemperature < 2700){
+    	colortemperature = 2700
+    }else if(colortemperature > 6500){
+    	colortemperature = 6500
+    }
     
-    def body = [
-        "id": state.id,
-        "cmd": "color",
-        "data": color.hex,
-        "subData": getDuration()
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
-    
-    setPowerByStatus(true)
-}
-
-def setColorTemperature(colortemperature){
     def body = [
         "id": state.id,
         "cmd": "color",
@@ -255,32 +272,23 @@ def off(){
     sendCommand(options, null)
 }
 
-
-def setScene1(){
-	log.debug "setScene1 >> ${state.id}"
-    
-    def body = [
-        "id": state.id,
-        "cmd": "scene",
-        "data": 1
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+def updated() {
+	if(settings.makeChild == "yes"){
+    	installChild()
+    }
 }
 
-def setScene2(){
-	log.debug "setScene2 >> ${state.id}"
-    
-    def body = [
-        "id": state.id,
-        "cmd": "scene",
-        "data": 5
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+def installMoon() {
+	def childDevice =  addChildDevice("Xiaomi Light Ceiling Moon", "mi-connector-" + state.id  + "-moon" , null, [completedSetup: true, label: "Moon Mode", componentName: "Moon Mode", componentLabel: "Moon Mode", isComponent: false])
 }
 
-def updated() {}
+def installChild(){
+	def backgroundID = "mi-connector-" + state.id  + "-child"
+	def child = childDevices.find { it.deviceNetworkId == backgroundID }
+    if(!child){
+    	def childDevice =  addChildDevice("Xiaomi Light Ceiling Child", backgroundID , null, [completedSetup: true, label: "Background Light", componentName: "Background Light", componentLabel: "Background Light", isComponent: false])
+    }
+}
 
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
@@ -289,14 +297,28 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
         
-        def colorRGB = colorTemperatureToRGB(jsonObj.state.colorTemperature)
-        String hex = String.format("#%02x%02x%02x", colorRGB[0], colorRGB[1], colorRGB[2]);  
-    	sendEvent(name:"color", value: hex )
-        sendEvent(name:"level", value: jsonObj.properties.brightness)
+        sendEvent(name:"level", value: jsonObj.properties.brightness as int)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
-	    
+    	sendEvent(name:"mode", value: jsonObj.properties.activeMode)
+        
+        sendEvent("colorTemperature", jsonObj.properties.colorTemperature[0] as int)
+        
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("colorTemperature", jsonObj.properties.bgColorTemperature[0] as int)
+    		target.setStatus("color", jsonObj.properties.bgColor)
+    		target.setStatus("level", jsonObj.properties.bgBrightness as int)
+    		target.setStatus("switch", jsonObj.properties.bgPower == true ? "on" : "off")
+        }
+        
+        def moonTarget = getMoonLight()
+        if(moonTarget){
+    		sendEvent(name:"switch", value: jsonObj.properties.activeMode == "daylight" ? "off" : "on")
+        }
+        
+        
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-        sendEvent(name: "lastCheckin", value: now)
+        sendEvent(name: "lastCheckin", value: now, displayed: false)
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
