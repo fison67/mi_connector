@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.30)
+ *  Mi Connector (v.0.0.32)
  *
  * MIT License
  *
@@ -49,7 +49,6 @@ preferences {
    page(name: "remoteDevicePage")
    page(name: "remoteDeviceNextPage")
 }
-
 
 def mainPage() {
 	def languageList = ["English", "Korean"]
@@ -300,8 +299,8 @@ def initialize() {
     def myhubAction = new hubitat.device.HubAction(options, null, [callback: null])
     sendHubCommand(myhubAction)
     
-    updateLanguage()
-    updateExternalNetwork()
+//    updateLanguage()
+//    updateExternalNetwork()
 }
 
 def dataCallback(hubitat.device.HubResponse hubResponse) {
@@ -310,7 +309,6 @@ def dataCallback(hubitat.device.HubResponse hubResponse) {
         msg = parseLanMessage(hubResponse.description)
         status = msg.status
         json = msg.json
-        log.debug "${json}"
         state.latestHttpResponse = status
     } catch (e) {
         logger('warn', "Exception caught while parsing data: "+e);
@@ -405,7 +403,7 @@ def addDevice(){
         }else if(params.type == "philips.light.moonlight"){
         	dth = "Xiaomi Philips Bedside Lamp";
             name = "Xiaomi Philips Bedside Lamp";
-        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s"){
+        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s" || params.type == "roborock.vacuum.s6" || params.type == "viomi.vacuum.v7"){
         	dth = "Xiaomi Vacuums";
             name = "Xiaomi Vacuums";
         }else if(params.type == "roborock.vacuum.s5"){
@@ -456,6 +454,9 @@ def addDevice(){
         }else if(params.type == "lumi.curtain.b1"){
             dth = "Xiaomi Curtain2";
             name = "Xiaomi Curtain2";
+        }else if(params.type == "lumi.blind"){
+        	dth = "Xiaomi Curtain";
+            name = "Xiaomi Blind";
         }else if(params.type == "lumi.water"){
 			dth = "Xiaomi Water Detector";
             name = "Xiaomi Water Dectector";
@@ -584,8 +585,11 @@ def addDevice(){
     
 }
 
+def _getServerURL(){
+     return settings.address
+}
+
 def updateDevice(){
-//	log.debug "Mi >> ${params.type} (${params.key}) >> ${params.cmd}"
     def id = params.id
     def dni = "mi-connector-" + id.toLowerCase()
     def chlid = getChildDevice(dni)
@@ -599,8 +603,6 @@ def updateDevice(){
 def deleteDevice(){
 	def id = params.id
     def dni = "mi-connector-" + id.toLowerCase()
-    
-    log.debug "Try >> DELETE child device(${dni})"
     def result = false
     
     def chlid = getChildDevice(dni)
@@ -608,7 +610,6 @@ def deleteDevice(){
     	try{
             deleteChildDevice(dni)
             result = true
-    		log.debug "Success >> DELETE child device(${dni})"
         }catch(err){
 			log.error("Failed >> DELETE child Device Error!!! ${dni} => " + err);
         }
@@ -622,7 +623,6 @@ def getDeviceList(){
 	def list = getChildDevices();
     def resultList = [];
     list.each { child ->
- //       log.debug "child device id $child.deviceNetworkId with label $child.label"
         def dni = child.deviceNetworkId
         resultList.push( dni.substring(13, dni.length()) );
     }
