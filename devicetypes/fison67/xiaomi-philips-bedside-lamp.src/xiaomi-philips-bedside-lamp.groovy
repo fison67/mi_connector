@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Bedside Lamp (v.0.0.1)
+ *  Xiaomi Philips Bedside Lamp (v.0.0.2)
  *
  * MIT License
  *
@@ -35,10 +35,11 @@ import java.util.ArrayList
 metadata {
 	definition (name: "Xiaomi Philips Bedside Lamp", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-rgb-color-bulb") {
         capability "Switch"						//"on", "off"
+        capability "Light"
         capability "Actuator"
         capability "Refresh"
-        capability "Light"
 		capability "Color Control"
+		capability "Color Temperature"
         capability "Switch Level"
 
         attribute "lastOn", "string"
@@ -119,6 +120,9 @@ metadata {
 			state "default", label: "Scene6", action: "setScene6", backgroundColor:"#FFCF97"
 		}
         
+        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 2, range:"(2700..6500)") {
+	    	state "colorTemperature", action:"setColorTemperature"
+		}
         valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
             state "default", label:'Set Timer\n${currentValue}'
         }
@@ -132,7 +136,7 @@ metadata {
 		}
         
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "scene1", "scene2", "scene3", "scene4", "scene5", "scene6", "timer_label", "time", "tiemr0" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "scene1", "scene2", "scene3", "scene4", "scene5", "scene6", "colorTemperature", "timer_label", "time", "tiemr0" ])       
 	}
 }
 
@@ -152,7 +156,7 @@ def setInfo(String app_url, String id) {
 }
 
 def setStatus(params){
-//	log.debug "Status >> ${params}"
+    log.debug "${params.key} >> " + params.data
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
@@ -164,13 +168,20 @@ def setStatus(params){
             sendEvent(name: "lastOff", value: now, displayed: false)
         }
     	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break;
     case "color":
     	def colors = params.data.split(",")
-        String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger());  
-    	sendEvent(name:"color", value: hex )
+    	sendEvent(name:"color", value: String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger())  )
+        
+        float[] hsbValues = new float[3];
+		def hueSat = Color.RGBtoHSB(colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger(),hsbValues)
+    	sendEvent(name:"hue", value: (hueSat[0] * 100) as int  )
+    	sendEvent(name:"saturation", value: (hueSat[1] * 100) as int)
     	break;
     case "brightness":
-    	sendEvent(name:"level", value: params.data )
+    	sendEvent(name:"level", value: params.data as int)
     	break;
     case "scene":
     	sendEvent(name:"scene", value: params.data )
@@ -232,6 +243,26 @@ def setColor(color){
     sendCommand(options, null)
     
     setPowerByStatus(true)
+}
+
+def setColorTemperature(_colortemperature){
+	def colortemperature = _colortemperature
+	if(colortemperature < 2700){
+    	colortemperature = 2700
+    }else if(colortemperature > 6500){
+    	colortemperature = 6500
+    }
+    
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": colortemperature + "K",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)	
 }
 
 def setScene1(){
@@ -426,6 +457,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         
      	String hex = String.format("#%02x%02x%02x", jsonObj.state.colorRGB.red, jsonObj.state.colorRGB.blue, jsonObj.state.colorRGB.green);
         sendEvent(name:"color", value: hex )
+        sendEvent(name:"colorTemperature", jsonObj.properties.colorTemperature[0] as int)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
