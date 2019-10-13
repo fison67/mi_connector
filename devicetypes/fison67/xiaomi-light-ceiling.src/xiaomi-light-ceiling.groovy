@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling(v.0.0.3)
+ *  Xiaomi Light Ceiling(v.0.0.4)
  *
  * MIT License
  *
@@ -26,16 +26,15 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- *
- * Version. 0.0.2 >> Add Timer by fison67
 */
 
 import groovy.json.JsonSlurper
 
 metadata {
 	definition (name: "Xiaomi Light Ceiling", namespace: "fison67", author: "fison67") {
-        capability "Switch"						//"on", "off"
+        capability "Switch"
         capability "Light"
+		capability "Bulb"
         capability "Refresh"
 		capability "ColorTemperature"
         capability "Switch Level"
@@ -45,11 +44,8 @@ metadata {
         
         attribute "lastCheckin", "Date"
          
-        command "setTimeRemaining"
+    command "setTimeRemaining", ["number"]
         command "stop"
-        
-        command "setScene1"
-        command "setScene2"
 	}
 
 	simulator {
@@ -58,6 +54,7 @@ metadata {
 	preferences {
 		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
         input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
+        input name: "makeChild", title:"Make a background light" , type: "enum", options:["no", "yes"], required: true, defaultValue: "no"
 	}
 
 }
@@ -73,36 +70,85 @@ def setInfo(String app_url, String id) {
     state.id = id
 }
 
+def _getServerURL(){
+	return parent._getServerURL()
+}
+
+def _getID(){
+	return state.id
+}
+
 def setStatus(params){
-    log.debug "Status >> " + params.data
+//    log.debug params.key + ":" + params.data
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
     case "power":
         if(params.data == "true"){
             sendEvent(name:"switch", value: "on")
-            sendEvent(name: "lastOn", value: now)
+            sendEvent(name: "lastOn", value: now, displayed: false)
         } else {
             sendEvent(name:"switch", value: "off")
-            sendEvent(name: "lastOff", value: now)
+            sendEvent(name: "lastOff", value: now, displayed: false)
         }
-    	break;
-    case "color":
-    	sendEvent(name:"color", value: params.data )
-    	break;
+    	break
+    case "bgPower":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("switch", params.data == "true" ? "on" : "off")
+        }
+    	break
+    case "colorTemperature":
+        sendEvent(name:"colorTemperature", value: params.data as int )
+    	break
+    case "bgColor":
+    	def target = getBackgroundLight()
+        log.debug target
+        if(target){
+    		target.setStatus("color", params.data)
+        }
+    	break
+    case "bgColorTemperature":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("colorTemperature", params.data as int)
+        }
+    	break
     case "brightness":
-    	sendEvent(name:"level", value: params.data )
-    	break;
+    	sendEvent(name:"level", value: params.data as int)
+    	break
+    case "bgBrightness":
+    	def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("level", params.data as int)
+        }
+    	break
+    case "activeMode":
+    	def target = getMoonLight()
+        log.debug target
+        if(target){
+    		target.setStatus("switch", params.data == "daylight" ? "off" : "on")
+        }
+    	break
     }
     
     sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
+
+def getBackgroundLight(){
+    return childDevices.find { it.deviceNetworkId ==  "${device.deviceNetworkId}-child" }
+}
+
+def getMoonLight(){
+    return childDevices.find { it.deviceNetworkId ==  "${device.deviceNetworkId}-moon" }
+}
+
 def refresh(){
 	log.debug "Refresh"
     def options = [
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -119,6 +165,8 @@ def setLevel(brightness){
     if(brightness == 0){
     	off()
     }else{
+    	setPowerByStatus(true)
+		
         def body = [
             "id": state.id,
             "cmd": "brightness",
@@ -128,11 +176,17 @@ def setLevel(brightness){
         def options = makeCommand(body)
         sendCommand(options, null)
 
-    	setPowerByStatus(true)
     }
 }
 
-def setColorTemperature(colortemperature){
+def setColorTemperature(_colortemperature){
+	def colortemperature = _colortemperature
+	if(colortemperature < 2700){
+    	colortemperature = 2700
+    }else if(colortemperature > 6500){
+    	colortemperature = 6500
+    }
+    
     def body = [
         "id": state.id,
         "cmd": "color",
@@ -170,31 +224,31 @@ def off(){
 }
 
 
-def setScene1(){
-	log.debug "setScene1 >> ${state.id}"
-    
-    def body = [
-        "id": state.id,
-        "cmd": "scene",
-        "data": 1
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+def updated() {
+	if(settings.makeChild == "yes"){
+    	installChild()
+    }
 }
 
-def setScene2(){
-	log.debug "setScene2 >> ${state.id}"
-    
-    def body = [
-        "id": state.id,
-        "cmd": "scene",
-        "data": 5
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+def installMoon() {
+    addChildDevice("Xiaomi Light Ceiling Moon", "mi-connector-" + state.id  + "-moon", [
+        completedSetup: true,
+        label         : "Moon Mode",
+        isComponent   : false
+    ])
 }
 
-def updated() {}
+def installChild(){
+	def backgroundID = "mi-connector-" + state.id  + "-child"
+	def child = childDevices.find { it.deviceNetworkId == backgroundID }
+    if(!child){
+        addChildDevice("Xiaomi Light Ceiling Child", backgroundID, [
+            completedSetup: true,
+            label         : "Background Light",
+            isComponent   : false
+        ])
+    }
+}
 
 def callback(hubitat.device.HubResponse hubResponse){
 	def msg
@@ -207,6 +261,21 @@ def callback(hubitat.device.HubResponse hubResponse){
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
+        sendEvent("colorTemperature", jsonObj.properties.colorTemperature[0] as int)
+        
+        def target = getBackgroundLight()
+        if(target){
+    		target.setStatus("colorTemperature", jsonObj.properties.bgColorTemperature[0] as int)
+    		target.setStatus("color", jsonObj.properties.bgColor)
+    		target.setStatus("level", jsonObj.properties.bgBrightness as int)
+    		target.setStatus("switch", jsonObj.properties.bgPower == true ? "on" : "off")
+        }
+        
+        def moonTarget = getMoonLight()
+        if(moonTarget){
+    		sendEvent(name:"switch", value: jsonObj.properties.activeMode == "daylight" ? "off" : "on")
+        }
+        
         def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
         sendEvent(name: "lastCheckin", value: now)
     } catch (e) {
@@ -225,7 +294,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -311,4 +380,21 @@ def getDuration(){
         }
     }
     return duration
+}
+
+def huesatToRGB(float hue, float sat) {
+	while(hue >= 100) hue -= 100
+	int h = (int)(hue / 100 * 6)
+	float f = hue / 100 * 6 - h
+	int p = Math.round(255 * (1 - (sat / 100)))
+	int q = Math.round(255 * (1 - (sat / 100) * f))
+	int t = Math.round(255 * (1 - (sat / 100) * (1 - f)))
+	switch (h) {
+		case 0: return [255, t, p]
+		case 1: return [q, 255, p]
+		case 2: return [p, 255, t]
+		case 3: return [p, q, 255]
+		case 4: return [t, p, 255]
+		case 5: return [255, p, q]
+	}
 }
