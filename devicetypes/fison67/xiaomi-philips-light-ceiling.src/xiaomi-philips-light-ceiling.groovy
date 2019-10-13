@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Philips Light Ceiling(v.0.0.2)
+ *  Xiaomi Philips Light Ceiling(v.0.0.3)
  *
  * MIT License
  *
@@ -89,9 +89,9 @@ def setStatus(params){
             sendEvent(name: "lastOff", value: now)
         }
     	break;
-    case "color":
-    	sendEvent(name:"color", value: params.data )
-    	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
@@ -111,7 +111,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -274,7 +274,7 @@ def callback(hubitat.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
        
-        sendEvent(name:"color", value: jsonObj.properties.color)
+        sendEvent("colorTemperature", jsonObj.properties.colorTemperature[0] as int)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -296,7 +296,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
