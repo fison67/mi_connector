@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Strip(v.0.0.1)
+ *  Xiaomi Light Strip(v.0.0.2)
  *
  * MIT License
  *
@@ -88,6 +88,9 @@ def setStatus(params){
     case "brightness":
     	sendEvent(name:"level", value: params.data )
     	break;
+    case "colorTemperature":
+    	sendEvent(name:"colorTemperature", value: params.data as int)
+    	break
     }
     
     sendEvent(name: "lastCheckin", value: now)
@@ -99,7 +102,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -145,6 +148,54 @@ def setColor(color){
     sendCommand(options, null)
 }
 
+def setHue(hue){
+	log.debug "setHue >> ${hue}"
+	state._hue = hue
+	if(state._saturation == null){
+		return
+	}
+	
+	def rgb = huesatToRGB(state._hue as Integer, state._saturation as Integer)
+	log.debug "setColor >> ${rgb}"
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)
+	
+	state._hue = null
+	state._saturation = null
+}
+
+def setSaturation(saturation){
+	log.debug "setSaturation >> ${saturation}"
+	state._saturation = saturation
+	if(state._hue == null){
+		return
+	}
+	
+	def rgb = huesatToRGB(state._hue as Integer, state._saturation as Integer)
+	log.debug "setColor >> ${rgb}"
+    def body = [
+        "id": state.id,
+        "cmd": "color",
+        "data": "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})",
+        "subData": getDuration()
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+    
+    setPowerByStatus(true)
+	
+	state._hue = null
+	state._saturation = null
+}
+
 def on(){
 	log.debug "Off >> ${state.id}"
     def body = [
@@ -177,7 +228,15 @@ def callback(hubitat.device.HubResponse hubResponse){
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         log.debug jsonObj
 		
-    	sendEvent(name:"color", value: [jsonObj.state.colorRGB.red, jsonObj.state.colorRGB.green, jsonObj.state.colorRGB.blue])
+        def colors = jsonObj.state.colorRGB
+        String hex = String.format("#%02x%02x%02x", colors.red, colors.green, colors.blue);  
+        
+    	sendEvent(name:"hue", value: jsonObj.state.colorHue  )
+    	sendEvent(name:"saturation", value: jsonObj.state.colorSaturation)
+        if(jsonObj.properties.colorTemperature){
+    		sendEvent(name:"colorTemperature", value: jsonObj.properties.colorTemperature[0] as int)
+        }
+    	sendEvent(name:"color", value: hex )
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -198,7 +257,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
@@ -233,3 +292,4 @@ def huesatToRGB(float hue, float sat) {
 		case 5: return [255, p, q]
 	}
 }
+
