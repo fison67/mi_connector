@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light (v.0.0.3)
+ *  Xiaomi Light (v.0.0.4)
  *
  * MIT License
  *
@@ -67,8 +67,8 @@ def setStatus(params){
 	log.debug "${params.key} >> ${params.data}"
     def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
  	switch(params.key){
-    case "color":
-    	sendEvent(name:"color", value: params.data )
+    case "colorTemperature":
+    	sendEvent(name:"color", value: params.data as int)
     	break;
     case "power":
         if(params.data == "true"){
@@ -92,7 +92,7 @@ def refresh(){
      	"method": "GET",
         "path": "/devices/get/${state.id}",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ]
     ]
@@ -155,7 +155,7 @@ def callback(hubitat.device.HubResponse hubResponse){
         msg = parseLanMessage(hubResponse.description)
 		def jsonObj = new JsonSlurper().parseText(msg.body)
         
-        sendEvent(name:"color", value: jsonObj.properties.color)
+    	sendEvent(name:"colorTemperature", value: jsonObj.state.colorTemperature)
         sendEvent(name:"level", value: jsonObj.properties.brightness)
         sendEvent(name:"switch", value: jsonObj.properties.power == true ? "on" : "off")
 	    
@@ -179,7 +179,7 @@ def makeCommand(body){
      	"method": "POST",
         "path": "/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent._getServerURL(),
             "Content-Type": "application/json"
         ],
         "body":body
