@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.32)
+ *  Mi Connector (v.0.0.33)
  *
  * MIT License
  *
@@ -56,9 +56,9 @@ def mainPage() {
 	def languageList = ["English", "Korean"]
     dynamicPage(name: "mainPage", title: "Mi Connector", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
-        	input "address", "string", title: "Server address", required: true, description:"ex)192.168.0.100:30000"
+        	input "address", "text", title: "Server address", required: true, description:"ex)192.168.0.100:30000"
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
-            input "externalAddress", "string", title: "External network address", required: false
+            input "externalAddress", "text", title: "External network address", required: false
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Local Management", description:"This makes you easy to setup"
         	href url:"http://${settings.externalAddress}", style:"embedded", required:false, title:"External Management", description:"This makes you easy to setup"
         }
