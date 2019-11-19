@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.33)
+ *  Mi Connector (v.0.0.34)
  *
  * MIT License
  *
@@ -378,7 +378,7 @@ def addDevice(){
         def dth = null
         def name = null
 
-        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.sa2"){
+        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4"){
         	dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
         }else if(params.type == "lumi.gateway.v2"){
@@ -408,7 +408,7 @@ def addDevice(){
         }else if(params.type == "lumi.cube" || params.type == "lumi.cube.aq2"){
         	dth = "Xiaomi Cube";
             name = "Xiaomi Cube";
-        }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1"){
+        }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1" || params.type == "zhimi.humidifier.cb2"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
         }else if(params.type == "shuii.humidifier.jsq001"){
