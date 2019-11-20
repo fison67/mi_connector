@@ -106,7 +106,6 @@ Added support devices.
 |   | zhimi.airpurifier.v7  |   X |    |
 |   | zhimi.airpurifier.mc1  |   X |    |
 |   | zhimi.airpurifier.ma2  |   X |    |
-|   | zhimi.airpurifier.ma4  |   X |    |
 | Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |  O |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
