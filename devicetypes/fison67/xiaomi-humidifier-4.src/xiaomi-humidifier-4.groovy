@@ -79,6 +79,15 @@ metadata {
         		attributeState "level", action:"switch level.setLevel"
 		    }
 		}
+        valueTile("gearLabel", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Gear'
+        }
+        standardTile("gear", "device.gear", width: 3, height: 1) {
+            state "1", label:'Low'
+            state "2", label:'Medium'
+            state "3", label:'High'
+            state "4", label:'Humidity'
+        }
         valueTile("waterLabel", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Water'
         }
@@ -122,7 +131,7 @@ metadata {
         }        
 		
         main (["switch"])
-        details(["switch", "waterLabel", "water", "waterTankLabel", "waterTank", "buzzer", "led", "gear1", "gear2", "gear3", "gear4", "refresh"])
+        details(["switch", "gearLabel", "gear", "waterLabel", "water", "waterTankLabel", "waterTank", "buzzer", "led", "gear1", "gear2", "gear3", "gear4", "refresh"])
 	}
 }
 
