@@ -160,7 +160,7 @@ def setStatus(params){
     	sendEvent(name:"buzzer", value: params.data == "true" ? "on" : "off" )
         break;
     case "gear":
-    	sendEvent(name:"mode", value: params.data as int)
+    	sendEvent(name:"gear", value: params.data as int)
     	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data as int)
