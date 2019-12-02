@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.5)
+ *  Xiaomi Air Purifier (v.0.0.6)
  *
  * MIT License
  *
@@ -156,7 +156,7 @@ metadata {
 	simulator {
 	}
 	preferences {
-		input name:"model", type:"enum", title:"Select Model", options:["MiAirPurifier", "MiAirPurifier2", "MiAirPurifierPro", "MiAirPurifier2S"], description:"Select Your Airpurifier Model"
+		input name:"model", type:"enum", title:"Select Model", options:["MiAirPurifier", "MiAirPurifier2", "MiAirPurifierPro", "MiAirPurifier2S", "MiAirPurifier3"], description:"Select Your Airpurifier Model"
         input name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: ["English", "Korean"], defaultValue: "English", description:"Language for DTH"
         
         input name: "totalChartType", title:"Total-Chart Type" , type: "enum", required: true, options: ["line", "bar"], defaultValue: "line", description:"Total Chart Type [ line, bar ]" 
@@ -417,6 +417,9 @@ def setStatus(params){
     case "mode":
     	if(params.data != "idle") {
         	state.lastMode = params.data
+            try{
+        		sendEvent(name:"level", value: state.lastLevel as int )
+            }catch(err){}
         	sendEvent(name:"mode", value: params.data )
         }
         if(params.data == "auto"){
@@ -457,7 +460,11 @@ def setStatus(params){
     	break;
     case "favoriteLevel":
 		def stf = Float.parseFloat(params.data)
-		def level = Math.round(stf*6.25)    
+        def level = Math.round(stf*6.25)   
+	    if(model == "MiAirPurifier3"){
+        	level = Math.round(stf*7.14)
+        }
+        state.lastLevel = level
         sendEvent(name:"level", value: level)
         sendEvent(name:"fanSpeed", value: calFanSpeed(level))
     	break;
@@ -533,7 +540,10 @@ def setFanSpeed(speed){
 }
 
 def setLevel(level){
-	def speed = Math.round(level/6.25)    
+	def speed = Math.round(level/6.25)   
+    if(model == "MiAirPurifier3"){
+        level = Math.round(stf/7.14)
+    }
 	log.debug "setLevel >> " + level + " >> " + speed
     if(model != "MiAirPurifier"){
         def body = [
@@ -835,6 +845,9 @@ def callback(physicalgraph.device.HubResponse hubResponse){
 	//
 		if(jsonObj.properties.favoriteLevel != null && jsonObj.properties.favoriteLevel != ""){
         	def level = Math.round(jsonObj.properties.favoriteLevel*6.25)   
+            if(model == "MiAirPurifier3"){
+                level = Math.round(jsonObj.properties.favoriteLevel*7.14)
+            }
             sendEvent(name:"level", value: level)
             sendEvent(name:"fanSpeed", value: calFanSpeed(level))
         }
