@@ -106,6 +106,8 @@ Added support devices.
 |   | zhimi.airpurifier.v7  |   X |    |
 |   | zhimi.airpurifier.mc1  |   X |    |
 |   | zhimi.airpurifier.ma2  |   X |    |
+|   | zhimi.airpurifier.ma4  |   O |    |
+|   | zhimi.airpurifier.sa2  |   △ |    |
 | Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |  O |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
@@ -146,6 +148,9 @@ Added support devices.
 |   | yeelink.light.ceiling4  |   O |    |
 |   | yeelink.light.ceiling5  |   O |    |
 |   | yeelink.light.ceiling6  |   O |    |
+|   | yeelink.light.ceiling7  |   △ |    |
+|   | yeelink.light.ceiling8  |   △ |    |
+|   | yeelink.light.ceiling9  |   △ |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
