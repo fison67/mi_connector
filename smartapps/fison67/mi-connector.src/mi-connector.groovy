@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.39)
+ *  Mi Connector (v.0.0.40)
  *
  * MIT License
  *
@@ -438,9 +438,12 @@ def addDevice(){
         }else if(params.type == "philips.light.moonlight"){
         	dth = "Xiaomi Philips Bedside Lamp";
             name = "Xiaomi Philips Bedside Lamp";
-        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s" || params.type == "roborock.vacuum.s6" || params.type == "viomi.vacuum.v7"){
+        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s" || params.type == "roborock.vacuum.s6"){
         	dth = "Xiaomi Vacuums";
             name = "Xiaomi Vacuums";
+        }else if(params.type == "viomi.vacuum.v7"){
+        	dth = "Xiaomi Vacuum Viomi";
+            name = "Xiaomi Vacuum Viomi";
         }else if(params.type == "roborock.vacuum.s5" || params.type == "roborock.vacuum.s6"){
         	dth = "Xiaomi Vacuums2";
             name = "Xiaomi Vacuums2";
