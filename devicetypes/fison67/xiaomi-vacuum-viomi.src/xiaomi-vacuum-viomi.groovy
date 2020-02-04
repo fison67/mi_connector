@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Vacuums Viomi (v.0.0.1)
+ *  Xiaomi Vacuum Viomi (v.0.0.1)
  *
  * MIT License
  *
@@ -246,7 +246,8 @@ def refresh(){
 def silent(){
     def body = [
         "id": state.id,
-        "cmd": "silent"
+        "cmd": "fanSpeed",
+        "data": 0
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -255,7 +256,8 @@ def silent(){
 def standard(){
     def body = [
         "id": state.id,
-        "cmd": "standard"
+        "cmd": "fanSpeed",
+        "data": 1
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -264,7 +266,8 @@ def standard(){
 def medium(){
     def body = [
         "id": state.id,
-        "cmd": "medium"
+        "cmd": "fanSpeed",
+        "data": 2
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -273,7 +276,8 @@ def medium(){
 def turbo(){
     def body = [
         "id": state.id,
-        "cmd": "turbo"
+        "cmd": "fanSpeed",
+        "data": 3
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
