@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.40)
+ *  Mi Connector (v.0.0.41)
  *
  * MIT License
  *
@@ -432,9 +432,12 @@ def addDevice(){
         }else if(params.type == "philips.light.downlight"){
         	dth = "Xiaomi Philips Downlight";
             name = "Xiaomi Philips Downlight";
-        }else if(params.type == "philips.light.sread1" || params.type == "philips.light.bulb"){
+        }else if(params.type == "philips.light.bulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
+        }else if(params.type == "philips.light.sread1"){
+        	dth = " Xiaomi Philips Sread";
+            name = " Xiaomi Philips Sread";
         }else if(params.type == "philips.light.moonlight"){
         	dth = "Xiaomi Philips Bedside Lamp";
             name = "Xiaomi Philips Bedside Lamp";
