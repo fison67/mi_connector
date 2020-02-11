@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.41)
+ *  Mi Connector (v.0.0.42)
  *
  * MIT License
  *
@@ -447,7 +447,7 @@ def addDevice(){
         }else if(params.type == "viomi.vacuum.v7"){
         	dth = "Xiaomi Vacuum Viomi";
             name = "Xiaomi Vacuum Viomi";
-        }else if(params.type == "roborock.vacuum.s5" || params.type == "roborock.vacuum.s6"){
+        }else if(params.type == "roborock.vacuum.s5" || params.type == "roborock.vacuum.s5e" || params.type == "roborock.vacuum.s6"){
         	dth = "Xiaomi Vacuums2";
             name = "Xiaomi Vacuums2";
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
