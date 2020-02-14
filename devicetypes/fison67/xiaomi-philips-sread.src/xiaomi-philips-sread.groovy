@@ -106,7 +106,7 @@ metadata {
             state "default", label:'Reading', action:"modeReading"
         }   
         valueTile("modePhone", "device.modePhone", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'Reading', action:"modePhone"
+            state "default", label:'Phone', action:"modePhone"
         }   
         valueTile("mode", "device.mode", decoration: "flat", width: 2, height: 2) {
             state "default", label:'${currentValue}'
