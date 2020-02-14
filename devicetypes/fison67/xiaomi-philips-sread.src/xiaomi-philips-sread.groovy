@@ -37,6 +37,7 @@ metadata {
         capability "Switch Level"
         capability "Light"
         
+        attribute "ambientLevel", "number"
         attribute "ambientPower", "string"
         attribute "mode", "string"
         attribute "eyeCare", "string"
@@ -51,6 +52,7 @@ metadata {
         command "modePhone"
         command "ambientOn"
         command "ambientOff"
+        command "setAmbientLevel"
         
         
 	}
@@ -129,9 +131,22 @@ metadata {
         }   
         valueTile("ambientOff", "device.ambientOff", width: 2, height: 1, decoration: "flat") {
             state "default", label:'Ambient OFF', action:"ambientOff"
-        }   
+        }
+        valueTile("ambient_label", "", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Ambient'
+        }
+        standardTile("ambientPower", "device.ambientPower", inactiveLabel: false, width: 2, height: 1, canChangeIcon: true) {
+            state "on", label:'${name}', action:"ambientOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "off", label:'${name}', action:"ambientOn", backgroundColor:"#ffffff", nextState:"turningOn"
+             
+        	state "turningOn", label:'....', action:"ambientOff", backgroundColor:"#00a0dc", nextState:"turningOff"
+            state "turningOff", label:'....', action:"ambientOn", backgroundColor:"#ffffff", nextState:"turningOn"
+        }
+        controlTile("ambientLevel", "device.ambientLevel", "slider", height: 1, width: 2, inactiveLabel: false, range:"(0..100)") {
+			state ("ambientLevel", label:'${currentValue}', action:"setAmbientLevel")
+		}
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCare_label", "eyeCareOn", "eyeCareOff", "mode_label", "mode", "mode2_label", "modeStudy", "modeReading", "modePhone", "ambientOn", "ambientOff" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCare_label", "eyeCareOn", "eyeCareOff", "mode_label", "mode", "mode2_label", "modeStudy", "modeReading", "modePhone", "ambient_label", "ambientPower", "ambientLevel" ])       
 	}
 }
 
@@ -171,6 +186,9 @@ def setStatus(params){
     	break
     case "ambientPower":
     	sendEvent(name:"ambientPower", value: params.data == "true" ? "on" : "off")
+    	break
+    case "ambientBrightness":
+    	sendEvent(name:"ambientLevel", value: params.data as int)
     	break
     }
     sendEvent(name: "lastCheckin", value: now, displayed: false)
@@ -293,6 +311,16 @@ def ambientOff(){
         "id": state.id,
         "cmd": "setAmbientPower",
         "data": false
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def setAmbientLevel(level){
+    def body = [
+        "id": state.id,
+        "cmd": "setAmbientBrightness",
+        "data": level
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
