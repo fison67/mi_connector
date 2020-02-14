@@ -93,27 +93,36 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
-        valueTile("eyeCareOn", "device.eyeCareOn", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'EyeCare ON', action:"eyeCareOn"
+        valueTile("eyeCare_label", "", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'EyeCare'
+        }
+        valueTile("eyeCareOn", "device.eyeCareOn", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'ON', action:"eyeCareOn"
         }   
-        valueTile("eyeCareOff", "device.eyeCareOff", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'EyeCare OFF', action:"eyeCareOff"
+        valueTile("eyeCareOff", "device.eyeCareOff", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'OFF', action:"eyeCareOff"
         }   
-        valueTile("modeStudy", "device.modeStudy", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'Study', action:"modeStudy"
-        }   
-        valueTile("modeReading", "device.modeReading", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'Reading', action:"modeReading"
-        }   
-        valueTile("modePhone", "device.modePhone", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'Phone', action:"modePhone"
-        }   
-        valueTile("mode", "device.mode", decoration: "flat", width: 2, height: 2) {
+        valueTile("mode_label", "", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Current Mode'
+        }
+        valueTile("mode", "device.mode", decoration: "flat", width: 4, height: 1) {
             state "default", label:'${currentValue}'
         }
         
+        valueTile("mode2_label", "", decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Control Mode'
+        }
+        valueTile("modeStudy", "device.modeStudy", width: 1, height: 1, decoration: "flat") {
+            state "default", label:'Study', action:"modeStudy"
+        }   
+        valueTile("modeReading", "device.modeReading", width: 1, height: 1, decoration: "flat") {
+            state "default", label:'Reading', action:"modeReading"
+        }   
+        valueTile("modePhone", "device.modePhone", width: 1, height: 1, decoration: "flat") {
+            state "default", label:'Phone', action:"modePhone"
+        }   
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff", "modeStudy", "modeReading", "modePhone", "mode" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCare_label", "eyeCareOn", "eyeCareOff", "mode_label", "mode", "mode2_label", "modeStudy", "modeReading", "modePhone" ])       
 	}
 }
 
