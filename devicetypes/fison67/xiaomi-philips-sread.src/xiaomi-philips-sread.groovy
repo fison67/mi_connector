@@ -205,8 +205,8 @@ def eyeCareOn(){
 	log.debug "EYECARE ON"
     def body = [
         "id": state.id,
-        "cmd": "eyecare",
-        "data": "on"
+        "cmd": "eyeCare",
+        "data": true
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
@@ -216,8 +216,8 @@ def eyeCareOff(){
 	log.debug "EYECARE OFF"
 	def body = [
         "id": state.id,
-        "cmd": "eyecare",
-        "data": "off"
+        "cmd": "eyeCare",
+        "data": false
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
