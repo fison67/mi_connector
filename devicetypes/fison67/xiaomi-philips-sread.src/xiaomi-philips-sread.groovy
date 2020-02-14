@@ -142,7 +142,7 @@ metadata {
         	state "turningOn", label:'....', action:"ambientOff", backgroundColor:"#00a0dc", nextState:"turningOff"
             state "turningOff", label:'....', action:"ambientOn", backgroundColor:"#ffffff", nextState:"turningOn"
         }
-        controlTile("ambientLevel", "device.ambientLevel", "slider", height: 1, width: 2, inactiveLabel: false, range:"(0..100)") {
+        controlTile("ambientLevel", "device.ambientLevel", "slider", height: 1, width: 2, inactiveLabel: false, range:"(1..100)") {
 			state ("ambientLevel", label:'${currentValue}', action:"setAmbientLevel")
 		}
         main (["switch"])
