@@ -37,6 +37,7 @@ metadata {
         capability "Switch Level"
         capability "Light"
         
+        attribute "ambientPower", "string"
         attribute "mode", "string"
         attribute "eyeCare", "string"
         attribute "lastOn", "string"
@@ -48,6 +49,8 @@ metadata {
         command "modeStudy"
         command "modeReading"
         command "modePhone"
+        command "ambientOn"
+        command "ambientOff"
         
         
 	}
@@ -121,8 +124,14 @@ metadata {
         valueTile("modePhone", "device.modePhone", width: 1, height: 1, decoration: "flat") {
             state "default", label:'Phone', action:"modePhone"
         }   
+        valueTile("ambientOn", "device.ambientOn", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'Ambient ON', action:"ambientOn"
+        }   
+        valueTile("ambientOff", "device.ambientOff", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'Ambient OFF', action:"ambientOff"
+        }   
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCare_label", "eyeCareOn", "eyeCareOff", "mode_label", "mode", "mode2_label", "modeStudy", "modeReading", "modePhone" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCare_label", "eyeCareOn", "eyeCareOff", "mode_label", "mode", "mode2_label", "modeStudy", "modeReading", "modePhone", "ambientOn", "ambientOff" ])       
 	}
 }
 
@@ -159,6 +168,9 @@ def setStatus(params){
     	break
     case "mode":
     	sendEvent(name:"mode", value: params.data)
+    	break
+    case "ambientPower":
+    	sendEvent(name:"ambientPower", value: params.data == "true" ? "on" : "off")
     	break
     }
     sendEvent(name: "lastCheckin", value: now, displayed: false)
@@ -259,6 +271,28 @@ def modePhone(){
         "id": state.id,
         "cmd": "mode",
         "data": "phone"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def ambientOn(){
+	log.debug "ambientOn"
+	def body = [
+        "id": state.id,
+        "cmd": "setAmbientPower",
+        "data": true
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def ambientOff(){
+	log.debug "ambientOff"
+	def body = [
+        "id": state.id,
+        "cmd": "setAmbientPower",
+        "data": false
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
