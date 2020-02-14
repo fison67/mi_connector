@@ -172,8 +172,7 @@ def setLevel(brightness){
     def body = [
         "id": state.id,
         "cmd": "brightness",
-        "data": brightness,
-        "subData": getDuration()
+        "data": brightness
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
