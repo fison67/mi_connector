@@ -95,9 +95,12 @@ metadata {
         valueTile("eyeCareOff", "device.eyeCareOff", width: 2, height: 2, decoration: "flat") {
             state "default", label:'EyeCare OFF', action:"eyeCareOff"
         }   
+        valueTile("mode", "device.mode", decoration: "flat", width: 2, height: 2) {
+            state "default", label:'${currentValue}'
+        }
         
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff", "mode" ])       
 	}
 }
 
