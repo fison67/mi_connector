@@ -37,10 +37,14 @@ metadata {
         capability "Switch Level"
         capability "Light"
         
+        attribute "eyeCare", "string"
         attribute "lastOn", "string"
         attribute "lastOff", "string"
         attribute "lastCheckin", "Date"
-         
+        
+        command "eyeCareOn"
+        command "eyeCareOff"
+        
 	}
 
 	preferences {
@@ -84,9 +88,15 @@ metadata {
             state "default", label:'${currentValue}'
         }
         
+        valueTile("eyeCareOn", "device.eyeCareOn", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'EyeCare ON', action:"eyeCareOn"
+        }   
+        valueTile("eyeCareOff", "device.eyeCareOff", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'EyeCare OFF', action:"eyeCareOff"
+        }   
         
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff" ])       
 	}
 }
 
@@ -118,6 +128,9 @@ def setStatus(params){
     case "brightness":
     	sendEvent(name:"level", value: params.data as int)
     	break;
+    case "eyeCare":
+    	sendEvent(name:"eyeCare", value: params.data == "true" ? "on" : "off")
+    	break
     }
     sendEvent(name: "lastCheckin", value: now, displayed: false)
 }
@@ -167,6 +180,29 @@ def off(){
     def options = makeCommand(body)
     sendCommand(options, null)
 }
+
+def eyeCareOn(){
+	log.debug "EYECARE ON"
+    def body = [
+        "id": state.id,
+        "cmd": "eyecare",
+        "data": "on"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def eyeCareOff(){
+	log.debug "EYECARE OFF"
+	def body = [
+        "id": state.id,
+        "cmd": "eyecare",
+        "data": "off"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
 
 
 def callback(physicalgraph.device.HubResponse hubResponse){
