@@ -45,6 +45,10 @@ metadata {
         
         command "eyeCareOn"
         command "eyeCareOff"
+        command "modeStudy"
+        command "modeReading"
+        command "modePhone"
+        
         
 	}
 
@@ -95,12 +99,21 @@ metadata {
         valueTile("eyeCareOff", "device.eyeCareOff", width: 2, height: 2, decoration: "flat") {
             state "default", label:'EyeCare OFF', action:"eyeCareOff"
         }   
+        valueTile("modeStudy", "device.modeStudy", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'Study', action:"modeStudy"
+        }   
+        valueTile("modeReading", "device.modeReading", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'Reading', action:"modeReading"
+        }   
+        valueTile("modePhone", "device.modePhone", width: 2, height: 2, decoration: "flat") {
+            state "default", label:'Reading', action:"modePhone"
+        }   
         valueTile("mode", "device.mode", decoration: "flat", width: 2, height: 2) {
             state "default", label:'${currentValue}'
         }
         
         main (["switch"])
-        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff", "mode" ])       
+        details(["switch", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff", "eyeCareOn", "eyeCareOff", "modeStudy", "modeReading", "modePhone", "mode" ])       
 	}
 }
 
@@ -210,7 +223,38 @@ def eyeCareOff(){
     sendCommand(options, null)
 }
 
+def modeStudy(){
+	log.debug "modeStudy"
+	def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "study"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
 
+def modeReading(){
+	log.debug "modeReading"
+	def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "reading"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
+
+def modePhone(){
+	log.debug "modePhone"
+	def body = [
+        "id": state.id,
+        "cmd": "mode",
+        "data": "phone"
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
+}
 
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
