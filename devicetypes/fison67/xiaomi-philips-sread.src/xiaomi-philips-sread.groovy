@@ -37,6 +37,7 @@ metadata {
         capability "Switch Level"
         capability "Light"
         
+        attribute "mode", "string"
         attribute "eyeCare", "string"
         attribute "lastOn", "string"
         attribute "lastOff", "string"
@@ -130,6 +131,9 @@ def setStatus(params){
     	break;
     case "eyeCare":
     	sendEvent(name:"eyeCare", value: params.data == "true" ? "on" : "off")
+    	break
+    case "mode":
+    	sendEvent(name:"mode", value: params.data)
     	break
     }
     sendEvent(name: "lastCheckin", value: now, displayed: false)
