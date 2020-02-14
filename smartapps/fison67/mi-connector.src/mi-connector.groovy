@@ -436,8 +436,8 @@ def addDevice(){
         	dth = "Xiaomi Light";
             name = "Philips Light";
         }else if(params.type == "philips.light.sread1"){
-        	dth = " Xiaomi Philips Sread";
-            name = " Xiaomi Philips Sread";
+        	dth = "Xiaomi Philips Sread";
+            name = "Xiaomi Philips Sread";
         }else if(params.type == "philips.light.moonlight"){
         	dth = "Xiaomi Philips Bedside Lamp";
             name = "Xiaomi Philips Bedside Lamp";
