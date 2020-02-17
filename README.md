@@ -113,15 +113,21 @@ Added support devices.
 |   | zhimi.airpurifier.ma2  |   X |    |
 |   | zhimi.airpurifier.ma4  |   O |    |
 |   | zhimi.airpurifier.sa2  |   △ |    |
+|   | zhimi.airpurifier.mb3  |   △ |    |
 | Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |  O |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
 |   | zhimi.humidifier.cb2  |   X |    |
 |   | shuii.humidifier.jsq001  |   O |  O  |
+|   | deerma.humidifier.mjjsq  |   O |  O  |
+| Xiaomi Dehumidifier  | nwt.derh.wdh318efw1  |   X |    |
 | Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
 |   | roborock.vacuum.c1  |   X |    |
 |   | roborock.vacuum.s5  |   X |    |
 |   | roborock.vacuum.s6  |   X |    |
+|   | roborock.vacuum.s5e  |   X |    |
+|   | roborock.vacuum.m1s  |   X |    |
+|   | roborock.vacuum.e2  |   X |    |
 |   | viomi.vacuum.v6  |   X |    |
 |   | viomi.vacuum.v7  |   X |    |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
@@ -159,6 +165,7 @@ Added support devices.
 |   | yeelink.light.ceiling7  |   △ |    |
 |   | yeelink.light.ceiling8  |   △ |    |
 |   | yeelink.light.ceiling9  |   △ |    |
+|   | yeelink.light.ceiling14  |   △ |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
