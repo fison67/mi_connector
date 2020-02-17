@@ -55,6 +55,11 @@ If this project helps you, you can give me a cup of coffee<br/>
 
 # Release Notes
 
+### Version: 0.0.5
+```
+Added support devices.
+```
+
 ### Version: 0.0.4
 ```
 Added a function to add a device by db file.
