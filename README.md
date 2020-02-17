@@ -116,6 +116,9 @@ Added support devices.
 | Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
 |   | roborock.vacuum.c1  |   X |    |
 |   | roborock.vacuum.s5  |   X |    |
+|   | roborock.vacuum.s6  |   X |    |
+|   | viomi.vacuum.v6  |   X |    |
+|   | viomi.vacuum.v7  |   X |    |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
 |   | chuangmi.plug.v2  |   X |    |
 |   | chuangmi.plug.v3  |   O |  O  |
@@ -155,6 +158,7 @@ Added support devices.
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 | Philips Bedside Lamp  | philips.light.moonlight  |   O |   O |
+| Philips Light  | philips.light.sread1  |   △ |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 |   | chuangmi.remote.h102a03  |   △ |  O |
 |   | chuangmi.remote.v2  |   △ |  O |
