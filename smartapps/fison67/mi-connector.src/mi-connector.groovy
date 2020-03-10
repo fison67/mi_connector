@@ -441,7 +441,7 @@ def addDevice(){
         }else if(params.type == "philips.light.moonlight"){
         	dth = "Xiaomi Philips Bedside Lamp";
             name = "Xiaomi Philips Bedside Lamp";
-        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s" || params.type == "roborock.vacuum.s6"){
+        }else if(params.type == "rockrobo.vacuum.v1" || params.type == "roborock.vacuum.c1" || params.type == "roborock.vacuum.m1s" || params.type == "roborock.vacuum.s6" || params.type == "roborock.vacuum.e2"){
         	dth = "Xiaomi Vacuums";
             name = "Xiaomi Vacuums";
         }else if(params.type == "viomi.vacuum.v6" || params.type == "viomi.vacuum.v7"){
