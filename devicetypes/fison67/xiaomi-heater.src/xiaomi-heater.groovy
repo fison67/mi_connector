@@ -44,7 +44,7 @@ LANGUAGE_MAP = [
 
 
 metadata {
-	definition (name: "Xiaomi Heater2", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Heater", namespace: "fison67", author: "fison67") {
 
 		capability "Actuator"
 		capability "Temperature Measurement"
@@ -213,11 +213,11 @@ def setStatus(params){
  
  	switch(params.key){
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data )
+    	sendEvent(name:"humidity", value: params.data, displayed: false )
     	break;
     case "power":
         sendEvent(name:"thermostatMode", value: (params.data == "true" ? "heat" : "off"))
-        sendEvent(name:"mode2", value: (params.data == "true" ? state.st : "off"))
+        sendEvent(name:"mode2", value: (params.data == "true" ? state.st : "off"), displayed: false)
     	break;
     case "temperature":
 	    def Settemp = device.currentValue('heatingSetpoint')
@@ -228,12 +228,12 @@ def setStatus(params){
 		def st = data.replace("C","");
 		def stf = Float.parseFloat(st)
 		def tem = Math.round(stf*100)/10 as float
-        sendEvent(name:"temperature", value: tem )
+        sendEvent(name:"temperature", value: tem, displayed: false )
         sendEvent(name:"thermostatOperatingState", value: (tem >= Settemp ? "idle" : "heating" ))
     	break;    
     //case "targetTemperature":
       //  sendEvent(name:"level", value: params.data)
-        case "targetTemperature":
+    case "targetTemperature":
 	    def Curtemp = device.currentValue('temperature')
 		def para = "${params.data}"
 		String data = para
@@ -242,30 +242,30 @@ def setStatus(params){
 		def tem = Math.round(stf*10)/10
         sendEvent(name:"heatingSetpoint", value: tem)
         sendEvent(name:"thermostatOperatingState", value: (tem <= Curtemp ? "idle" : "heating" ))
-        sendEvent(name:"mode2", value: (device.currentValue('thermostatMode') == "heat" ? tem : "off"))
+        sendEvent(name:"mode2", value: (device.currentValue('thermostatMode') == "heat" ? tem : "off"), displayed: false)
     	break;
     case "ledBrightness":
-        sendEvent(name:"ledBrightness", value: params.data)
+        sendEvent(name:"ledBrightness", value: params.data, displayed: false)
     	break;        
     case "buzzer":
-    	sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off") )
+    	sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off"), displayed: false )
         break;
     case "childLock":
-    	sendEvent(name:"childlock", value: (params.data == "on" ? "on" : "off") )
+    	sendEvent(name:"childlock", value: (params.data == "on" ? "on" : "off"), displayed: false )
         break;
     case "powerOffTime":
     	state.rsec = params.data as int
     	state.trmin = (state.rsec/60) as int
         state.rhour = (state.trmin/60) as int
         state.rmin = state.trmin - state.rhour*60
-    	sendEvent(name:"remaintime", value: "${state.rhour}h ${state.rmin}min")
+    	sendEvent(name:"remaintime", value: "${state.rhour}h ${state.rmin}min", displayed: false)
         break;
         
     }
     
     def nowT = new Date().format("HH:mm:ss", location.timeZone)
     def nowD = new Date().format("yyyy-MM-dd", location.timeZone)
-    sendEvent(name: "lastCheckin", value: nowD + "\n" + nowT)
+    sendEvent(name: "lastCheckin", value: nowD + "\n" + nowT, displayed: false)
 }
 
 def settimer(setmin){
@@ -365,6 +365,28 @@ def heat(){
     ]
     def options = makeCommand(body)
     sendCommand(options, null)
+}
+
+def setThermostatMode(mode){
+	log.debug "setThermostatMode " + mode
+	switch(mode){
+    case "auto":
+    	heat()
+        sendEvent(name:"thermostatMode", value: "auto")
+    	break
+    case "heat":
+    	heat()
+        sendEvent(name:"thermostatMode", value: "heat")
+    	break
+    case "off":
+    	off()
+        sendEvent(name:"thermostatMode", value: "off")
+		break
+    }
+}
+
+def setHeatingSetpoint(temp) {
+	setLevel(temp)
 }
 
 def off(){
