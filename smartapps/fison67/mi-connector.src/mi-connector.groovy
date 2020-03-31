@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.43)
+ *  Mi Connector (v.0.0.44)
  *
  * MIT License
  *
@@ -378,10 +378,10 @@ def addDevice(){
         def dth = null
         def name = null
 
-        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4" || params.type == "zhimi.airpurifier.mb3"){
+        if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.mc2" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4" || params.type == "zhimi.airpurifier.mb3"){
         	dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
-        }else if(params.type == "lumi.gateway.v2"){
+        }else if(params.type == "lumi.gateway.v2" || params.type == "lumi.gateway.mieu01"){
         	dth = "Xiaomi Gateway";
             name = "Xiaomi Gateway V2";
         }else if(params.type == "lumi.gateway.v3"){
@@ -432,7 +432,7 @@ def addDevice(){
         }else if(params.type == "philips.light.downlight"){
         	dth = "Xiaomi Philips Downlight";
             name = "Xiaomi Philips Downlight";
-        }else if(params.type == "philips.light.bulb"){
+        }else if(params.type == "philips.light.bulb" || params.type == "philips.light.hbulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
         }else if(params.type == "philips.light.sread1"){
@@ -453,7 +453,7 @@ def addDevice(){
         }else if(params.type == "qmi.powerstrip.v1" || params.type == "zimi.powerstrip.v2"){
         	dth = "Xiaomi Power Strip";
             name = "Xiaomi Power Strip";
-        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.v3" || params.type == "chuangmi.plug.m1"|| params.type == "chuangmi.plug.m2" || params.type == "chuangmi.plug.m3" || params.type == "lumi.plug"){
+        }else if(params.type == "chuangmi.plug.v1" || params.type == "chuangmi.plug.v2" || params.type == "chuangmi.plug.v3" || params.type == "chuangmi.plug.m1"|| params.type == "chuangmi.plug.m2" || params.type == "chuangmi.plug.m3" || params.type == "lumi.plug" || params.type == "chuangmi.plug.hmi205" || params.type == "chuangmi.plug.hmi206"){
         	dth = "Xiaomi Power Plug";
             name = "Xiaomi Power Plug";
         }else if(params.type == "chuangmi.plug.v3"){
