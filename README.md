@@ -46,6 +46,7 @@ If this project helps you, you can give me a cup of coffee<br/>
 		- [Install DTH with GitHub Repo integration](#install-dth-with-github-repo-integration)
 	- [Install SmartApp](#install-smartapp)
 		- [Install SmartApp with GitHub Repo integration](#install-smartapp-with-github-repo-integration)
+	- [Install Bluetooth Bridge](#install-bluetooth-bridge)
 - [Troubleshooting](#troubleshooting)
 - [Library](#library)
 - [License](#license)
@@ -165,12 +166,14 @@ Added support devices.
 |   | yeelink.light.ceiling7  |   △ |    |
 |   | yeelink.light.ceiling8  |   △ |    |
 |   | yeelink.light.ceiling9  |   △ |    |
+|   | yeelink.light.ceiling13  |   △ |    |
 |   | yeelink.light.ceiling14  |   △ |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
 | Philips Bedside Lamp  | philips.light.moonlight  |   O |   O |
 | Philips Light  | philips.light.sread1  |   △ |    |
+|   | philips.light.bulb  |   △ |    |
 |  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
 |   | chuangmi.remote.h102a03  |   △ |  O |
 |   | chuangmi.remote.v2  |   △ |  O |
@@ -416,6 +419,12 @@ Update Click
 12. Click on the "Update" button
 ```
 Step 3 and 4 are only needed if the repo has not been added earlier (e.g. in the DTH installation).
+
+## Install Bluetooth Bridge
+See the [Manual](ble-bridge/README.md) for details
+```
+Burn a binary to ESP32
+```
 
 # Troubleshooting
 ### Suddenly Mi Connector can't connect to Xiaomi devices
