@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Gateway (v.0.0.2)
+ *  Xiaomi Gateway (v.0.0.3)
  *
  * MIT License
  *
@@ -49,6 +49,8 @@ metadata {
         command "chartIlluminance"
         
      	command "sirenByID"
+        command "ledOn"
+        command "ledOff"
 	}
 
 
