@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.44)
+ *  Mi Connector (v.0.0.45)
  *
  * MIT License
  *
@@ -462,7 +462,7 @@ def addDevice(){
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1" ){
         	dth = "Xiaomi Wall Switch";
             name = "Xiaomi Wall Switch";
-        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
+        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2" || params.type == "lumi.relay"){
         	dth = "Xiaomi Wall Switch";
             name = "Xiaomi Wall Switch";
         }else if(params.type == "lumi.sensor_ht"){
@@ -572,7 +572,7 @@ def addDevice(){
                 def resultString = new groovy.json.JsonOutput().toJson("result":"fail")
                 render contentType: "application/javascript", data: resultString
             }
-        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2"){
+        }else if(params.type == "lumi.ctrl_neutral2" || params.type == "lumi.ctrl_ln2" || params.type == "lumi.relay"){
         	try{
             	def index = 1;
             	for (def i = 0; i <2; i++) {
