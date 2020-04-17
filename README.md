@@ -196,6 +196,7 @@ Added support devices.
 | Xiaomi Cube | lumi.cube  |  O  |    |
 | Xiaomi Wall Switch | lumi.ctrl_neutral1  |  O  |    |
 |  | lumi.ctrl_neutral2  |  O  |    |
+| Xiaomi Relay | lumi.relay  |  O  |    |
 | Xiaomi Smoke Sensor | lumi.smoke  |  O  |    |
 | Xiaomi Gas Sensor | lumi.gas  |  O  |    |
 | Xiaomi Water Sensor | lumi.water  |  O  |    |
@@ -244,6 +245,7 @@ Added support devices.
 <img src="./imgs/product/xiaomi-air-fresh.jpg?raw=true" title="Xiaomi Air Fresh" width="200px">
 <img src="./imgs/product/xiaomi-eink-temperature.jpeg?raw=true" title="Xiaomi E-Ink Temperatre" width="200px">
 <img src="./imgs/product/xiaomi-circulator.png?raw=true" title="Xiaomi Circulator" width="200px">
+<img src="./imgs/product/aqara-relay.jfif?raw=true" title="Relay" width="200px">
 
 
 # Installation
