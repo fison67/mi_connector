@@ -486,7 +486,7 @@ def addDevice(){
 		}else if(params.type == "lumi.smoke"){
         	dth = "Xiaomi Smoke Detector";
             name = "Xiaomi Smoke Detector";
-        }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"|| params.type == "yeelink.light.ceiling3"|| params.type == "yeelink.light.ceiling4" || params.type == "yeelink.light.ceiling5"|| params.type == "yeelink.light.ceiling6"|| params.type == "yeelink.light.ceiling7"|| params.type == "yeelink.light.ceiling8"|| params.type == "yeelink.light.ceiling9" || params.type == "yeelink.light.ceiling10"|| params.type == "yeelink.light.ceiling11" || params.type == "yeelink.light.ceiling12" || params.type == "yeelink.light.ceiling13" || params.type == "yeelink.light.ceiling14"){
+        }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"|| params.type == "yeelink.light.ceiling3"|| params.type == "yeelink.light.ceiling4" || params.type == "yeelink.light.ceiling5"|| params.type == "yeelink.light.ceiling6"|| params.type == "yeelink.light.ceiling7"|| params.type == "yeelink.light.ceiling8"|| params.type == "yeelink.light.ceiling9" || params.type == "yeelink.light.ceiling10"|| params.type == "yeelink.light.ceiling11" || params.type == "yeelink.light.ceiling12" || params.type == "yeelink.light.ceiling13" || params.type == "yeelink.light.ceiling14" || params.type == "yeelink.light.ceiling15.mibt54b"){
         	dth = "Xiaomi Light Ceiling";
             name = "Xiaomi Light Ceiling";
         }else if(params.type == "philips.light.ceiling" || params.type == "philips.light.zyceiling"){
