@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.45)
+ *  Mi Connector (v.0.0.46)
  *
  * MIT License
  *
@@ -408,6 +408,9 @@ def addDevice(){
         }else if(params.type == "lumi.cube" || params.type == "lumi.cube.aq2"){
         	dth = "Xiaomi Cube";
             name = "Xiaomi Cube";
+        }else if(params.type == "lumi.bulb"){
+        	dth = "Xiaomi Aqara Light"
+            name = "Xiaomi Aqara Light"
         }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1" || params.type == "zhimi.humidifier.cb2" || params.type ==  "zhimi.humidifier.cb1"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
@@ -423,7 +426,7 @@ def addDevice(){
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
-        }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2"){
+        }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2" || params.type == "yeelink.light.strip3" || params.type == "yeelink.light.strip4"){
         	dth = "Xiaomi Light Strip";
             name = "Xiaomi Light Strip";
         }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
@@ -483,7 +486,7 @@ def addDevice(){
 		}else if(params.type == "lumi.smoke"){
         	dth = "Xiaomi Smoke Detector";
             name = "Xiaomi Smoke Detector";
-        }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"|| params.type == "yeelink.light.ceiling3"|| params.type == "yeelink.light.ceiling4" || params.type == "yeelink.light.ceiling5"|| params.type == "yeelink.light.ceiling6"|| params.type == "yeelink.light.ceiling7"|| params.type == "yeelink.light.ceiling8"|| params.type == "yeelink.light.ceiling9" || params.type == "yeelink.light.ceiling14"){
+        }else if(params.type == "yeelink.light.ceiling1" || params.type == "yeelink.light.ceiling2"|| params.type == "yeelink.light.ceiling3"|| params.type == "yeelink.light.ceiling4" || params.type == "yeelink.light.ceiling5"|| params.type == "yeelink.light.ceiling6"|| params.type == "yeelink.light.ceiling7"|| params.type == "yeelink.light.ceiling8"|| params.type == "yeelink.light.ceiling9" || params.type == "yeelink.light.ceiling10"|| params.type == "yeelink.light.ceiling11" || params.type == "yeelink.light.ceiling12" || params.type == "yeelink.light.ceiling13" || params.type == "yeelink.light.ceiling14"){
         	dth = "Xiaomi Light Ceiling";
             name = "Xiaomi Light Ceiling";
         }else if(params.type == "philips.light.ceiling" || params.type == "philips.light.zyceiling"){
