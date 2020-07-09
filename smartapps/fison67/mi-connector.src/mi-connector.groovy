@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.47)
+ *  Mi Connector (v.0.0.49)
  *
  * MIT License
  *
@@ -420,7 +420,7 @@ def addDevice(){
        	}else if(params.type == "deerma.humidifier.mjjsq"){
         	dth = "Xiaomi Humidifier 4";
             name = "Xiaomi Humidifier 4";
-       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za3" || params.type == "zhimi.fan.za4"){	
+       	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za3" || params.type == "zhimi.fan.za4" || params.type == "zhimi.fan.za5"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
         } else if(params.type == "dmaker.fan.p5" || params.type == "dmaker.fan.p8"){	
@@ -534,7 +534,7 @@ def addDevice(){
         }else if(params.type == "lumi.acpartner.v3"){
         	dth = "Xiaomi Gateway2";
             name = "Xiaomi Gateway2";
-        }else if(params.type == "ble.mitemperature" || params.type == "ble.einktemperature"){
+        }else if(params.type == "ble.mitemperature" || params.type == "ble.einktemperature" || params.type == "ble.einktemperature.cleargrass"){
         	dth = "Xiaomi Bluetooth Weather";
             name = "Xiaomi Bluetooth Weather";
         }else if(params.type == "lumi.vibration"){
