@@ -127,8 +127,6 @@ metadata {
         	state "turningOn", label:'....', action:"buzzerOff", icon: "st.custom.sonos.muted", backgroundColor:"#d1cdd2", nextState:"turningOff"
             state "turningOff", label:'....', action:"buzzerOn", icon: "st.custom.sonos.unmuted", backgroundColor:"#f9b959", nextState:"turningOn"
         }
-        
-
 	}
 }
 
@@ -168,6 +166,9 @@ def setStatus(params){
     case "childLock":
     	sendEvent(name:"childLock", value: (params.data == "true" ? "on" : "off"))
     	break;
+    case "powerOffTime":
+        sendEvent(name:"powerOffTime", value: params.data as int)
+    	break;   
     }
     updateLastTime()
 }
