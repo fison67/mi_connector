@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.52)
+ *  Mi Connector (v.0.0.54)
  *
  * MIT License
  *
@@ -411,7 +411,7 @@ def addDevice(){
         }else if(params.type == "lumi.bulb"){
         	dth = "Xiaomi Aqara Light"
             name = "Xiaomi Aqara Light"
-        }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1" || params.type == "zhimi.humidifier.cb2" || params.type ==  "zhimi.humidifier.cb1"){
+        }else if(params.type == "zhimi.humidifier.v1" || params.type == "zhimi.humidifier.ca1" || params.type == "zhimi.humidifier.cb2" || params.type ==  "zhimi.humidifier.cb1" || params.type == "zhimi.humidifier.ca4"){
         	dth = "Xiaomi Humidifier";
             name = "Xiaomi Humidifier";
         }else if(params.type == "shuii.humidifier.jsq001"){
@@ -432,7 +432,7 @@ def addDevice(){
         }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2" || params.type == "yeelink.light.strip3" || params.type == "yeelink.light.strip4"){
         	dth = "Xiaomi Light Strip";
             name = "Xiaomi Light Strip";
-        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
+        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.lamp3" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
         	dth = "Xiaomi Light Mono";
             name = "Xiaomi Light Mono";
         }else if(params.type == "philips.light.downlight"){
