@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.55)
+ *  Mi Connector (v.0.0.56)
  *
  * MIT License
  *
@@ -417,7 +417,7 @@ def addDevice(){
         }else if(params.type == "shuii.humidifier.jsq001"){
         	dth = "Xiaomi Humidifier 3";
             name = "Xiaomi Humidifier 3";
-       	}else if(params.type == "deerma.humidifier.mjjsq"){
+       	}else if(params.type == "deerma.humidifier.mjjsq" || params.type == "deerma.humidifier.jsq"){
         	dth = "Xiaomi Humidifier 4";
             name = "Xiaomi Humidifier 4";
        	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za3" || params.type == "zhimi.fan.za4" || params.type == "zhimi.fan.za5"){	
