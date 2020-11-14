@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling Child (v.0.0.1)
+ *  Xiaomi Light Ceiling Child (v.0.0.2)
  *
  * MIT License
  *
@@ -45,33 +45,6 @@ metadata {
 		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
         input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
 	}
-
-	simulator { }
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"switch.on", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfMTA0/MDAxNTIyMTUzOTg0NzIz.62-IbE4S7wAOxe3hufTJctU8mlQmrIUQztDaSTnf3kog.sxe2rqceUxFEPqrfYZ_DLkjxM5IPSotCqhErG87DI0Mg.PNG.shin4299/Yeelight_tile_off.png?type=w580", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://postfiles.pstatic.net/MjAxODAzMjdfNjgg/MDAxNTIyMTUzOTg0NzMx.YZwxpTpbz-9oqHVDLhcLyOcdWvn6TE0RPdpB_D7kWzwg.97WcX3XnDGPr5kATUZhhGRYJ1IO1MNV2pbDvg8DXruog.PNG.shin4299/Yeelight_tile_on.png?type=w580", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-            tileAttribute ("device.color", key: "COLOR_CONTROL") {
-                attributeState "color", action:"setColor"
-            }
-		}
-        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 1, range:"(2700..6500)") {
-	    	state "time", action:"setColorTemperature"
-		}
-        
-        main (["switch"])
-        details(["switch", "colorTemperature"])       
-	}
 }
 
 // parse events into attributes
@@ -96,12 +69,19 @@ def setLevel(brightness){
 }
 
 def setColor(color){
-    def body = [
+    def colors = color.hex
+    if(colors == null){
+    	def rgb = huesatToRGB(color.hue as Integer, color.saturation as Integer)
+        colors = "rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})"
+    }
+    
+     def body = [
         "id": parent._getID(),
         "cmd": "bgColor",
-        "data": color.hex,
+        "data": colors,
         "subData": getDuration()
     ]
+    
     def options = parent.makeCommand(body)
     parent.sendCommand(options, null)
 }
@@ -159,4 +139,21 @@ def getDuration(){
         }
     }
     return duration
+}
+
+def huesatToRGB(float hue, float sat) {
+	while(hue >= 100) hue -= 100
+	int h = (int)(hue / 100 * 6)
+	float f = hue / 100 * 6 - h
+	int p = Math.round(255 * (1 - (sat / 100)))
+	int q = Math.round(255 * (1 - (sat / 100) * f))
+	int t = Math.round(255 * (1 - (sat / 100) * (1 - f)))
+	switch (h) {
+		case 0: return [255, t, p]
+		case 1: return [q, 255, p]
+		case 2: return [p, 255, t]
+		case 3: return [p, q, 255]
+		case 4: return [t, p, 255]
+		case 5: return [255, p, q]
+	}
 }
