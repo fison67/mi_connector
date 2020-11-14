@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Light Ceiling(v.0.0.4)
+ *  Xiaomi Light Ceiling(v.0.0.5)
  *
  * MIT License
  *
@@ -29,6 +29,7 @@
  *
 */
 
+import java.awt.Color
 import groovy.json.JsonSlurper
 
 metadata {
@@ -50,64 +51,12 @@ metadata {
         command "stop"
 	}
 
-	simulator {
-	}
-
 	preferences {
 		input name:	"smooth", type:"enum", title:"Select", options:["On", "Off"], description:"", defaultValue: "On"
         input name: "duration", title:"Duration" , type: "number", required: false, defaultValue: 500, description:""
         input name: "makeChild", title:"Make a background light" , type: "enum", options:["no", "yes"], required: true, defaultValue: "no"
 	}
     
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_on.png", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/mi_connector/raw/master/icons/xiaomi_ceil_off.png", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"switch level.setLevel"
-            }
-		}
-        valueTile("refresh", "device.refresh", width: 2, height: 2, decoration: "flat") {
-            state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
-        }        
-        valueTile("lastOn_label", "", decoration: "flat") {
-            state "default", label:'Last\nON'
-        }
-        valueTile("lastOn", "device.lastOn", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("lastOff_label", "", decoration: "flat") {
-            state "default", label:'Last\nOFF'
-        }
-        valueTile("lastOff", "device.lastOff", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        controlTile("colorTemperature", "device.colorTemperature", "slider", height: 1, width: 2, range:"(2700..6500)") {
-	    	state "colorTemperature", action:"setColorTemperature"
-		}
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-        childDeviceTiles("all")
-        main (["switch"])
-        details(["switch", "all", "refresh", "lastOn_label", "lastOn", "lastOff_label","lastOff",  "colorTemperature", "timer_label", "time", "tiemr0" ])       
-	}
 }
 
 // parse events into attributes
@@ -155,11 +104,20 @@ def setStatus(params){
     	break
     case "bgColor":
     	def target = getBackgroundLight()
-        log.debug target
         if(target){
-//        	def colors = params.data.split(",")
-//            String hex = String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger())
-    		target.setStatus("color", params.data)
+            def colors = []
+            if(params.data.contains(",")){
+            	colors = params.data.split(",")
+            	target.setStatus("color", String.format("#%02x%02x%02x", colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger()) )
+            }else{
+            	target.setStatus("color", params.data )
+                colors = hex2Rgb(params.data)
+            }
+            
+            float[] hsbValues = new float[3];
+            def hueSat = Color.RGBtoHSB(colors[0].toInteger(), colors[1].toInteger(), colors[2].toInteger(),hsbValues)
+            target.setStatus("hue", (hueSat[0] * 100) as int )
+            target.setStatus("saturation", (hueSat[1] * 100) as int)
         }
     	break
     case "bgColorTemperature":
@@ -279,14 +237,14 @@ def updated() {
 }
 
 def installMoon() {
-	def childDevice =  addChildDevice("Xiaomi Light Ceiling Moon", "mi-connector-" + state.id  + "-moon" , null, [completedSetup: true, label: "Moon Mode", componentName: "Moon Mode", componentLabel: "Moon Mode", isComponent: false])
+	def childDevice =  addChildDevice("Xiaomi Light Ceiling Moon", "mi-connector-" + state.id  + "-moon" , null, [completedSetup: true, label: "Moon Mode", isComponent: false])
 }
 
 def installChild(){
 	def backgroundID = "mi-connector-" + state.id  + "-child"
 	def child = childDevices.find { it.deviceNetworkId == backgroundID }
     if(!child){
-    	def childDevice =  addChildDevice("Xiaomi Light Ceiling Child", backgroundID , null, [completedSetup: true, label: "Background Light", componentName: "Background Light", componentLabel: "Background Light", isComponent: false])
+    	def childDevice =  addChildDevice("Xiaomi Light Ceiling Child", backgroundID , null, [completedSetup: true, label: "Background Light",  isComponent: false])
     }
 }
 
@@ -473,4 +431,12 @@ def getDuration(){
         }
     }
     return duration
+}
+
+def hex2Rgb(String colorStr) {
+    return [
+        Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
+        Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
+        Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) 
+    ]
 }
