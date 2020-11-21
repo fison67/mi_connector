@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.57)
+ *  Mi Connector (v.0.0.58)
  *
  * MIT License
  *
@@ -377,6 +377,7 @@ def addDevice(){
     if(!child){
         def dth = null
         def name = null
+        def nameSpace = "fison67"
 
         if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.mc2" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4" || params.type == "zhimi.airpurifier.mb3"){
         	dth = "Xiaomi Air Purifier";
@@ -549,7 +550,12 @@ def addDevice(){
         }else if(params.type == "zhimi.heater.za1" || params.type == "zhimi.heater.za2"){
         	dth = "Xiaomi Heater"
             name = "Xiaomi Heater"
-        }else if(params.type == "zhimi.airfresh.va2"){
+        }else if(params.type == "zhimi.heater.mc2"){
+        	nameSpace = "streamorange58819"
+        	dth = "Xiaomi Heater New App"
+            name = "Xiaomi Heater"
+        }
+        else if(params.type == "zhimi.airfresh.va2"){
         	dth = "Xiaomi Air Fresh"
             name = "Xiaomi Air Fresh"
         }else if(params.type == "air.fan.ca23ad9"){
@@ -567,7 +573,7 @@ def addDevice(){
             render contentType: "application/javascript", data: resultString
         }else if(params.type == "lumi.ctrl_neutral1" || params.type == "lumi.ctrl_ln1"){
         	try{
-                def childDevice = addChildDevice("fison67", dth, (dni + "-1"), getLocationID(), [
+                def childDevice = addChildDevice(nameSpace, dth, (dni + "-1"), getLocationID(), [
                     "label": name + "1"
                 ])    
                 childDevice.setInfo(settings.address, id, "1")
@@ -588,7 +594,7 @@ def addDevice(){
         	try{
             	def index = 1;
             	for (def i = 0; i <2; i++) {
-                	def childDevice = addChildDevice("fison67", dth, (dni + "-" + index), getLocationID(), [
+                	def childDevice = addChildDevice(nameSpace, dth, (dni + "-" + index), getLocationID(), [
                         "label": name + index
                     ])    
                     childDevice.setInfo(settings.address, id, index.toString())
@@ -610,7 +616,7 @@ def addDevice(){
             }
         }else if(params.type == "virtual.remote.tv" || params.type == "virtual.remote.custom" || params.type == "virtual.remote.air"){
      		dni = "mi-connector-" + id.toLowerCase() + "-" + new Date().getTime()
-        	def childDevice = addChildDevice("fison67", dth, dni, getLocationID(), [
+        	def childDevice = addChildDevice(nameSpace, dth, dni, getLocationID(), [
                 "label": name
             ])    
             childDevice.setInfo(settings.address, id)
@@ -622,7 +628,7 @@ def addDevice(){
             render contentType: "application/javascript", data: resultString
         }else{
             try{
-                def childDevice = addChildDevice("fison67", dth, dni, getLocationID(), [
+                def childDevice = addChildDevice(nameSpace, dth, dni, getLocationID(), [
                     "label": name
                 ])    
                 childDevice.setInfo(settings.address, id)
