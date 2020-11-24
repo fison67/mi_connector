@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.58)
+ *  Mi Connector (v.0.0.59)
  *
  * MIT License
  *
@@ -430,13 +430,13 @@ def addDevice(){
         }else if(params.type == "zhimi.fan.fa1"){
         	dth = "Xiaomi Fan Fa1";	
             name = "Xiaomi Fan Fa1";	   
-        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
+        }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" ||  params.type == "yeelink.light.color3" ||  params.type == "yeelink.light.color4" ||  params.type == "yeelink.light.color5" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
         }else if(params.type == "yeelink.light.strip1" || params.type == "yeelink.light.strip2" || params.type == "yeelink.light.strip3" || params.type == "yeelink.light.strip4"){
         	dth = "Xiaomi Light Strip";
             name = "Xiaomi Light Strip";
-        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.lamp3" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
+        }else if(params.type == "yeelink.light.lamp1" || params.type == "yeelink.light.lamp2" ||params.type == "yeelink.light.lamp3" || params.type == "yeelink.light.mono1" || params.type == "yeelink.light.ct2"){
         	dth = "Xiaomi Light Mono";
             name = "Xiaomi Light Mono";
         }else if(params.type == "philips.light.downlight"){
