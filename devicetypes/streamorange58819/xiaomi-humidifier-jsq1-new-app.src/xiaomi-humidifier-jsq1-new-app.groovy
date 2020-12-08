@@ -99,6 +99,14 @@ def refresh(){
     sendCommand(options, callback)
 }
 
+def setBuzzer(power){
+	if(power == "on"){
+    	buzzerOn()
+    }else{
+    	buzzerOff()
+    }
+}
+
 def buzzerOn(){
 	sendCommand(makePayload("buzzer", "on"), null)
 }
@@ -110,6 +118,14 @@ def buzzerOff(){
 def setTargetHumidity(humidity){
 	log.debug "setTargetHumidity: ${humidity}"
 	sendCommand(makePayload("targetHumidity",humidity), null)
+}
+
+def setLed(power){
+	if(power == "on"){
+    	ledOn()
+    }else{
+    	ledOff()
+    }
 }
 
 def ledOn(){
