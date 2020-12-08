@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.60)
+ *  Mi Connector (v.0.0.61)
  *
  * MIT License
  *
@@ -564,7 +564,12 @@ def addDevice(){
         }else if(params.type == "nwt.derh.wdh318efw1"){
         	dth = "Xiaomi Dehumidifier"
             name = "Xiaomi Dehumidifier"
-        }	
+        }else if(params.type == "deerma.humidifier.jsq1"){
+        	nameSpace = "streamorange58819"
+            dth = "Xiaomi Humidifier Jsq1 New App"
+            name = "Xiaomi Heater"
+        }
+        
         
         
         if(dth == null){
