@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Humidifier Jsq1 New App(v.0.0.1)
+ *  Xiaomi Humidifier Jsq1 New App(v.0.0.2)
  *
  * MIT License
  *
@@ -32,7 +32,7 @@ import groovy.transform.Field
 
 
 metadata {
-	definition (name: "Xiaomi Humidifier Jsq1 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid: "45395604-5bb6-39f2-ab84-f99e2f84a6eb", ocfDeviceType: "oic.d.airpurifier") {
+	definition (name: "Xiaomi Humidifier Jsq1 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid: "4b7e9c8c-3597-3061-874e-2daf4c2a6115", ocfDeviceType: "oic.d.airpurifier") {
         capability "Switch"		
 		capability "Sensor"
         capability "Temperature Measurement"
@@ -40,6 +40,9 @@ metadata {
         capability "streamorange58819.led"
         capability "streamorange58819.buzzer"
         capability "streamorange58819.targetHumidity"
+        capability "streamorange58819.watertank"
+        capability "streamorange58819.waterstatus"
+        capability "streamorange58819.gear"
 	}
 }
 
@@ -50,6 +53,9 @@ def installed(){
     sendEvent(name: "led", value: "on")
     sendEvent(name: "switch", value: "on")
     sendEvent(name: "buzzer", value: "on")
+    sendEvent(name:"gear", value: 1)
+    sendEvent(name:"waterstatus", value:"enough")
+    sendEvent(name:"waterTank", value: "mounted")
 }
 
 def parse(String description) {
@@ -84,6 +90,15 @@ def setStatus(params){
     case "targetHumidity":
         sendEvent(name:"targetHumidity", value: params.data as int, unit:"%")
     	break
+    case "gear":
+        sendEvent(name:"gear", value: params.data as int)
+    	break
+    case "water":
+        sendEvent(name:"waterstatus", value: params.data == "true" ? "enough" : "not enough")
+    	break
+    case "waterTank":
+        sendEvent(name:"waterTank", value: params.data == "true" ? "mounted" : "unmounted")
+    	break
     }
 }
 
@@ -97,6 +112,10 @@ def refresh(){
         ]
     ]
     sendCommand(options, callback)
+}
+
+def setGear(value){
+	sendCommand(makePayload("changeGear", value), null)
 }
 
 def setBuzzer(power){
