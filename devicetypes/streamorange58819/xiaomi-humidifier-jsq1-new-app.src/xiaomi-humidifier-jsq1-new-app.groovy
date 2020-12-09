@@ -177,9 +177,9 @@ def callback(physicalgraph.device.HubResponse hubResponse){
        	sendEvent(name:"switch", value: jsonObj.state.power ? "on" : "off")
         sendEvent(name:"led", value: (jsonObj.state.led ? "on" : "off"))
         sendEvent(name:"buzzer", value: (jsonObj.state.buzzer ? "on" : "off"))
-        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value)
-        sendEvent(name:"relativeHumidity", value: jsonObj.properties.relativeHumidity)
-        sendEvent(name:"targetHumidity", value: jsonObj.properties.targetHumidity)
+        sendEvent(name:"temperature", value: jsonObj.properties.temperature.value, unit: "C")
+        sendEvent(name:"relativeHumidity", value: jsonObj.properties.relativeHumidity, unit: "%")
+        sendEvent(name:"targetHumidity", value: jsonObj.properties.targetHumidity,  unit: "%")
     } catch (e) {
         log.error "Exception caught while parsing data: "+e;
     }
