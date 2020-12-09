@@ -567,7 +567,7 @@ def addDevice(){
         }else if(params.type == "deerma.humidifier.jsq1"){
         	nameSpace = "streamorange58819"
             dth = "Xiaomi Humidifier Jsq1 New App"
-            name = "Xiaomi Heater"
+            name = "Xiaomi Humidifier"
         }
         
         
