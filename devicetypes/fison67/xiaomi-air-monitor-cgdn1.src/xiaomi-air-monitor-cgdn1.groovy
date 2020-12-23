@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Monitor CGDN1 (v.0.0.4)
+ *  Xiaomi Air Monitor CGDN1 (v.0.0.5)
  *
  * MIT License
  *
@@ -35,6 +35,7 @@ metadata {
         capability "Temperature Measurement"
         capability "Carbon Dioxide Measurement"
         capability "Relative Humidity Measurement"
+		capability "Refresh"
 		capability "Battery"
         capability "Power Source"
 	}
