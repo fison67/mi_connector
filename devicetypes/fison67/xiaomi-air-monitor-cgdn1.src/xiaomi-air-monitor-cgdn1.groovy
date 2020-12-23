@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Monitor CGDN1 (v.0.0.3)
+ *  Xiaomi Air Monitor CGDN1 (v.0.0.4)
  *
  * MIT License
  *
@@ -46,7 +46,7 @@ def installed(){
 	sendEvent(name:"temperature", value: 20, unit:"C")
 	sendEvent(name:"humidity", value: 40, unit:"%")
 	sendEvent(name:"battery", value: 100, unit:"%")
-	sendEvent(name:"carbonDioxide", value: 900)
+	sendEvent(name:"carbonDioxide", value: 900, unit:"ppm")
 	sendEvent(name:"powerSource", value: "battery")
 }
     
@@ -79,7 +79,7 @@ def setStatus(params){
         sendEvent(name:"temperature", value:  Float.parseFloat("${params.data}".replace("C","")), unit:"C" )
     	break;    
     case "carbonDioxide":
-        sendEvent(name:"carbonDioxide", value: params.data as int )
+        sendEvent(name:"carbonDioxide", value: params.data as int, unit:"ppm" )
     	break;    
     case "battery":
         sendEvent(name:"battery", value: "${params.data}" as int , unit:"%" )
