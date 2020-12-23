@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Air Monitor CGDN1", namespace: "fison67", author: "fison67") {
+	definition (name: "Xiaomi Air Monitor CGDN1", namespace: "fison67", author: "fison67", ocfDeviceType: "oic.d.airpurifier") {
 		capability "Dust Sensor"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
