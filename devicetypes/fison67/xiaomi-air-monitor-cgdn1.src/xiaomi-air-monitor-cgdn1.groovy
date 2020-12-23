@@ -33,6 +33,7 @@ metadata {
 	definition (name: "Xiaomi Air Monitor CGDN1", namespace: "fison67", author: "fison67", ocfDeviceType: "oic.d.airpurifier") {
 		capability "Dust Sensor"
         capability "Temperature Measurement"
+        capability "Carbon Dioxide Measurement"
         capability "Relative Humidity Measurement"
 		capability "Battery"
         capability "Power Source"
@@ -76,10 +77,13 @@ def setStatus(params){
     case "temperature":
         sendEvent(name:"temperature", value:  Float.parseFloat("${params.data}".replace("C","")), unit:"C" )
     	break;    
+    case "carbonDioxide":
+        sendEvent(name:"carbonDioxide", value: params.data as int )
+    	break;    
     case "battery":
         sendEvent(name:"battery", value: "${params.data}" as int , unit:"%" )
     	break;    
-    case "aqi":
+    case "pm2.5":
         sendEvent(name:"fineDustLevel", value: "${params.data}" as int )
     	break;    
     case "pm10":
