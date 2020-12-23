@@ -418,6 +418,9 @@ def addDevice(){
         }else if(params.type == "shuii.humidifier.jsq001"){
         	dth = "Xiaomi Humidifier 3";
             name = "Xiaomi Humidifier 3";
+       	}else if(params.type == "deerma.humidifier.mjjsq" || params.type == "deerma.humidifier.jsq"){
+        	dth = "Xiaomi Humidifier 4";
+            name = "Xiaomi Humidifier 4";
        	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za3" || params.type == "zhimi.fan.za4" || params.type == "zhimi.fan.za5"){	
         	dth = "Xiaomi Fan";	
             name = "Xiaomi Fan";	
@@ -483,6 +486,9 @@ def addDevice(){
             name = "Xiaomi Air Monitor";
         }else if(params.type == "cgllc.airmonitor.b1" || params.type == "cgllc.airmonitor.s1"){
         	dth = "Xiaomi Air Detector";
+            name = "Xiaomi Air Detector";
+        }else if(params.type == "cgllc.airm.cgdn1"){
+        	dth = "Xiaomi Air Monitor CGDN1";
             name = "Xiaomi Air Detector";
         }else if(params.type == "lumi.weather"){
         	dth = "Xiaomi Weather";
@@ -561,7 +567,7 @@ def addDevice(){
         }else if(params.type == "nwt.derh.wdh318efw1"){
         	dth = "Xiaomi Dehumidifier"
             name = "Xiaomi Dehumidifier"
-        }else if(params.type == "deerma.humidifier.jsq1" || params.type == "deerma.humidifier.mjjsq" || params.type == "deerma.humidifier.jsq"){
+        }else if(params.type == "deerma.humidifier.jsq1"){
         	nameSpace = "streamorange58819"
             dth = "Xiaomi Humidifier Jsq1 New App"
             name = "Xiaomi Humidifier"
