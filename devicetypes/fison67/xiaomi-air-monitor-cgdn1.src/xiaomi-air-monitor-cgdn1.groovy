@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Monitor CGDN1 (v.0.0.1)
+ *  Xiaomi Air Monitor CGDN1 (v.0.0.2)
  *
  * MIT License
  *
@@ -34,7 +34,6 @@ metadata {
 		capability "Dust Sensor"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-		capability "Tvoc Measurement"
 		capability "Battery"
         capability "Power Source"
 	}
@@ -45,7 +44,6 @@ def installed(){
 	sendEvent(name:"dustLevel", value: 10)
 	sendEvent(name:"temperature", value: 22, unit:"C")
 	sendEvent(name:"humidity", value: 22, unit:"%")
-	sendEvent(name:"tvocLevel", value: 10, unit:"ppm")
 	sendEvent(name:"battery", value: 100, unit:"%")
 	sendEvent(name:"powerSource", value: "battery")
 }
@@ -73,13 +71,11 @@ def setStatus(params){
     
     switch(params.key){
     case "relativeHumidity":
-    	sendEvent(name:"humidity", value: params.data, unit: "%")
+    	sendEvent(name:"humidity", value: "${params.data}" as int, unit: "%")
     	break;
     case "temperature":
         sendEvent(name:"temperature", value:  Float.parseFloat("${params.data}".replace("C","")), unit:"C" )
     	break;    
-    case "tvoc":
-        sendEvent(name:"tvocLevel", value: "${params.data}" as int , unit:"ppm" )
     case "battery":
         sendEvent(name:"battery", value: "${params.data}" as int , unit:"%" )
     	break;    
