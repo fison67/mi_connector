@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Monitor CGDN1 (v.0.0.2)
+ *  Xiaomi Air Monitor CGDN1 (v.0.0.3)
  *
  * MIT License
  *
@@ -43,9 +43,10 @@ metadata {
 def installed(){
 	sendEvent(name:"fineDustLevel", value: 10)
 	sendEvent(name:"dustLevel", value: 10)
-	sendEvent(name:"temperature", value: 22, unit:"C")
-	sendEvent(name:"humidity", value: 22, unit:"%")
+	sendEvent(name:"temperature", value: 20, unit:"C")
+	sendEvent(name:"humidity", value: 40, unit:"%")
 	sendEvent(name:"battery", value: 100, unit:"%")
+	sendEvent(name:"carbonDioxide", value: 900)
 	sendEvent(name:"powerSource", value: "battery")
 }
     
