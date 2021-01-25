@@ -33,6 +33,7 @@ metadata {
 	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67", vid:"generic-default-metadata") {
     	capability "Robot Cleaner Cleaning Mode"
         capability "Robot Cleaner Movement"
+        capability "Switch"	
 		capability "Fan Speed"
         capability "Battery"	
         capability "Refresh"	
@@ -91,7 +92,7 @@ def setStatus(params){
  	switch(params.key){
     case "mode":
     	sendEvent(name:"mode", value: params.data )
-//        sendEvent(name:"switch", value: (params.data == "cleaning" || params.data == "zone-cleaning") ? "on" : "off")
+        sendEvent(name:"switch", value: (params.data == "cleaning" || params.data == "zone-cleaning") ? "on" : "off")
         def cleanMode = "stop"
         if(params.data == "zone-cleaning"){
         	cleanMode = "part"
@@ -141,7 +142,7 @@ def setStatus(params){
     	sendEvent(name:"fanSpeed_label", value: _value )
     	break;
     case "cleaning":
-//    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
+    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
        	sendEvent(name:"paused", value: params.data == "true" ? "paused" : "restart", displayed: false )     
     	break;
     case "volume":
@@ -311,7 +312,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         
         sendEvent(name:"mode", value: jsonObj.state.state)
         
-//        sendEvent(name:"switch", value: (jsonObj.properties.cleaning ? "on" : "off") )
+        sendEvent(name:"switch", value: (jsonObj.properties.cleaning ? "on" : "off") )
        	sendEvent(name:"paused", value: jsonObj.properties.cleaning ? "paused" : "restart" )  
         
         def mainBrush = getFilterLeftTime(jsonObj.properties.mainBrushWorkTime, 300)
