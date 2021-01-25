@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Vacuums (v.0.0.3)
+ *  Xiaomi Vacuums (v.0.0.4)
  *
  * MIT License
  *
@@ -30,9 +30,9 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67", vid: "generic-switch", ocfDeviceType: "oic.d.switch") {
+	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67", vid:"generic-default-metadata") {
     	capability "Robot Cleaner Cleaning Mode"
-        capability "Switch"		
+        capability "Robot Cleaner Movement"
 		capability "Fan Speed"
         capability "Battery"	
         capability "Refresh"	
@@ -68,162 +68,10 @@ metadata {
     preferences {
         input name: "offOption", title:"OFF Option" , type: "enum", required: true, options: ["off", "return"], defaultValue: "off"
 	}
-    
-	simulator {}
+}
 
-	tiles {
-		multiAttributeTile(name:"mode", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.mode", key: "PRIMARY_CONTROL") {
-                attributeState "initiating", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"off"
-                attributeState "charger-offline", label:'${name}', backgroundColor:"#000000", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum-ready.png?raw=true", action:"on"
-                attributeState "waiting", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"charge"
-                attributeState "cleaning", label:'${name}', backgroundColor:"#4286f4", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                attributeState "returning", label:'${name}', backgroundColor:"#4e25a8", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                attributeState "charging", label:'${name}',   backgroundColor:"#25a896", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "charging-error", label:'${name}',  backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                attributeState "paused", label:'${name}',  backgroundColor:"#09540d", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "spot-cleaning", label:'${name}', backgroundColor:"#a0e812", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                attributeState "error", label:'${name}',   backgroundColor:"#ff2100", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_off.png?raw=true", action:"on"
-                
-                attributeState "shutting-down", label:'${name}',  backgroundColor:"#00a0dc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                attributeState "updating", label:'${name}',  backgroundColor:"#ffa0ea", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"on"
-                
-                attributeState "docking", label:'${name}', backgroundColor:"#9049bc", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_turning_off.png?raw=true", action:"off"
-                attributeState "zone-cleaning", label:'${name}',  backgroundColor:"#91f268", icon:"https://github.com/fison67/mi_connector/blob/master/icons/vacuum_on.png?raw=true", action:"off"
-                
-                attributeState "full", label:'${name}', backgroundColor:"#ffffff", icon:"st.Electronics.electronics1", action:"on"
-                
-			}
-            
-            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-            
-		}
-        
-        standardTile("switch", "device.switch", inactiveLabel: false, width: 1, height: 1, canChangeIcon: true) {
-            state "on", label:'${name}', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'${name}', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"off", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"on", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        
-        valueTile("fanSpeed_label", "device.fanSpeed_label", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'Fan Speed: ${currentValue}'
-        }
-        valueTile("empty1_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Volume'
-        }
-        standardTile("quiet", "device.quiet") {
-			state "default", label: "Quiet", action: "quiet", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMTAy/MDAxNTIyMzIzNjE4NjE2.2N1NVfE2fmK85H1EhwK_gqEs0FK0qSaJ1KCimGnxZFcg.CAcpOhL3yJXAlvS-JoBcGz1Uf2UnjuICzGs4hBwwK8kg.PNG.shin4299/Fan_20.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("balanced", "device.balanced") {
-			state "default", label: "Balanced", action: "balanced", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMzIg/MDAxNTIyMzIzNjE4NjE2.8HySZX7X1Lb821PxhP96mahNs7dxuYcmDYqy-8bczT8g.wMnYS-sYxbbqXBFrK06w7fT_I6sBb1IcmznRVMOrjjEg.PNG.shin4299/Fan_60.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("turbo", "device.turbo") {
-			state "default", label: "Turbo", action: "turbo", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfNTgg/MDAxNTIyMzIzNDI2NjE2.86i1P_l290aYfdzh9fATsl3VA-dCVAba9ir_1Ym3mlIg.gyZmaDisBZAbtzzSg-55iwk2ie1ijd64x4ZTo5Jbu4Eg.PNG.shin4299/Fan_30.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        standardTile("fullSpeed", "device.fullSpeed") {
-			state "default", label: "Full Speed", action: "fullSpeed", icon:"https://postfiles.pstatic.net/MjAxODAzMjlfMjIw/MDAxNTIyMzIzNjE4NjIx.t6DneqY6JyAZAicutP3NtV9Vf0wWGNAXWnVDIxnL_0gg.-5LlfL2aVTqW3ziuAXWOHFQ6C436d5-XZc_NVHxgS9Mg.PNG.shin4299/Fan_120.png?type=w580", backgroundColor:"#b1d6de"
-		}
-        
-        standardTile("fanSpeed", "device.fanSpeed", inactiveLabel: false, width: 2, height: 2) {
-            state "quiet", label:'Quiet', action:"balanced", backgroundColor:"#00a0dc", nextState:"balanced"
-            state "balanced", label:'Balanced', action:"turbo", backgroundColor:"#1000ff", nextState:"turbo"
-            state "turbo", label:'Turbo', action:"fullSpeed", backgroundColor:"#9a71f2", nextState:"fullSpeed"
-            state "fullSpeed", label:'Max', action:"quiet", backgroundColor:"#aa00ff", nextState:"quiet"
-        }
-        
-        standardTile("paused", "device.paused", width: 1, height: 1) {
-            state "paused", label:'Pause', action:"paused", backgroundColor:"#00a0dc"
-        }
-        standardTile("restart", "device.restart", width: 1, height: 1) {
-            state "restart", label:'Restart', action:"on", backgroundColor:"#09540d"
-        }
-            
-        
-        standardTile("charge", "device.charge", width: 1, height: 1 ) {
-            state "charge", label:'Charge', action:"charge",  backgroundColor:"#25a896"
-        }
-        
-        standardTile("spot", "device.spot", width: 1, height: 1 ) {
-            state "spot", label:'Spot', action:"spotClean",  backgroundColor:"#2ca6e8"
-        }
-        
-        standardTile("find", "device.find", width: 1, height: 1 ) {
-            state "find", label:'Find Me', action:"find",  backgroundColor:"#1cffe8"
-        }
-        
-        valueTile("battery", "device.battery",  height: 1, width: 1) {
-            state "val", label:'${currentValue}%', defaultState: true,
-            	backgroundColors:[
-                    [value: 10, color: "#ff002a"],
-                    [value: 20, color: "#f4425f"],
-                    [value: 30, color: "#ef7085"],
-                    [value: 40, color: "#ea8f9e"],
-                    [value: 50, color: "#edadb7"],
-                    [value: 60, color: "#a9aee8"],
-                    [value: 70, color: "#7f87e0"],
-                    [value: 80, color: "#505bd3"],
-                    [value: 90, color: "#2131e0"]
-                ]
-        }
-        
-        controlTile("volume", "device.volume", "slider", height: 1, width: 2, inactiveLabel: false, range:"(0..100)") {
-			state ("volume", label:'${currentValue}', action:"setVolumeWithTest")
-		}
-        
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-            state "default", label:"", action:"refresh", icon:"st.secondary.refresh"
-        }
-        
-        
-        valueTile("empty2_label", "", decoration: "flat", width: 4, height: 1) {
-            state "default", label:''
-        }
-        valueTile("label_clean_time", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Clean Time'
-        }
-        valueTile("cleanTime", "device.cleanTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_clean_area", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Clean Area'
-        }
-        valueTile("cleanArea", "device.cleanArea", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_main_brush", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Main Brush'
-        }
-        valueTile("mainBrushLeftTime", "device.mainBrushLeftTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_side_brush", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Side Brush'
-        }
-        valueTile("sideBrushLeftTime", "device.sideBrushLeftTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_filter", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Filter'
-        }
-        valueTile("filterTime", "device.filterTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("label_sensor", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Sensor'
-        }
-        valueTile("sensorTime", "device.sensorTime", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        main (["mode"])
-      	details(["mode", "switch", "paused", "restart", "spot", "charge", "find", "fanSpeed_label", "empty1_label", "quiet", "balanced", "turbo", "fullSpeed", "volume", "battery", "refresh", 
-        "empty2_label", "label_clean_time", "cleanTime", "label_clean_area", "cleanArea", "label_main_brush", "mainBrushLeftTime", "label_side_brush", "sideBrushLeftTime", "label_filter", "filterTime", "label_sensor", "sensorTime"])
-	}
+def installed(){
+
 }
 
 // parse events into attributes
@@ -243,16 +91,35 @@ def setStatus(params){
  	switch(params.key){
     case "mode":
     	sendEvent(name:"mode", value: params.data )
-        if(params.data == "cleaning"){
-        	sendEvent(name:"switch", value: "on", displayed: false)
-        	sendEvent(name:"robotCleanerCleaningMode", value: "auto", displayed: false)
-        }else{
-        	sendEvent(name:"switch", value: "off", displayed: false)
-        	sendEvent(name:"robotCleanerCleaningMode", value: "stop", displayed: false)
+//        sendEvent(name:"switch", value: (params.data == "cleaning" || params.data == "zone-cleaning") ? "on" : "off")
+        def cleanMode = "stop"
+        if(params.data == "zone-cleaning"){
+        	cleanMode = "part"
+        }else  if(params.data == "charging"){
+        	cleanMode = "stop"
+        }else {
+        	cleanMode = "auto"
+        }
+        sendEvent(name:"robotCleanerCleaningMode", value: cleanMode)
+        
+        def cleanMovement = ""
+        if(params.data == "cleaning" || params.data == "zone-cleaning" || params.data == "spot-cleaning"){
+        	cleanMovement = "cleaning"
+        }else if(params.data == "charging"){
+        	cleanMovement = "charging"
+        }else if(params.data == "returning" || params.data == "docking"){
+        	cleanMovement = "homing"
+        }else if(params.data == "charger-offline"){
+        	cleanMovement = "powerOff"
+        }else if(params.data == "error" || params.data == "charging-error"){
+        	cleanMovement = "alarm"
+        }
+        if(cleanMovement != ""){
+    		sendEvent(name:"robotCleanerMovement", value: cleanMovement )
         }
     	break;
     case "batteryLevel":
-    	sendEvent(name:"battery", value: params.data, displayed: false)
+    	sendEvent(name:"battery", value: params.data)
     	break;
     case "fanSpeed":
     	def val = params.data.toInteger()
@@ -274,7 +141,7 @@ def setStatus(params){
     	sendEvent(name:"fanSpeed_label", value: _value )
     	break;
     case "cleaning":
-    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
+//    	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
        	sendEvent(name:"paused", value: params.data == "true" ? "paused" : "restart", displayed: false )     
     	break;
     case "volume":
@@ -307,20 +174,6 @@ def setStatus(params){
     	sendEvent(name:"cleanArea", value: params.data, displayed: false)
     	break
     }
-    
-    
-    updateLastTime()
-}
-
-def setRobotCleanerCleaningMode(mode){
-	switch(mode){
-    case "auto":
-    	on()
-    	break
-    case "stop":
-    	off()
-    	break
-    }
 }
 
 public String formatSeconds(int timeInSeconds){
@@ -335,13 +188,7 @@ public String formatSeconds(int timeInSeconds){
     return HH + ":" + MM + ":" + SS;
 }
 
-def updateLastTime(){
-	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now, displayed: false)
-}
-
 def refresh(){
-	log.debug "Refresh"
     def options = [
      	"method": "GET",
         "path": "/devices/get/${state.id}",
@@ -376,132 +223,83 @@ def setVolumeWithTest(volume){
 }
 
 def quiet(){
-    log.debug "quiet >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "quiet"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("quiet")
 }
 
 def balanced(){
-    log.debug "balanced >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "balanced"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("balanced")
 }
 
 def turbo(){
-    log.debug "turbo >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "turbo"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("turbo")
 }
 
 def fullSpeed(){
-    log.debug "fullSpeed >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "fullSpeed"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("fullSpeed")
 }
 
 def spotClean(){
-	log.debug "spotClean >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "spotClean"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("spotClean")
     
     sendEvent(name:"spot", value: "on" )
 }
 
 def charge(){
-	log.debug "charge >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "charge"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("charge")
 }
 
 def paused(){
-	log.debug "paused >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "pause"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("pause")
 }
 
 def start(){
-    log.debug "start >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "start"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("start")
 }
 
 def find(){
-    log.debug "find >> ${state.id}"
-    def body = [
-        "id": state.id,
-        "cmd": "find"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("find")
 }
 
 def clean(){
-    def body = [
-        "id": state.id,
-        "cmd": "clean"
-    ]
-    def options = makeCommand(body)
-    sendCommand(options, null)
+    requestCommand("clean")
 }
 
 def on(){
-    log.debug "On >> ${state.id}"
     clean()
 }
 
 def off(){
 	if(offOption == "off"){
-        log.debug "Off >> ${state.id}"
-        def body = [
-            "id": state.id,
-            "cmd": "stop"
-        ]
-        def options = makeCommand(body)
-        sendCommand(options, null)
+        stop()
     }else{
     	charge()
     }
 }
 
-/*
-def timer(mSecond, function){
-	def now = new Date()
-	def runTime = new Date(now.getTime() + mSecond)
-	runOnce(runTime, function);
+def stop(){
+    requestCommand("stop")
 }
-*/
+
+def setRobotCleanerCleaningMode(mode){
+	if(mode == "stop"){
+    	stop()
+    }else if(mode == "part"){
+    	spotClean()
+    }else{
+    	on()
+    }
+}
+
+def setRobotCleanerMovement(movement){
+	log.debug "setRobotCleanerMovement: ${movement}"
+	if(movemoent == "charging"){
+    	charge()
+    }else if(movement == "powerOff"){
+    	off()
+    }else if(movement == "cleaning"){
+    	on()
+    }
+}
 
 def callback(physicalgraph.device.HubResponse hubResponse){
 	def msg
@@ -513,7 +311,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         
         sendEvent(name:"mode", value: jsonObj.state.state)
         
-        sendEvent(name:"switch", value: (jsonObj.properties.cleaning ? "on" : "off") )
+//        sendEvent(name:"switch", value: (jsonObj.properties.cleaning ? "on" : "off") )
        	sendEvent(name:"paused", value: jsonObj.properties.cleaning ? "paused" : "restart" )  
         
         def mainBrush = getFilterLeftTime(jsonObj.properties.mainBrushWorkTime, 300)
@@ -557,12 +355,7 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         log.error "Exception caught while parsing data: "+e;
     }
 }
-/*
-def setValueTime(type, time, baseTime){
-    def tmp = getFilterLeftTime(time, baseTime)
-    setValueTime2(type, tmp[0], tmp[1])
-}
-*/
+
 def setValueTime2(type, time, percent){
     sendEvent(name:type, value: "Left: ${time} Hour,   ${percent}%", displayed: false)
 }
@@ -573,7 +366,15 @@ def getFilterLeftTime(time, baseTime){
     return [leftHour, percent]
 }
 
-def updated() {
+def updated() {}
+
+def requestCommand(cmd){
+    def body = [
+        "id": state.id,
+        "cmd": cmd
+    ]
+    def options = makeCommand(body)
+    sendCommand(options, null)
 }
 
 def sendCommand(options, _callback){
