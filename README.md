@@ -123,12 +123,16 @@ Added support devices.
 |   | zhimi.airpurifier.ma4  |   O |    |
 |   | zhimi.airpurifier.sa2  |   △ |    |
 |   | zhimi.airpurifier.mb3  |   △ |    |
-| Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |  O |
+| Xiaomi Air Fresh  | zhimi.airfresh.va2  |   X |   |
 | Xiaomi Humidifier  | zhimi.humidifier.v1  |   X |    |
 |   | zhimi.humidifier.ca1  |   O |    |
+|   | zhimi.humidifier.ca4  |   X |    |
+|   | zhimi.humidifier.cb1  |   X |    |
 |   | zhimi.humidifier.cb2  |   X |    |
-|   | shuii.humidifier.jsq001  |   O |  O  |
-|   | deerma.humidifier.mjjsq  |   O |  O  |
+|   | shuii.humidifier.jsq001  |   O |    |
+|   | deerma.humidifier.mjjsq  |   O |    |
+|   | deerma.humidifier.jsq  |   X |    |
+|   | deerma.humidifier.jsq1  |   X |    |
 | Xiaomi Dehumidifier  | nwt.derh.wdh318efw1  |   X |    |
 | Xiaomi Vacuum  | rockrobo.vacuum.v1  |   O |    |
 |   | roborock.vacuum.c1  |   X |    |
@@ -154,10 +158,19 @@ Added support devices.
 |   | lumi.gateway.v3  |   O |    |
 | Xiaomi AC Partner  | lumi.acpartner.v3  |   X |    |
 | Xiaomi Fan  | zhimi.fan.v2  |   O |    |
+|   | zhimi.fan.v2  |   X |    |
 |   | zhimi.fan.v3  |   O |    |
-|   | zhimi.fan.sa1  |   X |  O |
-|   | zhimi.fan.za1  |   O |  O |
-|   | air.fan.ca23ad9  |   O |  O |
+|   | zhimi.fan.sa1  |   X |   |
+|   | zhimi.fan.za1  |   O |   |
+|   | zhimi.fan.za3  |   X |   |
+|   | zhimi.fan.za4  |   X |   |
+|   | zhimi.fan.za5  |   X |   |
+|   | air.fan.ca23ad9  |   O |   |
+|   | dmaker.fan.p5  |   X |   |
+|   | dmaker.fan.p8  |   X |   |
+|   | dmaker.fan.p9  |   X |   |
+|   | dmaker.fan.p10  |   X |   |
+|   | dmaker.fan.p11  |   X |   |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |    |
 |   | yeelink.light.lamp2  |   O |    |
 |   | yeelink.light.lamp3  |   O |    |
@@ -174,7 +187,7 @@ Added support devices.
 |   | yeelink.light.strip4  |   O |    |
 |   | yeelink.light.strip5  |   O |    |
 |   | yeelink.light.strip6  |   O |    |
-| Bedside Lamp  | yeelink.light.bslamp1  |   O |   O |
+| Bedside Lamp  | yeelink.light.bslamp1  |   O |    |
 |   | yeelink.light.bslamp2  |   X |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
 |   | yeelink.light.ceiling2  |   O |    |
@@ -197,13 +210,16 @@ Added support devices.
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
-| Philips Bedside Lamp  | philips.light.moonlight  |   O |   O |
+| Philips Bedside Lamp  | philips.light.moonlight  |   O |    |
 | Philips Light  | philips.light.sread1  |   △ |    |
 |   | philips.light.bulb  |   △ |    |
-|  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |  O |
+|  Xiaomi IR Remote | chuangmi.ir.v2  |   △ |   |
 |   | chuangmi.remote.h102a03  |   △ |  O |
 |   | chuangmi.remote.v2  |   △ |  O |
-|  Xiaomi Heater | zhimi.heater.za1  |   O |  O |
+|  Xiaomi Heater | zhimi.heater.za1  |   O |   |
+|   | zhimi.heater.za2  |   X |   |
+|   | zhimi.heater.mc2  |   X |   |
+|   | zhimi.elecheater.ma1  |   X |   |
 
 ### Zigbee Devices
 | Type  | Model | Tested | Beta |
@@ -227,15 +243,15 @@ Added support devices.
 | Xiaomi Gas Sensor | lumi.gas  |  O  |    |
 | Xiaomi Water Sensor | lumi.water  |  O  |    |
 | Xiaomi Curtain Motor | lumi.curtain  |  O  |    |
-| Xiaomi Vibration Sensor | lumi.vibration  |  O  |  O  |
+| Xiaomi Vibration Sensor | lumi.vibration  |  O  |    |
 
 ### Bluetooth Devices
 | Type  | Model | Tested | Beta |
 | ------------- | ------------- | ------------- | ------------- |
-| Xiaomi Flora | ble.flora  |  △  |  O  |
-| Xiaomi Flora Pot | ble.floraPot  |  △  |  O  |
-| Xiaomi Temp-Humid Sensor | ble.mitemperature  |  △  |  O  |
-| Xiaomi E-Ink Temp-Humid Sensor | ble.einktemperature  |  △  |  O  |
+| Xiaomi Flora | ble.flora  |  △  |    |
+| Xiaomi Flora Pot | ble.floraPot  |  △  |    |
+| Xiaomi Temp-Humid Sensor | ble.mitemperature  |  △  |    |
+| Xiaomi E-Ink Temp-Humid Sensor | ble.einktemperature  |  △  |    |
 
 <img src="./imgs/product/button.jpg" title="Button" width="200px"><img src="./imgs/product/button_aq.png" title="Button Aqara" width="200px"><img src="./imgs/product/cube.png" title="Cube" width="200px">
 <img src="./imgs/product/door.jpg" title="Door" width="200px"><img src="./imgs/product/door_aq.png" title="Door Aqara" width="200px"><img src="./imgs/product/fire.jpg" title="Fire Sensor" width="200px">
