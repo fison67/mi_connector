@@ -9,6 +9,9 @@ Please see the [prerequisites](#prerequisites) needed for this connector to work
 
 > Hubitat? Use the following branch: https://github.com/fison67/mi_connector/tree/hubitat
 
+> No more used a arm image.<br/>
+Just use a fison67/mi-connector image.
+
 ### Example Video<br/>
 [![Example](https://img.youtube.com/vi/CtPce-KBVcY/0.jpg)](https://www.youtube.com/watch?v=CtPce-KBVcY)
 
@@ -55,6 +58,11 @@ If this project helps you, you can give me a cup of coffee<br/>
 <!-- /TOC -->
 
 # Release Notes
+
+### Version: 0.0.6
+```
+Added support devices.
+```
 
 ### Version: 0.0.5
 ```
@@ -129,8 +137,10 @@ Added support devices.
 |   | roborock.vacuum.s5e  |   X |    |
 |   | roborock.vacuum.m1s  |   X |    |
 |   | roborock.vacuum.e2  |   X |    |
+|   | roborock.vacuum.a10  |   X |    |
 |   | viomi.vacuum.v6  |   X |    |
 |   | viomi.vacuum.v7  |   X |    |
+|   | kxf321.mop.mo001  |   X |    |
 | Xiaomi Power Socket  | chuangmi.plug.v1  |   X |    |
 |   | chuangmi.plug.v2  |   X |    |
 |   | chuangmi.plug.v3  |   O |  O  |
@@ -149,12 +159,21 @@ Added support devices.
 |   | zhimi.fan.za1  |   O |  O |
 |   | air.fan.ca23ad9  |   O |  O |
 | Yeelight Mono  | yeelink.light.lamp1  |   X |    |
+|   | yeelink.light.lamp2  |   O |    |
+|   | yeelink.light.lamp3  |   O |    |
 |   | yeelink.light.mono1  |   O |    |
 |   | yeelink.light.ct2  |   O |    |
 | Yeelight Color  | yeelink.light.color1  |   O |    |
 |   | yeelink.light.color2  |   O |    |
+|   | yeelink.light.color3  |   O |    |
+|   | yeelink.light.color4  |   O |    |
+|   | yeelink.light.color5  |   O |    |
 |   | yeelink.light.strip1  |   O |    |
 |   | yeelink.light.strip2  |   O |    |
+|   | yeelink.light.strip3  |   O |    |
+|   | yeelink.light.strip4  |   O |    |
+|   | yeelink.light.strip5  |   O |    |
+|   | yeelink.light.strip6  |   O |    |
 | Bedside Lamp  | yeelink.light.bslamp1  |   O |   O |
 |   | yeelink.light.bslamp2  |   X |   O |
 |  Yeelight Ceiling | yeelink.light.ceiling1  |   O |    |
@@ -168,6 +187,13 @@ Added support devices.
 |   | yeelink.light.ceiling9  |   △ |    |
 |   | yeelink.light.ceiling13  |   △ |    |
 |   | yeelink.light.ceiling14  |   △ |    |
+|   | yeelink.light.ceiling15  |   △ |    |
+|   | yeelink.light.ceiling16  |   △ |    |
+|   | yeelink.light.ceiling17  |   △ |    |
+|   | yeelink.light.ceiling18  |   △ |    |
+|   | yeelink.light.ceiling19  |   △ |    |
+|   | yeelink.light.ceiling20  |   △ |    |
+|   | yeelink.light.ceil26  |   △ |    |
 |  Philips Ceiling | philips.light.ceiling  |   O |    |
 |   | philips.light.zyceiling  |   O |    |
 | Philips Downlight  | philips.light.downlight  |   O |    |
@@ -262,7 +288,7 @@ Added support devices.
 | Docker tag |
 | ------------- |
 |fison67/mi-connector:latest|
-|fison67/mi-connector-arm:latest|
+|~~fison67/mi-connector-arm:latest~~|
 
 
 ## Install Mi Connector API Server
@@ -273,8 +299,8 @@ Added support devices.
 sudo mkdir /docker
 sudo mkdir /docker/mi-connector
 sudo chown -R pi:pi /docker
-docker pull fison67/mi-connector-arm:latest
-docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector-arm --net=host fison67/mi-connector-arm:latest
+docker pull fison67/mi-connector:latest
+docker run -d --restart=always -v /docker/mi-connector:/config --name=mi-connector --net=host fison67/mi-connector:latest
 ```
 
 ### Synology NAS
