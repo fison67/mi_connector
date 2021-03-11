@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.67)
+ *  Mi Connector (v.0.0.68)
  *
  * MIT License
  *
@@ -380,6 +380,9 @@ def addDevice(){
         def nameSpace = "fison67"
 
         if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.mc2" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4" || params.type == "zhimi.airpurifier.mb3" || params.type ==  "zhimi.airpurifier.va1"){
+        	dth = "Xiaomi Air Purifier";
+            name = "Xiaomi Air Purifier";
+        }else if(params.type ==  "zhimi.airpurifier.sb1" || params.type ==  "zhimi.airpurifier.vb2" || params.type ==  "zhimi.airpurifier.mb4"){
         	dth = "Xiaomi Air Purifier";
             name = "Xiaomi Air Purifier";
         }else if(params.type == "lumi.gateway.v2" || params.type == "lumi.gateway.mieu01"){
