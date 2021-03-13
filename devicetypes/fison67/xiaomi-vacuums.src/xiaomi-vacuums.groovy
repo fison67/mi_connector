@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Vacuums (v.0.0.4)
+ *  Xiaomi Vacuums (v.0.0.5)
  *
  * MIT License
  *
@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67", vid:"generic-default-metadata") {
+	definition (name: "Xiaomi Vacuums", namespace: "fison67", author: "fison67") {
     	capability "Robot Cleaner Cleaning Mode"
         capability "Robot Cleaner Movement"
         capability "Switch"	
@@ -49,8 +49,6 @@ metadata {
         attribute "filterLeftLife", "NUMBER"
         attribute "sensorLeftLife", "NUMBER"
         
-        attribute "lastCheckin", "Date"
-         
         command "find"
         command "clean"
         command "charge"
@@ -86,6 +84,20 @@ def setInfo(String app_url, String id) {
     state.id = id
 }
 
+def setFanSpeed(speed){
+	if(speed == 0){
+    	stop()
+    }else if(speed == 1){
+    	quiet()
+    }else if(speed == 2){
+    	balanced()
+    }else if(speed == 3){
+    	turbo()
+    }else if(speed == 4){
+    	fullSpeed()
+    }
+}
+
 def setStatus(params){
 	log.debug "${params.key} >> ${params.data}"
     
@@ -96,7 +108,7 @@ def setStatus(params){
         def cleanMode = "stop"
         if(params.data == "zone-cleaning"){
         	cleanMode = "part"
-        }else  if(params.data == "charging"){
+        }else if(params.data == "charging"){
         	cleanMode = "stop"
         }else {
         	cleanMode = "auto"
@@ -127,19 +139,20 @@ def setStatus(params){
         def _value
         switch(val){
         case 38:
-        	_value = "Quiet"
+        	_value = 1
         	break;
         case 60:
-        	_value = "Balanced"
+        	_value = 2
         	break;
         case 77:
-        	_value = "Turbo"
+        	_value = 3
         	break;
         case 90:
-        	_value = "Full Speed"
+        	_value = 4
         	break;
         }
-    	sendEvent(name:"fanSpeed_label", value: _value )
+        sendEvent(name: "fanSpeed", value: _value)
+//    	sendEvent(name:"fanSpeed_label", value: _value )
     	break;
     case "cleaning":
     	sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"), displayed: false )
@@ -337,16 +350,16 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         def fanSpeed;
         switch(jsonObj.state.fanSpeed){
         case 38:
-        	fanSpeed = "Quiet"
+        	fanSpeed = 1
         	break;
         case 60:
-        	fanSpeed = "Balanced"
+        	fanSpeed = 2
         	break;
         case 77:
-        	fanSpeed = "Turbo"
+        	fanSpeed = 3
         	break;
         case 90:
-        	fanSpeed = "Full Speed"
+        	fanSpeed = 4
         	break;
         }
     	sendEvent(name:"fanSpeed_label", value: fanSpeed )
