@@ -32,7 +32,6 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "Xiaomi Heater New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"c330f481-969a-319e-854f-7eb3cbf555a2", ocfDeviceType: "oic.d.thermostat") {
 		capability "Thermostat Mode"
-		capability "Thermostat Cooling Setpoint"
 		capability "Thermostat Heating Setpoint"		
         capability "Temperature Measurement"
         capability "streamorange58819.led"
@@ -63,10 +62,10 @@ def setStatus(params){
         sendEvent(name:"thermostatMode", value: (params.data == "true" ? "heat" : "off"))
     	break;
     case "temperature":
-        sendEvent(name:"temperature", value: Math.round(Float.parseFloat("${params.data}".replace("C",""))*100)/10 as float)
+        sendEvent(name:"temperature", value: Math.round(Float.parseFloat("${params.data}".replace("C",""))*100)/10 as float, unit: "C")
     	break;    
     case "targetTemperature":
-        sendEvent(name:"heatingSetpoint", value: "${params.data}".replace("C","") as int)
+        sendEvent(name:"heatingSetpoint", value: "${params.data}".replace("C","") as int, unit: "C")
     	break;
     case "led":
         sendEvent(name:"led", value: (params.data == "true" ? "on" : "off") )
