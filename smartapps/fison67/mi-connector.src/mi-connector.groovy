@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.69)
+ *  Mi Connector (v.0.0.70)
  *
  * MIT License
  *
@@ -55,8 +55,15 @@ preferences {
 def mainPage() {
 	def languageList = ["English", "Korean"]
     dynamicPage(name: "mainPage", title: "Mi Connector", nextPage: null, uninstall: true, install: true) {
+    	if(location.hubs.size() < 1) {
+            section() {
+                paragraph "[ERROR]\nSmartThings Hub not found.\nYou need a SmartThings Hub to use Mi-Connector."
+            }
+            return
+        }
    		section("Request New Devices"){
         	input "address", "text", title: "Server address", required: true, description:"ex)192.168.0.100:30000"
+            input "devHub", "enum", title: "Hub", required: true, multiple: false, options: getHubs()
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
             input "externalAddress", "text", title: "External network address", required: false
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Local Management", description:"This makes you easy to setup"
@@ -448,7 +455,7 @@ def addDevice(){
         }else if(params.type == "philips.light.bulb" || params.type == "philips.light.hbulb"){
         	dth = "Xiaomi Light";
             name = "Philips Light";
-        }else if(params.type == "philips.light.sread1"){
+        }else if(params.type == "philips.light.sread1" || params.type == "philips.light.sread2" || params.type == "philips.light.sread3"){
         	dth = "Xiaomi Philips Sread";
             name = "Xiaomi Philips Sread";
         }else if(params.type == "philips.light.moonlight"){
@@ -736,7 +743,7 @@ def renderConfig() {
 
 def getLocationID(){
 	def locationID = null
-    try{ locationID = location.hubs[0].id }catch(err){}
+    try{ locationID = getHubID(devHub) }catch(err){}
     return locationID
 }
 
@@ -751,6 +758,23 @@ def versionCallBack(physicalgraph.device.HubResponse hubResponse) {
     }
 }
 
+def getHubs(){
+	def list = []
+    location.getHubs().each { hub ->
+    	list.push(hub.name)
+    }
+    return list
+}
+
+def getHubID(name){
+	def id = null
+    location.getHubs().each { hub ->
+    	if(hub.name == name){
+        	id = hub.id
+        }
+    }
+    return id
+}
 
 mappings {
     if (!params.access_token || (params.access_token && params.access_token != state.accessToken)) {
