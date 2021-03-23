@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier New App(v.0.0.1)
+ *  Xiaomi Air Purifier New App(v.0.0.2)
  *
  * MIT License
  *
@@ -76,9 +76,21 @@ def getModeStr(type){
     }
 }
 
+def getModeInt(mode){
+	if(mode == "auto"){
+    	return 0
+    }else if(mode == "sleep"){
+    	return 1
+    }else if(mode == "favorite"){
+    	return 2
+    }else if(mode == "none"){
+    	return 3
+    }
+}
+
 def setAirPurifierMode(mode){
 	log.debug "setAirPurifierMode >> ${mode}"
-    sendCommandData("changeMode", mode)
+    sendCommandData("changeMode", getModeInt(mode))
 }
 
 def setLed(power){
