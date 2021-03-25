@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.70)
+ *  Mi Connector (v.0.0.71)
  *
  * MIT License
  *
@@ -387,11 +387,13 @@ def addDevice(){
         def nameSpace = "fison67"
 
         if(params.type == "zhimi.airpurifier.m1" || params.type == "zhimi.airpurifier.v1" || params.type == "zhimi.airpurifier.v2" || params.type ==  "zhimi.airpurifier.v3" || params.type ==  "zhimi.airpurifier.v6" || params.type ==  "zhimi.airpurifier.v7" || params.type ==  "zhimi.airpurifier.m2" || params.type ==  "zhimi.airpurifier.ma2" || params.type ==  "zhimi.airpurifier.mc1" || params.type == "zhimi.airpurifier.mc2" || params.type == "zhimi.airpurifier.sa2" || params.type == "zhimi.airpurifier.ma4" || params.type == "zhimi.airpurifier.mb3" || params.type ==  "zhimi.airpurifier.va1"){
-        	dth = "Xiaomi Air Purifier";
+        	dth = "Xiaomi Air Purifier1 New App";
+            nameSpace = "streamorange58819"
             name = "Xiaomi Air Purifier";
         }else if(params.type ==  "zhimi.airpurifier.sb1" || params.type ==  "zhimi.airpurifier.vb2" || params.type ==  "zhimi.airpurifier.mb4"){
-        	dth = "Xiaomi Air Purifier";
+        	dth = "Xiaomi Air Purifier New App";
             name = "Xiaomi Air Purifier";
+            nameSpace = "streamorange58819"
         }else if(params.type == "lumi.gateway.v2" || params.type == "lumi.gateway.mieu01"){
         	dth = "Xiaomi Gateway";
             name = "Xiaomi Gateway V2";
@@ -655,6 +657,7 @@ def addDevice(){
                 try{ childDevice.refresh() }catch(e){}
                 try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
                 try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
+                try{ childDevice.setModel(params.type) }catch(e){}
                 
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
                 render contentType: "application/javascript", data: resultString
