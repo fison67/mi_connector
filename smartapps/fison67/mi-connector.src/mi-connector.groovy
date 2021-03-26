@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.71)
+ *  Mi Connector (v.0.0.72)
  *
  * MIT License
  *
@@ -392,6 +392,10 @@ def addDevice(){
             name = "Xiaomi Air Purifier";
         }else if(params.type ==  "zhimi.airpurifier.sb1" || params.type ==  "zhimi.airpurifier.vb2" || params.type ==  "zhimi.airpurifier.mb4"){
         	dth = "Xiaomi Air Purifier New App";
+            name = "Xiaomi Air Purifier";
+            nameSpace = "streamorange58819"
+        }else if(params.type == "hanyi.airpurifier.kj550"){
+        	dth = "Xiaomi Air Purifier kj550 New App";
             name = "Xiaomi Air Purifier";
             nameSpace = "streamorange58819"
         }else if(params.type == "lumi.gateway.v2" || params.type == "lumi.gateway.mieu01"){
