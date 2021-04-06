@@ -62,7 +62,7 @@ def setStatus(params){
         sendEvent(name:"thermostatMode", value: (params.data == "true" ? "heat" : "off"))
     	break;
     case "temperature":
-        sendEvent(name:"temperature", value: Math.round(Float.parseFloat("${params.data}".replace("C",""))*100)/10 as float, unit: "C")
+        sendEvent(name:"temperature", value: "${params.data}".replace("C","") as float, unit: "C")
     	break;    
     case "targetTemperature":
         sendEvent(name:"heatingSetpoint", value: "${params.data}".replace("C","") as int, unit: "C")
