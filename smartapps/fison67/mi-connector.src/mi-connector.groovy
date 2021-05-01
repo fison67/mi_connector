@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.72)
+ *  Mi Connector (v.0.0.73)
  *
  * MIT License
  *
@@ -438,7 +438,8 @@ def addDevice(){
         	dth = "Xiaomi Humidifier 4";
             name = "Xiaomi Humidifier 4";
        	}else if(params.type == "zhimi.fan.v1" || params.type == "zhimi.fan.v2" || params.type == "zhimi.fan.v3" || params.type == "zhimi.fan.sa1" || params.type == "zhimi.fan.za1" || params.type == "zhimi.fan.za3" || params.type == "zhimi.fan.za4" || params.type == "zhimi.fan.za5"){	
-        	dth = "Xiaomi Fan";	
+			nameSpace = "streamorange58819"
+            dth = "Xiaomi Fan New App";	
             name = "Xiaomi Fan";	
         }else if(params.type == "dmaker.fan.p5" || params.type == "dmaker.fan.p8" || params.type == "dmaker.fan.p9" || params.type == "dmaker.fan.p10" || params.type == "dmaker.fan.p11"){	
         	dth = "Xiaomi Fan P";	
@@ -573,9 +574,12 @@ def addDevice(){
         	nameSpace = "streamorange58819"
         	dth = "Xiaomi Heater New App"
             name = "Xiaomi Heater"
-        }
-        else if(params.type == "zhimi.airfresh.va2"){
+        }else if(params.type == "zhimi.airfresh.va2"){
         	dth = "Xiaomi Air Fresh"
+            name = "Xiaomi Air Fresh"
+        }else if(params.type == "dmaker.airfresh.t2017"){
+        	nameSpace = "streamorange58819"
+        	dth = "Xiaomi Air Fresh T2017 New App"
             name = "Xiaomi Air Fresh"
         }else if(params.type == "air.fan.ca23ad9"){
         	dth = "Xiaomi Circulator"
@@ -605,6 +609,7 @@ def addDevice(){
                 try{ childDevice.refresh() }catch(e){}
                 try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
                 try{ childDevice.setExternalAddress(settings.externalAddress) }catch(e){}
+                try{ childDevice.setModel(params.type) }catch(e){}
                 
                 log.debug "Success >> ADD Device : ${type} DNI=${dni}"
                 def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
