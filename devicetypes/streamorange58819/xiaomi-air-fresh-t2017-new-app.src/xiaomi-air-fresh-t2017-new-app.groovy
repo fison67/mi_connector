@@ -81,6 +81,10 @@ def setStatus(params){
     	break
     case "mode":
         sendEvent(name:"pmode", value: getModeStr(params.data as int))
+        break
+    case "favoriteLevel":
+        sendEvent(name:"fanSpeed", value: getSTFanSpeed(params.data as int))
+        break
     }
 }
 
@@ -147,6 +151,20 @@ def getFanSpeed(speed){
     	return 240
     }else if(speed == 4){
     	return 300
+    }
+}
+
+def getSTFanSpeed(speed){
+	if(60 == speed){
+    	return 0
+    }else if(60 < speed && speed <= 120){
+    	return 1
+    }else if(60 < speed && speed <= 120){
+    	return 2
+    }else if(180 < speed && speed <= 240){
+    	return 3
+    }else if(240 < speed && speed <= 300){
+    	return 4
     }
 }
 
