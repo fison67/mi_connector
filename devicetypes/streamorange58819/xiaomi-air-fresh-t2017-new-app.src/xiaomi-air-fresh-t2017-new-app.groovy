@@ -101,7 +101,7 @@ def refresh(){
 }
 
 def on(){ sendCommand(makePayload("power", "on"), null) }
-def off(){ endCommand(makePayload("power", "off"), null) }
+def off(){ sendCommand(makePayload("power", "off"), null) }
 
 def setChildLock(locked){
 	if(locked == "locked"){
