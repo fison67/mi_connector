@@ -80,7 +80,7 @@ def setStatus(params){
     	sendEvent(name:"carbonDioxide", value: params.data as int, unit:"ppm")
     	break
     case "mode":
-        sendEvent(name:"pmode", value: getModeStr(params.data as int))
+        sendEvent(name:"pmode", value: params.data == "favourite" ? "favorite" : params.data)
         break
     case "favoriteLevel":
         sendEvent(name:"fanSpeed", value: getSTFanSpeed(params.data as int))
