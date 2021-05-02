@@ -77,7 +77,7 @@ def setStatus(params){
     	sendEvent(name:"childlock", value: (params.data == "on" ? "on" : "off") )
         break;
     case "carbonDioxide":
-    	sendEvent(name:"carbonDioxide", value: params.data as int)
+    	sendEvent(name:"carbonDioxide", value: params.data as int, unit:"ppm")
     	break
     case "mode":
         sendEvent(name:"pmode", value: getModeStr(params.data as int))
