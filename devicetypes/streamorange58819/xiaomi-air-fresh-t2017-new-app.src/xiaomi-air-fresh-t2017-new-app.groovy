@@ -85,6 +85,8 @@ def setStatus(params){
     case "favoriteLevel":
         sendEvent(name:"fanSpeed", value: getSTFanSpeed(params.data as int))
         break
+    case "pm2.5":
+        sendEvent(name:"fineDustLevel", value: params.data as int, unit:"\u03bcg/m^3")
     }
 }
 
