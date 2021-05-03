@@ -30,7 +30,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Air Fresh T2017 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", ocfDeviceType: "oic.d.airpurifier") {
+	definition (name: "Xiaomi Air Fresh T2017 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"889c5d30-b10d-33a5-bbd7-5f978fcde5c8", ocfDeviceType: "oic.d.airpurifier") {
 		capability "Switch"						
         capability "Temperature Measurement"
         capability "Carbon Dioxide Measurement"
@@ -38,6 +38,9 @@ metadata {
 		capability "Fan Speed"
 		capability "Refresh"
 		capability "streamorange58819.pmode"
+		capability "streamorange58819.heater"
+		capability "streamorange58819.heaterlevel"
+		capability "streamorange58819.heaterstatus"
         capability "streamorange58819.led"
         capability "streamorange58819.buzzer"
 		capability "streamorange58819.childLock"
@@ -64,6 +67,9 @@ def setStatus(params){
     case "power":
         sendEvent(name:"switch", value: (params.data == "true" ? "on" : "off"))
     	break;
+    case "pm2.5":
+        sendEvent(name:"fineDustLevel", value: params.data as int, unit:"\u03bcg/m^3")
+    	break;
     case "temperature":
         sendEvent(name:"temperature", value: "${params.data}".replace("C","") as float, unit: "C")
     	break;    
@@ -74,10 +80,10 @@ def setStatus(params){
     	sendEvent(name:"buzzer", value: (params.data == "true" ? "on" : "off") )
         break;
     case "childLock":
-    	sendEvent(name:"childlock", value: (params.data == "on" ? "on" : "off") )
+        sendEvent(name:"childlock", value: (params.data == "true" ? "locked" : "unlocked"))
         break;
     case "carbonDioxide":
-    	sendEvent(name:"carbonDioxide", value: params.data as int, unit:"ppm")
+    	sendEvent(name:"carbonDioxide", value: params.data as int, unit: "ppm")
     	break
     case "mode":
         sendEvent(name:"pmode", value: params.data == "favourite" ? "favorite" : params.data)
@@ -85,8 +91,14 @@ def setStatus(params){
     case "favoriteLevel":
         sendEvent(name:"fanSpeed", value: getSTFanSpeed(params.data as int))
         break
-    case "pm2.5":
-        sendEvent(name:"fineDustLevel", value: params.data as int, unit:"\u03bcg/m^3")
+    case "heater":
+        sendEvent(name:"heater", value: (params.data == "true" ? "on" : "off"))
+    case "heaterLevel":
+        sendEvent(name:"heaterlevel", value: getSTHeaterLevel(params.data as int))
+        break
+    case "heaterStatus":
+        sendEvent(name:"heaterstatus", value: (params.data == "true" ? "on" : "off"))
+        break
     }
 }
 
@@ -138,9 +150,22 @@ def setLed(power){
 def ledOn(){ sendCommand(makePayload("led", "on"), null) }
 def ledOff(){ sendCommand(makePayload("led", "off"), null) }
 
-def setFanSpeed(speed){
-	sendCommand(makePayload("favoriteLevel", getFanSpeed(speed)), null)
+def setHeater(power){
+	if(power == "on"){
+    	heaterOn()
+    }else{
+    	heaterOff()
+    }
 }
+
+def heaterOn(){ sendCommand(makePayload("heater", "on"), null) }
+def heaterOff(){ sendCommand(makePayload("heater", "off"), null) }
+
+def setHeaterLevel(level){ sendCommand(makePayload("heaterLevel", getHeaterLevelValue(level)), null) }
+
+def setAirPurifierMode(mode){ sendCommand(makePayload("changeMode", mode), null) }
+
+def setFanSpeed(speed){ sendCommand(makePayload("favoriteLevel", getFanSpeed(speed)), null) }
 
 def getFanSpeed(speed){
 	if(speed == 0){
@@ -156,12 +181,32 @@ def getFanSpeed(speed){
     }
 }
 
+def getSTHeaterLevel(level){
+	if(level == "low"){
+    	return 1
+    }else if(level == "medium"){
+    	return 2
+    }else if(level == "high"){
+    	return 3
+    }
+}
+
+def getHeaterLevelValue(level){
+	if(level == 1){
+    	return "low"
+    }else if(level == 2){
+    	return "medium"
+    }else if(level == 3){
+    	return "high"
+    }
+}
+
 def getSTFanSpeed(speed){
 	if(60 == speed){
     	return 0
     }else if(60 < speed && speed <= 120){
     	return 1
-    }else if(60 < speed && speed <= 120){
+    }else if(120 < speed && speed <= 180){
     	return 2
     }else if(180 < speed && speed <= 240){
     	return 3
