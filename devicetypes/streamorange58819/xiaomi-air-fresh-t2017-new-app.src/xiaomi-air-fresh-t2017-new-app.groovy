@@ -93,8 +93,9 @@ def setStatus(params){
         break
     case "heater":
         sendEvent(name:"heater", value: (params.data == "true" ? "on" : "off"))
+        break
     case "heaterLevel":
-        sendEvent(name:"heaterlevel", value: getSTHeaterLevel(params.data as int))
+        sendEvent(name:"heaterlevel", value: getSTHeaterLevel(params.data))
         break
     case "heaterStatus":
         sendEvent(name:"heaterstatus", value: (params.data == "true" ? "on" : "off"))
