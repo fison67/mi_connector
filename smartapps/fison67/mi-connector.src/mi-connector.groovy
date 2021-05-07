@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.73)
+ *  Mi Connector (v.0.0.74)
  *
  * MIT License
  *
@@ -441,9 +441,13 @@ def addDevice(){
 			nameSpace = "streamorange58819"
             dth = "Xiaomi Fan New App";	
             name = "Xiaomi Fan";	
-        }else if(params.type == "dmaker.fan.p5" || params.type == "dmaker.fan.p8" || params.type == "dmaker.fan.p9" || params.type == "dmaker.fan.p10" || params.type == "dmaker.fan.p11"){	
+        }else if(params.type == "dmaker.fan.p5" || params.type == "dmaker.fan.p9" || params.type == "dmaker.fan.p10" || params.type == "dmaker.fan.p11"){	
         	dth = "Xiaomi Fan P";	
             name = "Xiaomi Fan P";	   
+        }else if(params.type == "dmaker.fan.p8"){
+        	nameSpace = "streamorange58819"
+        	dth = "Xiaomi Fan P New App"
+            name = "Xiaomi Fan P"
         }else if(params.type == "zhimi.fan.fa1"){
         	dth = "Xiaomi Fan Fa1";	
             name = "Xiaomi Fan Fa1";	   
