@@ -91,7 +91,7 @@ def setStatus(params){
     	sendEvent(name: "fanSpeed", value: getFanSpeedValue(params.data as int))
     	break
     case "angleEnable":
-    	sendEvent(name: "rotationangle", value: (params.data == "true" ? "on" : "off"))
+    	sendEvent(name: "rotationangle", value: (params.data == "true" ? 4 : 0))
     	break
     }
 }
@@ -126,6 +126,10 @@ def on(){
 
 def off(){
 	control("power", "off")
+}
+
+def setRotationAngle(level){
+    control("angle", level == 0 ? "off" : "on")
 }
 
 def setFanMode(mode){
