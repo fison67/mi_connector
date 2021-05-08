@@ -76,7 +76,7 @@ def setStatus(params){
     log.debug "Notify [${params.key}] >> ${params.data}"
     switch(params.key){
     case "power":
-    	sendEvent(name: "power", value: (params.data == "true" ? "on" : "off"))
+    	sendEvent(name: "switch", value: (params.data == "true" ? "on" : "off"))
     	break
     case "led":
     	sendEvent(name: "led", value: (params.data == "true" ? "on" : "off"))
