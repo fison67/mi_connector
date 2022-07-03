@@ -1,5 +1,5 @@
 /**
- *  Mi Connector (v.0.0.74)
+ *  Mi Connector (v.0.0.75)
  *
  * MIT License
  *
@@ -450,7 +450,11 @@ def addDevice(){
             name = "Xiaomi Fan P"
         }else if(params.type == "zhimi.fan.fa1"){
         	dth = "Xiaomi Fan Fa1";	
-            name = "Xiaomi Fan Fa1";	   
+            name = "Xiaomi Fan Fa1";	
+        }else if(params.type == "dmaker.fan.p220"){
+            nameSpace = "streamorange58819"
+        	dth = "Xiaomi Fan P220 New App";	
+            name = "Xiaomi Fan #5";	
         }else if(params.type == "yeelink.light.color1" || params.type == "yeelink.light.color2" ||  params.type == "yeelink.light.color3" ||  params.type == "yeelink.light.color4" ||  params.type == "yeelink.light.color5" || params.type == "yeelink.light.bslamp1" || params.type == "yeelink.light.bslamp2"){
         	dth = "Xiaomi Light";
             name = "Xiaomi Light";
