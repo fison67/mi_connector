@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Fan P220 New App(v.0.0.1)
+ *  Xiaomi Fan P220 New App(v.0.0.2)
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "Xiaomi Fan P220 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"59d4bee6-c290-31ae-a978-bc58ab2142e6", ocfDeviceType: "oic.d.fan") {
+	definition (name: "Xiaomi Fan P220 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"f6250efb-90f0-3ddb-a834-3f92c25626c7", ocfDeviceType: "oic.d.fan") {
         capability "Switch"				
         capability "streamorange58819.dmakermode"
 		capability "Fan Speed"
