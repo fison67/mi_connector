@@ -32,7 +32,7 @@ import groovy.transform.Field
 import java.text.DateFormat
 
 metadata {
-	definition (name: "Xiaomi Air Purifier New App", namespace: "streamorange58819", mnmn: "fison67", author: "fison67", vid: "441ab1ad-0abd-3705-9a27-129a0b4cc83f", ocfDeviceType:"oic.d.airpurifier") {
+	definition (name: "Xiaomi Air Purifier New App", namespace: "streamorange58819", mnmn: "fison67", author: "fison67", vid: "2752ea30-6548-383d-8e70-dec58390a704", ocfDeviceType:"oic.d.airpurifier") {
         capability "Switch"						
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
@@ -42,7 +42,7 @@ metadata {
 		capability "streamorange58819.childLock"
 		capability "Filter Status"
 		capability "Fan Speed"
-		capability "FineDustSensor"
+		capability "Fine Dust Sensor"
 		capability "Sensor"
 		capability "Refresh"
         
@@ -163,10 +163,10 @@ def setStatus(params){
         sendEvent(name:"pmode", value: getModeStr(params.data as int))
     	break;
     case "pm2.5":
-    	sendEvent(name:"fineDustLevel", value: params.data as int, unit:"μg/m^3")
+    	sendEvent(name:"fineDustLevel", value: params.data as Integer, unit:"㎍/㎥")
     	break;
     case "aqi":
-    	sendEvent(name:"fineDustLevel", value: params.data as int, unit:"μg/m^3")
+    	sendEvent(name:"fineDustLevel", value: params.data as Integer, unit:"㎍/㎥")
     	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data as int, unit: "%")
@@ -257,10 +257,10 @@ def callback(physicalgraph.device.HubResponse hubResponse){
         	sendEvent(name:"temperature", value: jsonObj.properties.temperature.value, unit:"C"  )
         }
         if(jsonObj.properties["pm2.5"] != null){
-        	sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"])
+        	sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"] as Integer)
         }
         if(jsonObj.properties["aqi"] != null){
-        	sendEvent(name:"fineDustLevel", value: jsonObj.properties["aqi"])
+        	sendEvent(name:"fineDustLevel", value: jsonObj.properties["aqi"] as Integer)
         }
         
 		if(jsonObj.state["mode"] != null){
