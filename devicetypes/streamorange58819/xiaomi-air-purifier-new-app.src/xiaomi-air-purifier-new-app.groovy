@@ -32,7 +32,7 @@ import groovy.transform.Field
 import java.text.DateFormat
 
 metadata {
-	definition (name: "Xiaomi Air Purifier New App", namespace: "streamorange58819", mnmn: "fison67", author: "fison67", vid: "bed896bc-cb00-3ae8-9439-e65ca96f5adb", ocfDeviceType:"oic.d.airpurifier") {
+	definition (name: "Xiaomi Air Purifier New App", namespace: "streamorange58819", mnmn: "fison67", author: "fison67", vid: "441ab1ad-0abd-3705-9a27-129a0b4cc83f", ocfDeviceType:"oic.d.airpurifier") {
         capability "Switch"						
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
