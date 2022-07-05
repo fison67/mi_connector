@@ -42,7 +42,7 @@ metadata {
 		capability "streamorange58819.childLock"
 		capability "Filter Status"
 		capability "Fan Speed"
-		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
+		capability "FineDustSensor"
 		capability "Sensor"
 		capability "Refresh"
         
@@ -233,7 +233,7 @@ def sendCommandData(cmd, data){
 
 def installed(){
 	sendEvent(name:"filterStatus", value: "normal")
-	sendEvent(name:"dustLevel" , value: null)
+//	sendEvent(name:"dustLevel" , value: null)
     sendEvent(name:"supportedPmodes", value: ["auto", "sleep", "favorite"])
 }
 
