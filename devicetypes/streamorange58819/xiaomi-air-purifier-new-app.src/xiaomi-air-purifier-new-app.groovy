@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier New App(v.0.0.2)
+ *  Xiaomi Air Purifier New App(v.0.0.3)
  *
  * MIT License
  *
@@ -51,7 +51,6 @@ metadata {
 
 	preferences {}
 }
-
 
 // parse events into attributes
 def parse(String description) {
@@ -164,10 +163,10 @@ def setStatus(params){
         sendEvent(name:"pmode", value: getModeStr(params.data as int))
     	break;
     case "pm2.5":
-    	sendEvent(name:"fineDustLevel", value: params.data as int)
+    	sendEvent(name:"fineDustLevel", value: params.data as int, unit:"μg/m^3")
     	break;
     case "aqi":
-    	sendEvent(name:"fineDustLevel", value: params.data as int)
+    	sendEvent(name:"fineDustLevel", value: params.data as int, unit:"μg/m^3")
     	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data as int, unit: "%")
@@ -235,6 +234,7 @@ def sendCommandData(cmd, data){
 def installed(){
 	sendEvent(name:"filterStatus", value: "normal")
 	sendEvent(name:"dustLevel" , value: null)
+    sendEvent(name:"supportedPmodes", value: ["auto", "sleep", "favorite"])
 }
 
 def updated() {}
