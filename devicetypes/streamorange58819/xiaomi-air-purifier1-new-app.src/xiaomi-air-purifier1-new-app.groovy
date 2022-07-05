@@ -1,5 +1,5 @@
 /**
- *  Xiaomi Air Purifier (v.0.0.8)
+ *  Xiaomi Air Purifier (v.0.0.9)
  *
  * MIT License
  *
@@ -32,7 +32,7 @@ import groovy.transform.Field
 import java.text.DateFormat
 
 metadata {
-	definition (name: "Xiaomi Air Purifier1 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"b5d198ed-979e-3093-8f89-e12ad82504b7", ocfDeviceType:"oic.d.airpurifier") {
+	definition (name: "Xiaomi Air Purifier1 New App", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid:"42f0f9b4-0933-33c5-84aa-10ab770bc021", ocfDeviceType:"oic.d.airpurifier") {
         capability "Switch"						
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
@@ -43,7 +43,7 @@ metadata {
 		capability "streamorange58819.led"
 		capability "Refresh"
 		capability "Sensor"
-		capability "Dust Sensor" // fineDustLevel : PM 2.5   dustLevel : PM 10
+        capability "Fine Dust Sensor"
          
         attribute "buzzer", "enum", ["on", "off"]        
         attribute "f1_hour_used", "number"
@@ -108,7 +108,7 @@ def setStatus(params){
         sendEvent(name:"pmode", value: params.data )
     	break;
     case "pm2.5":
-    	sendEvent(name:"fineDustLevel", value: params.data as int, unit:"μg/m^3")
+    	sendEvent(name:"fineDustLevel", value: params.data as Integer, unit: "㎍/㎥")
     	break;
     case "relativeHumidity":
     	sendEvent(name:"humidity", value: params.data, unit:"%")
@@ -146,7 +146,7 @@ def setStatus(params){
         sendEvent(name:"filterStatus", value: life == 0 ? "replace" : "normal")
     	break;
     case "average_aqi":
-    	sendEvent(name:"average_aqi", value: params.data as int)
+    	sendEvent(name:"average_aqi", value: params.data as Integer)
     	break;
     }
 }
@@ -242,7 +242,6 @@ def sendCommandData(cmd, data){
 
 def installed(){
 	sendEvent(name:"switch" , value:"off")
-    sendEvent(name:"dustLevel", value: null)
     sendEvent(name:"airPurifierFanMode", value: "idle" )
 }
 
@@ -267,13 +266,13 @@ def callback(physicalgraph.device.HubResponse hubResponse){
             sendEvent(name:"temperature", value: jsonObj.properties.temperature.value, unit: "C" )
         }
         if(jsonObj.state.aqi != null && jsonObj.state.aqi != ""){
-            sendEvent(name:"airQuality", value: jsonObj.state.aqi)
+            sendEvent(name:"airQuality", value: jsonObj.state.aqi as Integer)
         }
         if(jsonObj.state.averageAqi != null && jsonObj.state.averageAqi != ""){
             sendEvent(name:"average_aqi", value: jsonObj.state.averageAqi)
         }
         if(jsonObj.properties["pm2.5"] != null && jsonObj.properties["pm2.5"] != ""){
-            sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"], unit:"μg/m^3")
+            sendEvent(name:"fineDustLevel", value: jsonObj.properties["pm2.5"] as Integer, unit:"㎍/㎥")
         }
         if(jsonObj.properties["mode"] != null && jsonObj.properties["mode"] != ""){
             sendEvent(name:"pmode", value: jsonObj.properties["mode"])
